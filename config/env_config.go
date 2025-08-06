@@ -42,17 +42,9 @@ func LoadDBEnv() {
 		fmt.Println("Set pass word as MYSQL_PASSWORD=your_pass in .env file")
 	}
 	if MYSQL_DATABASE = os.Getenv("MYSQL_DATABASE"); MYSQL_DATABASE == "" {
-		MYSQL_HOST = "foodopiaMVC"
+		MYSQL_HOST = "mvc_foodopia"
 	}
 	if MYSQL_PORT = os.Getenv("MYSQL_PORT"); MYSQL_PORT == "" {
 		MYSQL_PORT = "3306"
 	}
-
-	fmt.Println("final env values are ")
-	fmt.Println(SERVER_PORT)
-	fmt.Println(MYSQL_HOST)
-	fmt.Println(MYSQL_USER)
-	fmt.Println(MYSQL_PASSWORD)
-	fmt.Println(MYSQL_DATABASE)
-	fmt.Println(MYSQL_PORT)
 }

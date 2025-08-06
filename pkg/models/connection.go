@@ -13,7 +13,7 @@ import (
 var DB *sql.DB
 
 func InitDatabase() (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_HOST, config.MYSQL_DATABASE)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT, config.MYSQL_DATABASE)
 
 	DB, err := sql.Open("mysql", dsn)
 
@@ -30,7 +30,7 @@ func InitDatabase() (*sql.DB, error) {
 		return nil, fmt.Errorf("error connecting to database: %v", err)
 	}
 
-	fmt.Println("Database connected successfully!")
+	fmt.Println("\nDatabase connected successfully!")
 
 	return DB, nil
 }
