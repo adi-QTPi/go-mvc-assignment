@@ -22,7 +22,6 @@ func (uc *UserApiController) GetAllUsers(w http.ResponseWriter, r *http.Request)
 }
 
 func (uc *UserApiController) GetUserById(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Path)
 
 	_, err := fmt.Fprintf(w, "asked for the user with id :")
 	if err != nil {

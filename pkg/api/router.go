@@ -5,11 +5,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func SetupNewRouter() *mux.Router {
+func SetupRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	apiRouter := router.PathPrefix("/api").Subrouter()
-	api.ImplimentApiRoutes(apiRouter) //don't import from api, coz same package
+	api.ImplimentApiRoutes(apiRouter)
 
 	staticRouter := router.PathPrefix("/static").Subrouter()
 	api.ImplimentStaticRoutes(staticRouter)
