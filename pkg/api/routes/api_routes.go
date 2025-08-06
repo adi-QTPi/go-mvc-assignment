@@ -25,7 +25,7 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/users",
 		middleware.Chain(
 			http.HandlerFunc(userController.GetAllUsers),
-			middleware.RequiredEntries("id", "username"),
+			middleware.RequiredEntries("id", "username", "password"),
 			middleware.AnotherMiddleware,
 		)).Methods("GET")
 

@@ -15,13 +15,17 @@ func main() {
 
 	router := api.SetupRouter()
 
-	serverPortString := fmt.Sprintf(":%v", os.Getenv("SERVER_PORT"))
+	serverPort := os.Getenv("SERVER_PORT")
+	if serverPort == "" {
+		serverPort = "9000"
+	}
+	serverPortString := fmt.Sprintf(":%v", serverPort)
 	server := &http.Server{
 		Addr:    serverPortString,
 		Handler: router,
 	}
 
-	fmt.Println("Starting the server... access on port ", serverPortString)
+	fmt.Printf("\nStarting the server... access on port %v \n\n", serverPortString)
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("Server error: %v", err)
