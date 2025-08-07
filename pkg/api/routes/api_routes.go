@@ -18,15 +18,26 @@ func testMiddleware(next http.Handler) http.Handler {
 }
 
 func ImplimentApiRoutes(subRouter *mux.Router) {
-	// subRouter.Use(testMiddleware)
-
 	userController := controllers.NewUserApiController()
+
+	subRouter.Handle("/signup",
+		middleware.Chain(
+			http.HandlerFunc(userController.AddUser),
+		)).Methods("POST")
 
 	subRouter.Handle("/users",
 		middleware.Chain(
 			http.HandlerFunc(userController.GetUsers),
 		)).Methods("GET")
 
-	subRouter.HandleFunc("/user/{id}", userController.GetUser).Methods("GET")
+	subRouter.Handle("/user/{id}",
+		middleware.Chain(
+			http.HandlerFunc(userController.GetUser),
+		)).Methods("GET")
+
+	subRouter.Handle("/user/{id}",
+		middleware.Chain(
+			http.HandlerFunc(userController.DeleteUser),
+		)).Methods("DELETE")
 
 }
