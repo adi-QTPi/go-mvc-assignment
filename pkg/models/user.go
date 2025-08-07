@@ -54,7 +54,7 @@ func GetUserById(id string) (*User, error) {
 	return &fetchedUser, nil
 }
 
-func GetUserByUsername(userName string) (bool, error) {
+func GetUserByUsername(userName string) (bool, error, string) {
 	sql_query := "SELECT user_id FROM user WHERE user_name = ?;"
 
 	row := DB.QueryRow(sql_query, userName)
@@ -62,12 +62,13 @@ func GetUserByUsername(userName string) (bool, error) {
 	var userId string
 	err := row.Scan(&userId)
 	if err == sql.ErrNoRows {
-		return false, nil
+		//no usr found case
+		return false, nil, userId
 	} else if err != nil {
-		return false, fmt.Errorf("error in running query %v", err)
+		return false, fmt.Errorf("error in running query %v", err), userId
 	}
 
-	return true, nil
+	return true, nil, userId
 }
 
 func DeleteUserById(id string) error {
@@ -79,6 +80,20 @@ func DeleteUserById(id string) error {
 	}
 
 	return nil
+}
+
+func FetchHashedPassword(id string) string {
+	sql_query := "SELECT pwd_hash FROM user WHERE user_id = ?;"
+
+	row := DB.QueryRow(sql_query, id)
+	var pwd_hash string
+	err := row.Scan(&pwd_hash)
+	if err != nil {
+		return ""
+	}
+
+	return pwd_hash
+
 }
 
 func AddNewUser(u User) error {

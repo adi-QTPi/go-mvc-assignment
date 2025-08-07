@@ -14,5 +14,8 @@ func SetupRouter() *mux.Router {
 	staticRouter := router.PathPrefix("/static").Subrouter()
 	api.ImplimentStaticRoutes(staticRouter)
 
+	accountRouter := router.PathPrefix("/account").Subrouter()
+	api.ImplimentAccountRoutes(accountRouter)
+
 	return router
 }

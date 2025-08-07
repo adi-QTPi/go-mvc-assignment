@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -15,7 +14,19 @@ var (
 	MYSQL_PASSWORD string
 	MYSQL_DATABASE string
 	MYSQL_PORT     string
+	JWT_SECRET     string
 )
+
+func LoadJwtEnv() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("Error loading .env file (from : LoadMainEnv)")
+	}
+
+	if JWT_SECRET = os.Getenv("JWT_SECRET"); JWT_SECRET == "" {
+		log.Fatal("Set a proper JWT secret in .env file")
+
+	}
+}
 
 func LoadMainEnv() {
 	if err := godotenv.Load(".env"); err != nil {
@@ -39,7 +50,7 @@ func LoadDBEnv() {
 		MYSQL_USER = "root"
 	}
 	if MYSQL_PASSWORD = os.Getenv("MYSQL_PASSWORD"); MYSQL_PASSWORD == "" {
-		fmt.Println("Set pass word as MYSQL_PASSWORD=your_pass in .env file")
+		log.Fatal("Set pass word as MYSQL_PASSWORD=your_pass in .env file")
 	}
 	if MYSQL_DATABASE = os.Getenv("MYSQL_DATABASE"); MYSQL_DATABASE == "" {
 		MYSQL_HOST = "mvc_foodopia"
