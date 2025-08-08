@@ -17,8 +17,20 @@ type Item struct {
 	IsAvailable bool           `json:"is_available"`
 }
 
-func GetAllItems() ([]Item, error) {
-	sqlQuery := "SELECT * FROM item;"
+type DisplayItem struct {
+	ItemId      string         `json:"item_id"`
+	ItemName    string         `json:"item_name"`
+	CookTimeMin string         `json:"cook_time_min"`
+	Price       string         `json:"price"`
+	DisplayPic  sql.NullString `json:"display_pic"`
+	CatId       string         `json:"cat_id"`
+	Category    string         `json:"category"`
+	SubCatId    string         `json:"subcat_id"`
+	SubCategory string         `json:"subcategory"`
+}
+
+func GetAllItems() ([]DisplayItem, error) {
+	sqlQuery := "SELECT i.item_id, i.item_name, i.cook_time_min, i.price, i.display_pic, i.cat_id, c.cat_name AS cat_name, i.subcat_id, cd.cat_name AS subcat_name FROM item i JOIN category c ON i.cat_id = c.cat_id LEFT JOIN category cd ON i.subcat_id = cd.cat_id WHERE i.is_available = 1 ORDER BY RAND();"
 
 	rows, err := DB.Query(sqlQuery)
 	if err != nil {
@@ -26,11 +38,11 @@ func GetAllItems() ([]Item, error) {
 	}
 	defer rows.Close()
 
-	var fetchedItems []Item
+	var fetchedItems []DisplayItem
 
 	for rows.Next() {
-		var oneItem Item
-		err := rows.Scan(&oneItem.ItemId, &oneItem.ItemName, &oneItem.CookTimeMin, &oneItem.Price, &oneItem.DisplayPic, &oneItem.CatId, &oneItem.SubCatId, &oneItem.IsAvailable)
+		var oneItem DisplayItem
+		err := rows.Scan(&oneItem.ItemId, &oneItem.ItemName, &oneItem.CookTimeMin, &oneItem.Price, &oneItem.DisplayPic, &oneItem.CatId, &oneItem.Category, &oneItem.SubCatId, &oneItem.SubCategory)
 
 		if err != nil {
 			return nil, fmt.Errorf("error fetching items -> %v", err)
