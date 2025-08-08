@@ -13,18 +13,16 @@ import (
 var DB *sql.DB
 
 func InitDatabase() (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT, config.MYSQL_DATABASE)
+	Dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/?parseTime=true&multiStatements=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT)
 
-	db, err := sql.Open("mysql", dsn)
-
+	db, err := sql.Open("mysql", Dsn)
 	if err != nil {
 		return nil, fmt.Errorf("error opening database -> %v", err)
 	}
 
-	// Configure connection pool settings
-	db.SetMaxOpenConns(25)                 // Maximum number of open connections
-	db.SetMaxIdleConns(5)                  // Maximum number of idle connections
-	db.SetConnMaxLifetime(5 * time.Minute) // Maximum lifetime of a connection
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(5 * time.Minute)
 
 	DB = db
 
@@ -32,7 +30,21 @@ func InitDatabase() (*sql.DB, error) {
 		return nil, fmt.Errorf("error connecting to database: %v", err)
 	}
 
-	fmt.Println("\nDatabase connected successfully!")
+	fmt.Println("\nDatabase Connected Successfully")
+
+	if err := CreateDatabase(); err != nil {
+		return DB, err
+	}
 
 	return DB, nil
+}
+
+func CreateDatabase() error {
+	sql_query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s; USE %s", config.MYSQL_DATABASE, config.MYSQL_DATABASE)
+	_, err := DB.Exec(sql_query)
+	if err != nil {
+		return fmt.Errorf("error creating the database %s : %v", config.MYSQL_DATABASE, err)
+	}
+	fmt.Println("Database Creation Successful : ", config.MYSQL_DATABASE)
+	return nil
 }

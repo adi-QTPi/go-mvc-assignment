@@ -1,8 +1,3 @@
-DROP DATABASE IF EXISTS mvc_foodopia;
-CREATE DATABASE mvc_foodopia;
-
-USE mvc_foodopia;
-
 CREATE TABLE category (
     cat_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     cat_name VARCHAR(255) NOT NULL,
@@ -35,6 +30,8 @@ CREATE TABLE item (
     FOREIGN KEY (cat_id) REFERENCES category(cat_id),
     FOREIGN KEY (subcat_id) REFERENCES category(cat_id)
 );
+CREATE INDEX idx_item_cat_id ON item(cat_id);
+CREATE INDEX idx_item_subcat_id ON item(subcat_id);
 
 CREATE TABLE `order` (
     order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -46,6 +43,8 @@ CREATE TABLE `order` (
     FOREIGN KEY (customer_id) REFERENCES user(user_id),
     FOREIGN KEY (table_no) REFERENCES `table`(table_id)
 );
+CREATE INDEX idx_order_customer_id ON `order`(customer_id);
+CREATE INDEX idx_order_status ON `order`(status);
 
 CREATE TABLE item_order (
     order_id BIGINT,
@@ -66,8 +65,3 @@ CREATE TABLE paid_orders (
     total_amount BIGINT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES `order`(order_id)
 );
-
-CREATE INDEX idx_order_customer_id ON `order`(customer_id);
-CREATE INDEX idx_order_status ON `order`(status);
-CREATE INDEX idx_item_cat_id ON item(cat_id);
-CREATE INDEX idx_item_subcat_id ON item(subcat_id);

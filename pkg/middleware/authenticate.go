@@ -72,8 +72,6 @@ func CheckPassword(next http.Handler) http.Handler {
 
 func IdentifyUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("identify user middleware touched")
-
 		token, err := r.Cookie("jwt_token")
 		if err != nil {
 			var responseJson util.StandardResponseJson

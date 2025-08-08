@@ -6,19 +6,21 @@ import (
 	"net/http"
 
 	"github.com/adi-QTPi/go-mvc-assignment/config"
+	"github.com/adi-QTPi/go-mvc-assignment/database"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/api"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 )
 
 func main() {
 	config.LoadMainEnv()
-
 	config.LoadDBEnv()
 
 	_, err := models.InitDatabase()
 	if err != nil {
 		log.Fatalf("Database not initialised properly -> %v", err)
 	}
+
+	database.MigrateDBSchema()
 
 	router := api.SetupRouter()
 
