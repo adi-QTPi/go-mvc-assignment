@@ -30,7 +30,6 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 		)).Methods("DELETE")
 
 	itemController := controllers.NewItemApiController()
-
 	subRouter.Handle("/item",
 		middleware.Chain(
 			http.HandlerFunc(itemController.GetItems),
@@ -60,6 +59,10 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(orderController.PlaceOrder),
 			middleware.AssignEmptyTable,
 			middleware.DecodeCartJsonInput,
+		)).Methods("POST")
+	subRouter.Handle("/pay",
+		middleware.Chain(
+			http.HandlerFunc(orderController.OrderPayment),
 		)).Methods("POST")
 
 	cookController := controllers.NewCookApiController()

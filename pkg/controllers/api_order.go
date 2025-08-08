@@ -55,3 +55,29 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 	responseJson.Msg = fmt.Sprintf("Ordder Placed !!! orderId = %v", newOrder.OrderId)
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
 }
+
+func (oc *OrderApiController) OrderPayment(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error parsing form data , %v", err), http.StatusInternalServerError)
+		return
+	}
+	orderId := r.Form.Get("order_id")
+	customerReview := r.Form.Get("customer_review")
+
+	err = models.MakePayment(orderId, customerReview)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error processing the payment , %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	err = models.VacateTable()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error vacating table , %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var responseJson util.StandardResponseJson
+	responseJson.Msg = fmt.Sprintf("Payment Successful for order #%v", orderId)
+	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+}

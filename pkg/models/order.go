@@ -90,6 +90,16 @@ func OccupyTable(tableNo int64) error {
 	return err
 }
 
+func VacateTable() error {
+	sqlQuery := "UPDATE `table` SET is_empty = 1 WHERE table_id IN (SELECT DISTINCT table_no FROM `order` o1 WHERE table_no IS NOT NULL AND NOT EXISTS (SELECT 1 FROM `order` o2 WHERE o2.table_no = o1.table_no AND o2.status != 'paid'));"
+
+	_, err := DB.Exec(sqlQuery)
+	if err != nil {
+		return fmt.Errorf("%v", err)
+	}
+	return nil
+}
+
 func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order) error {
 	sqlQuery := "INSERT INTO item_order (order_id, item_id, quantity, instruction) VALUES (?, ?, ?, ?);"
 
@@ -164,4 +174,42 @@ func FetchAllOrderDetailsByDate(dateStr string, xUser User) ([]Order, error) {
 	}
 
 	return orderSlice, nil
+}
+
+func MakePayment(orderId string, customerReview string) error {
+
+	order, err := FetchOrderByOrderId(orderId)
+	if err != nil {
+		return fmt.Errorf("error in scanning for order struct : , %v", err)
+	}
+
+	sqlQuery := "INSERT INTO paid_orders (order_id, customer_review, total_amount) VALUES (?, ?, ?);"
+
+	_, err = DB.Exec(sqlQuery, order.OrderId, customerReview, order.TotalPrice)
+	if err != nil {
+		return fmt.Errorf("error inseting in paid_orders : , %v", err)
+	}
+
+	sqlQuery = "UPDATE `order` SET status = 'paid' WHERE order_id = ?;"
+
+	_, err = DB.Exec(sqlQuery, order.OrderId)
+	if err != nil {
+		return fmt.Errorf("error in changing order status : , %v", err)
+	}
+
+	return nil
+}
+
+func FetchOrderByOrderId(orderId string) (Order, error) {
+	var order Order
+
+	sqlQuery := "SELECT o.order_id, u.user_id, u.name AS customer_name, o.table_no, o.order_at, o.status, o.total_price FROM `order` AS o JOIN `user` AS u ON o.customer_id = u.user_id WHERE o.order_id = ?"
+
+	row := DB.QueryRow(sqlQuery, orderId)
+	err := row.Scan(&order.OrderId, &order.CustomerId, &order.CustomerName, &order.TableNo, &order.OrderAt, &order.Status, &order.TotalPrice)
+	if err != nil {
+		return order, fmt.Errorf("error in scanning for order struct : , %v", err)
+	}
+
+	return order, nil
 }
