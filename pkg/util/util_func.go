@@ -25,6 +25,11 @@ func EncodeAndSendUsersWithStatus(w http.ResponseWriter, userSlice []models.User
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(userSlice)
 }
+func EncodeAndSendCategoriesWithStatus(w http.ResponseWriter, catSlice []models.Category, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(catSlice)
+}
 
 func EncodeAndSendItemWithStatus(w http.ResponseWriter, itemSlice []models.DisplayItem, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")

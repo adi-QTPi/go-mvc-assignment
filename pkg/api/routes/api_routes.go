@@ -44,4 +44,10 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(itemController.DeleteItem),
 		)).Methods("POST")
 
+	catController := controllers.NewCatApiController
+	subRouter.Handle("/categories",
+		middleware.Chain(
+			http.HandlerFunc(catController().GetCategories),
+		)).Methods("GET")
+
 }
