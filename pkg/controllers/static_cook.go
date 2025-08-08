@@ -15,6 +15,7 @@ func NewCookStaticController() *CookStaticController {
 }
 
 func (cc *CookStaticController) CookDashboardInfo(w http.ResponseWriter, r *http.Request) {
+
 	kitchenOrderSlice, err := models.FetchKitchenOrderForToday()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)

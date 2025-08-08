@@ -16,8 +16,6 @@ func NewCookApiController() *CookApiController {
 }
 
 func (coc *CookApiController) ChangeKitchenOrderStatus(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("item takeup controller reached")
-
 	r.ParseForm()
 	orderIdStr := r.Form.Get("order_id")
 	itemIdStr := r.Form.Get("item_id")
@@ -36,6 +34,12 @@ func (coc *CookApiController) ChangeKitchenOrderStatus(w http.ResponseWriter, r 
 	err = models.StatusUpdateByCook(cookId, orderId, itemId, isComplete)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error in model function : %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	err = models.SyncOrderStatus()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error in syncing order status (model function) : %v", err), http.StatusInternalServerError)
 		return
 	}
 

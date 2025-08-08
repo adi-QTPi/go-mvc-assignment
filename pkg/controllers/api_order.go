@@ -51,8 +51,6 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	fmt.Println("table no = ", tableNoStr, "user -> ", xUser.Name, "orderId -> ", newOrder.OrderId)
-
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = fmt.Sprintf("Ordder Placed !!! orderId = %v", newOrder.OrderId)
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)

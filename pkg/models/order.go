@@ -14,12 +14,13 @@ type ItemInCart struct {
 }
 
 type Order struct {
-	OrderId    int64         `json:"order_id"`
-	OrderAt    time.Time     `json:"order_at"`
-	TableNo    sql.NullInt64 `json:"table_no"`
-	CustomerId string        `json:"customer_id"`
-	Status     string        `json:"status"`
-	TotalPrice int64         `json:"total_price"`
+	OrderId      int64         `json:"order_id"`
+	OrderAt      time.Time     `json:"order_at"`
+	TableNo      sql.NullInt64 `json:"table_no"`
+	CustomerId   string        `json:"customer_id"`
+	CustomerName string        `json:"customer_name"`
+	Status       string        `json:"status"`
+	TotalPrice   int64         `json:"total_price"`
 }
 
 type ItemOrder struct {
@@ -124,4 +125,43 @@ func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
 	}
 
 	return kitchenData, nil
+}
+
+func FetchAllOrderDetailsByDate(dateStr string, xUser User) ([]Order, error) {
+	var orderSlice []Order
+	if xUser.Role == "admin" {
+		sqlQuery := "SELECT o.order_id, u.user_id, u.name AS customer_name, o.table_no, o.order_at, o.status, o.total_price FROM `order` AS o JOIN `user` AS u ON o.customer_id = u.user_id WHERE DATE(o.order_at) = ? ORDER BY o.order_at DESC;"
+
+		rows, err := DB.Query(sqlQuery, dateStr)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning the rows, %v", err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var o Order
+			err := rows.Scan(&o.OrderId, &o.CustomerId, &o.CustomerName, &o.TableNo, &o.OrderAt, &o.Status, &o.TotalPrice)
+			if err != nil {
+				return nil, fmt.Errorf("error scanning the rows, %v", err)
+			}
+			orderSlice = append(orderSlice, o)
+		}
+	} else if xUser.Role == "customer" {
+		sqlQuery := "SELECT o.order_id, u.user_id, u.name AS customer_name, o.table_no, o.order_at, o.status, o.total_price FROM `order` AS o JOIN `user` AS u ON o.customer_id = u.user_id WHERE o.customer_id = ? AND DATE(o.order_at) = ? ORDER BY o.order_at DESC;"
+
+		rows, err := DB.Query(sqlQuery, xUser.UserId, dateStr)
+		if err != nil {
+			return nil, fmt.Errorf("error fetching orders, %v", err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var o Order
+			err := rows.Scan(&o.OrderId, &o.CustomerId, &o.CustomerName, &o.TableNo, &o.OrderAt, &o.Status, &o.TotalPrice)
+			if err != nil {
+				return nil, fmt.Errorf("error scanning the rows, %v", err)
+			}
+			orderSlice = append(orderSlice, o)
+		}
+	}
+
+	return orderSlice, nil
 }
