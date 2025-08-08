@@ -31,6 +31,17 @@ type ItemOrder struct {
 	CookId      sql.NullString `json:"cook_id"`
 }
 
+type KitchenOrder struct {
+	OrderId     int64          `json:"order_id"`
+	ItemName    string         `json:"item_name"`
+	Quantity    int            `json:"quantity"`
+	Instruction sql.NullString `json:"instruction"`
+	IsComplete  string         `json:"is_complete"`
+	CookId      sql.NullString `json:"cook_id"`
+	TableNo     sql.NullInt64  `json:"table_no"`
+	OrderAt     time.Time      `json:"order_at"`
+}
+
 func CheckAndAssignTable(xUserId string) (int64, error) {
 	sqlQuery := "SELECT DISTINCT table_no FROM `order` WHERE customer_id = ? AND status != 'paid';"
 
@@ -87,4 +98,29 @@ func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order) error {
 		}
 	}
 	return nil
+}
+
+func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
+	var kitchenData []KitchenOrder
+
+	sqlQuery := "SELECT io.order_id, i.item_name, io.quantity, io.instruction, io.is_complete, io.cook_id, o.table_no, o.order_at FROM item_order io JOIN item i ON io.item_id = i.item_id JOIN `order` o ON io.order_id = o.order_id WHERE DATE(o.order_at) = CURDATE() ORDER BY io.order_id DESC;"
+
+	rows, err := DB.Query(sqlQuery)
+	if err != nil {
+		return kitchenData, fmt.Errorf("error fetching item order ingfo, %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var order KitchenOrder
+
+		err := rows.Scan(&order.OrderId, &order.ItemName, &order.Quantity, &order.Instruction, &order.IsComplete, &order.CookId, &order.TableNo, &order.OrderAt)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning the rows, %v", err)
+		}
+
+		kitchenData = append(kitchenData, order)
+	}
+
+	return kitchenData, nil
 }

@@ -37,6 +37,12 @@ func EncodeAndSendItemWithStatus(w http.ResponseWriter, itemSlice []models.Displ
 	json.NewEncoder(w).Encode(itemSlice)
 }
 
+func EncodeAndSendKitchenOrderWithStatus(w http.ResponseWriter, itemSlice []models.KitchenOrder, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(itemSlice)
+}
+
 func PutInContext(r *http.Request, key string, value string) *http.Request {
 	ctx := context.WithValue(r.Context(), key, value)
 	r = r.WithContext(ctx)
