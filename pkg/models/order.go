@@ -33,6 +33,7 @@ type ItemOrder struct {
 
 type KitchenOrder struct {
 	OrderId     int64          `json:"order_id"`
+	ItemId      int64          `json:"item_id"`
 	ItemName    string         `json:"item_name"`
 	Quantity    int            `json:"quantity"`
 	Instruction sql.NullString `json:"instruction"`
@@ -103,7 +104,7 @@ func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order) error {
 func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
 	var kitchenData []KitchenOrder
 
-	sqlQuery := "SELECT io.order_id, i.item_name, io.quantity, io.instruction, io.is_complete, io.cook_id, o.table_no, o.order_at FROM item_order io JOIN item i ON io.item_id = i.item_id JOIN `order` o ON io.order_id = o.order_id WHERE DATE(o.order_at) = CURDATE() ORDER BY io.order_id DESC;"
+	sqlQuery := "SELECT io.order_id, io.item_id,i.item_name, io.quantity, io.instruction, io.is_complete, io.cook_id, o.table_no, o.order_at FROM item_order io JOIN item i ON io.item_id = i.item_id JOIN `order` o ON io.order_id = o.order_id WHERE DATE(o.order_at) = CURDATE() ORDER BY io.order_id DESC;"
 
 	rows, err := DB.Query(sqlQuery)
 	if err != nil {
@@ -114,7 +115,7 @@ func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
 	for rows.Next() {
 		var order KitchenOrder
 
-		err := rows.Scan(&order.OrderId, &order.ItemName, &order.Quantity, &order.Instruction, &order.IsComplete, &order.CookId, &order.TableNo, &order.OrderAt)
+		err := rows.Scan(&order.OrderId, &order.ItemId, &order.ItemName, &order.Quantity, &order.Instruction, &order.IsComplete, &order.CookId, &order.TableNo, &order.OrderAt)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning the rows, %v", err)
 		}

@@ -61,4 +61,10 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 			middleware.AssignEmptyTable,
 			middleware.DecodeCartJsonInput,
 		)).Methods("POST")
+
+	cookController := controllers.NewCookApiController()
+	subRouter.Handle("/cook",
+		middleware.Chain(
+			http.HandlerFunc(cookController.ChangeKitchenOrderStatus),
+		)).Methods("POST")
 }
