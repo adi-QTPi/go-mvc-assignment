@@ -49,5 +49,9 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(catController().GetCategories),
 		)).Methods("GET")
+	subRouter.Handle("/categories",
+		middleware.Chain(
+			http.HandlerFunc(catController().AddCategory),
+		)).Methods("POST")
 
 }
