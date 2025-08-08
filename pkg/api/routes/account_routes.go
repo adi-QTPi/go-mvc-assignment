@@ -16,6 +16,7 @@ func ImplimentAccountRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(accountController.CreateNewUser),
 			middleware.HashPasword,
 			middleware.VerifyDuplicatePassword,
+			middleware.RequiredEntries("user_name", "name", "pwd", "re_pwd", "role"),
 		)).Methods("POST")
 
 	subRouter.Handle("/login",
@@ -23,5 +24,11 @@ func ImplimentAccountRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(accountController.LogUserIn),
 			middleware.CheckPassword,
 			middleware.CheckIfUserExists,
+			middleware.RequiredEntries("user_name", "password"),
+		)).Methods("POST")
+
+	subRouter.Handle("/logout",
+		middleware.Chain(
+			http.HandlerFunc(accountController.LogUserOut),
 		)).Methods("POST")
 }

@@ -27,6 +27,7 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/user/{id}",
 		middleware.Chain(
 			http.HandlerFunc(userController.DeleteUser),
+			middleware.RestrictToRoles("admin"),
 		)).Methods("DELETE")
 
 	itemController := controllers.NewItemApiController()
@@ -37,10 +38,14 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/item",
 		middleware.Chain(
 			http.HandlerFunc(itemController.AddItem),
+			middleware.RequiredEntries("item_name", "price", "cat_id"),
+			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
 	subRouter.Handle("/item/delete",
 		middleware.Chain(
 			http.HandlerFunc(itemController.DeleteItem),
+			middleware.RequiredEntries("item_id"),
+			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
 
 	catController := controllers.NewCatApiController
@@ -51,6 +56,8 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/categories",
 		middleware.Chain(
 			http.HandlerFunc(catController().AddCategory),
+			middleware.RequiredEntries("cat_name", "cat_description"),
+			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
 
 	orderController := controllers.NewOrderApiController()
@@ -59,15 +66,19 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(orderController.PlaceOrder),
 			middleware.AssignEmptyTable,
 			middleware.DecodeCartJsonInput,
+			middleware.RestrictToRoles("customer"),
 		)).Methods("POST")
 	subRouter.Handle("/pay",
 		middleware.Chain(
 			http.HandlerFunc(orderController.OrderPayment),
+			middleware.RestrictToRoles("customer"),
 		)).Methods("POST")
 
 	cookController := controllers.NewCookApiController()
 	subRouter.Handle("/cook",
 		middleware.Chain(
 			http.HandlerFunc(cookController.ChangeKitchenOrderStatus),
+			middleware.RequiredEntries("order_id", "item_id", "is_complete"),
+			middleware.RestrictToRoles("cook"),
 		)).Methods("POST")
 }

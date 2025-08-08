@@ -54,7 +54,7 @@ func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Reques
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
 }
 
-func (av *AccountController) LogUserIn(w http.ResponseWriter, r *http.Request) {
+func (ac *AccountController) LogUserIn(w http.ResponseWriter, r *http.Request) {
 	userId := util.ExtractFromContext(r, "user_id")
 
 	signedJwtTokenString, err := util.GetSignedJwtOfUser(w, userId)
@@ -76,6 +76,24 @@ func (av *AccountController) LogUserIn(w http.ResponseWriter, r *http.Request) {
 
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = "Logged in Successfully"
+	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+}
 
+func (ac *AccountController) LogUserOut(w http.ResponseWriter, r *http.Request) {
+	jwtCookie := http.Cookie{
+		Name:     "jwt_token",
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+		Expires:  time.Now().Add(24 * time.Hour),
+		MaxAge:   -1,
+	}
+
+	http.SetCookie(w, &jwtCookie)
+
+	var responseJson util.StandardResponseJson
+	responseJson.Msg = "Successfully logged Out."
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }

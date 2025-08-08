@@ -27,10 +27,12 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 	newItem.ItemName = r.Form.Get("item_name")
 
 	CookTimeMinStr := r.Form.Get("cook_time_min")
-	newItem.CookTimeMin, err = util.StringToSqlNullInt64(CookTimeMinStr)
-	if err != nil {
-		http.Error(w, "Invalid input for cook time ", http.StatusBadRequest)
-		return
+	if CookTimeMinStr != "" {
+		newItem.CookTimeMin, err = util.StringToSqlNullInt64(CookTimeMinStr)
+		if err != nil {
+			http.Error(w, "Invalid input for cook time ", http.StatusBadRequest)
+			return
+		}
 	}
 
 	PriceStr := r.Form.Get("price")
@@ -50,10 +52,12 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SubCatIdStr := r.Form.Get("subcat_id")
-	newItem.SubCatId, err = util.StringToSqlNullInt64(SubCatIdStr)
-	if err != nil {
-		http.Error(w, "Invalid input for cook time ", http.StatusBadRequest)
-		return
+	if SubCatIdStr != "" {
+		newItem.SubCatId, err = util.StringToSqlNullInt64(SubCatIdStr)
+		if err != nil {
+			http.Error(w, "Invalid input for subcat id", http.StatusBadRequest)
+			return
+		}
 	}
 
 	err = models.AddItem(newItem)

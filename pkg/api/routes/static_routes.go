@@ -19,25 +19,30 @@ func ImplimentStaticRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/cook",
 		middleware.Chain(
 			http.HandlerFunc(cookController.CookDashboardInfo),
+			middleware.RestrictToRoles("cook"),
 		)).Methods("GET")
 
 	adminStaticController := controllers.NewAdminStaticController()
 	subRouter.Handle("/admin",
 		middleware.Chain(
 			http.HandlerFunc(adminStaticController.FetchAdminOrderDashboardByDate),
+			middleware.RestrictToRoles("admin"),
 		)).Methods("GET")
 	subRouter.Handle("/admin/{date}",
 		middleware.Chain(
 			http.HandlerFunc(adminStaticController.FetchAdminOrderDashboardByDate),
+			middleware.RestrictToRoles("admin"),
 		)).Methods("GET")
 
 	customerSaticController := controllers.NewCustStaticController()
 	subRouter.Handle("/order",
 		middleware.Chain(
 			http.HandlerFunc(customerSaticController.RenderCustOrderPage),
+			middleware.RestrictToRoles("customer"),
 		)).Methods("GET")
 	subRouter.Handle("/order/{date}",
 		middleware.Chain(
 			http.HandlerFunc(customerSaticController.RenderCustOrderPage),
+			middleware.RestrictToRoles("customer"),
 		)).Methods("GET")
 }

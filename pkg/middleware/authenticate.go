@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+	"slices"
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
@@ -12,10 +13,27 @@ import (
 func RequiredEntries(entries ...string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			err := r.ParseForm()
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Error parsing the form %v", err), http.StatusInternalServerError)
+				return
+			}
+			ok := true
+			for _, v := range entries {
+				if r.Form.Get(v) == "" {
+					ok = false
+				}
+			}
 
-			fmt.Println("the list of required entries are : ", entries)
+			if ok {
+				next.ServeHTTP(w, r)
+				return
+			}
 
-			next.ServeHTTP(w, r)
+			var responseJson util.StandardResponseJson
+			responseJson.Msg = "Data reading failed"
+			responseJson.ErrDescription = fmt.Sprintf("Enter the given fields in x-www-form-urlencoded format only : %v", entries)
+			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
 		})
 	}
 }
@@ -90,6 +108,25 @@ func IdentifyUser(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func RestrictToRoles(allowedRoles ...string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			xUser := util.ExtractUserFromContext(r)
+
+			if role := xUser.Role; slices.Contains(allowedRoles, role) {
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			var responseJson util.StandardResponseJson
+			responseJson.Msg = "User is Unauthorised"
+			responseJson.ErrDescription = fmt.Sprintf("this page is for users with roles %v only.", allowedRoles)
+			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
+		})
+	}
 }
 
 func AnotherMiddleware(next http.Handler) http.Handler {
