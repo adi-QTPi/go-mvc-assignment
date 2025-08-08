@@ -54,4 +54,11 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(catController().AddCategory),
 		)).Methods("POST")
 
+	orderController := controllers.NewOrderApiController()
+	subRouter.Handle("/order",
+		middleware.Chain(
+			http.HandlerFunc(orderController.PlaceOrder),
+			middleware.AssignEmptyTable,
+			middleware.DecodeCartJsonInput,
+		)).Methods("POST")
 }
