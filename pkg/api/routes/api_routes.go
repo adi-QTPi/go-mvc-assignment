@@ -9,9 +9,10 @@ import (
 )
 
 func ImplimentApiRoutes(subRouter *mux.Router) {
-	userController := controllers.NewUserApiController()
 
 	subRouter.Use(middleware.IdentifyUser)
+
+	userController := controllers.NewUserApiController()
 
 	subRouter.Handle("/users",
 		middleware.Chain(
@@ -27,5 +28,20 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(userController.DeleteUser),
 		)).Methods("DELETE")
+
+	itemController := controllers.NewItemApiController()
+
+	subRouter.Handle("/item",
+		middleware.Chain(
+			http.HandlerFunc(itemController.GetItems),
+		)).Methods("GET")
+	subRouter.Handle("/item",
+		middleware.Chain(
+			http.HandlerFunc(itemController.AddItem),
+		)).Methods("POST")
+	subRouter.Handle("/item/delete",
+		middleware.Chain(
+			http.HandlerFunc(itemController.DeleteItem),
+		)).Methods("POST")
 
 }

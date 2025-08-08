@@ -40,8 +40,8 @@ func InitDatabase() (*sql.DB, error) {
 }
 
 func CreateDatabase() error {
-	sql_query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s; USE %s", config.MYSQL_DATABASE, config.MYSQL_DATABASE)
-	_, err := DB.Exec(sql_query)
+	sqlQuery := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s; USE %s", config.MYSQL_DATABASE, config.MYSQL_DATABASE)
+	_, err := DB.Exec(sqlQuery)
 	if err != nil {
 		return fmt.Errorf("error creating the database %s : %v", config.MYSQL_DATABASE, err)
 	}

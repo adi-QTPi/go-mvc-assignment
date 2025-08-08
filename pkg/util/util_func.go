@@ -2,9 +2,11 @@ package util
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/adi-QTPi/go-mvc-assignment/config"
@@ -16,6 +18,18 @@ func EncodeAndSendResponseWithStatus(w http.ResponseWriter, responseJson Standar
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(responseJson)
+}
+
+func EncodeAndSendUsersWithStatus(w http.ResponseWriter, userSlice []models.User, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(userSlice)
+}
+
+func EncodeAndSendItemWithStatus(w http.ResponseWriter, itemSlice []models.Item, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(itemSlice)
 }
 
 func PutInContext(r *http.Request, key string, value string) *http.Request {
@@ -85,4 +99,16 @@ func DecryptJwtToken(w http.ResponseWriter, r *http.Request, tokenValue string) 
 	}
 
 	return claims.Sub
+}
+
+func StringToSqlNullInt64(s string) (sql.NullInt64, error) {
+	var ans sql.NullInt64
+	parsedInt, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		return ans, err
+	}
+	ans.Int64 = parsedInt
+	ans.Valid = true
+
+	return ans, nil
 }

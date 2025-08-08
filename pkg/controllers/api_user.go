@@ -24,8 +24,7 @@ func (uc *UserApiController) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	util.EncodeAndSendUsersWithStatus(w, users, http.StatusOK)
 }
 
 func (uc *UserApiController) GetUser(w http.ResponseWriter, r *http.Request) {

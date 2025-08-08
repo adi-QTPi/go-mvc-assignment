@@ -14,8 +14,8 @@ type User struct {
 }
 
 func GetAllUsers() ([]User, error) {
-	sql_query := "SELECT user_id, user_name, name, role FROM user;"
-	rows, err := DB.Query(sql_query)
+	sqlQuery := "SELECT user_id, user_name, name, role FROM user;"
+	rows, err := DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying users: %v", err)
 	}
@@ -36,10 +36,10 @@ func GetAllUsers() ([]User, error) {
 }
 
 func GetUserById(id string) (*User, error) {
-	sql_query := "SELECT user_id, user_name, name, role FROM user WHERE user_id = ?;"
+	sqlQuery := "SELECT user_id, user_name, name, role FROM user WHERE user_id = ?;"
 
-	row := DB.QueryRow(sql_query, id)
-	// defer row.Close()
+	row := DB.QueryRow(sqlQuery, id)
+	// defer row.Close() not work here
 
 	var fetchedUser User
 
@@ -55,9 +55,9 @@ func GetUserById(id string) (*User, error) {
 }
 
 func GetUserByUsername(userName string) (bool, error, string) {
-	sql_query := "SELECT user_id FROM user WHERE user_name = ?;"
+	sqlQuery := "SELECT user_id FROM user WHERE user_name = ?;"
 
-	row := DB.QueryRow(sql_query, userName)
+	row := DB.QueryRow(sqlQuery, userName)
 
 	var userId string
 	err := row.Scan(&userId)
@@ -72,9 +72,9 @@ func GetUserByUsername(userName string) (bool, error, string) {
 }
 
 func DeleteUserById(id string) error {
-	sql_query := "DELETE FROM user WHERE user_id = ?;"
+	sqlQuery := "DELETE FROM user WHERE user_id = ?;"
 
-	_, err := DB.Exec(sql_query, id)
+	_, err := DB.Exec(sqlQuery, id)
 	if err != nil {
 		return fmt.Errorf("unable to delete user, %v", err)
 	}
@@ -83,9 +83,9 @@ func DeleteUserById(id string) error {
 }
 
 func FetchHashedPassword(id string) string {
-	sql_query := "SELECT pwd_hash FROM user WHERE user_id = ?;"
+	sqlQuery := "SELECT pwd_hash FROM user WHERE user_id = ?;"
 
-	row := DB.QueryRow(sql_query, id)
+	row := DB.QueryRow(sqlQuery, id)
 	var pwd_hash string
 	err := row.Scan(&pwd_hash)
 	if err != nil {
@@ -97,11 +97,11 @@ func FetchHashedPassword(id string) string {
 }
 
 func AddNewUser(u User) error {
-	sql_query := "INSERT INTO user (user_name, name, pwd_hash, role) VALUES (?,?,?,?)"
+	sqlQuery := "INSERT INTO user (user_name, name, pwd_hash, role) VALUES (?,?,?,?)"
 
-	_, err := DB.Exec(sql_query, u.UserName, u.Name, u.PwdHash, u.Role)
+	_, err := DB.Exec(sqlQuery, u.UserName, u.Name, u.PwdHash, u.Role)
 	if err != nil {
-		return fmt.Errorf("unable to delete user, %v", err)
+		return fmt.Errorf("unable to add user, %v", err)
 	}
 
 	return nil
