@@ -13,7 +13,7 @@ import (
 var DB *sql.DB
 
 func InitDatabase() (*sql.DB, error) {
-	Dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/?parseTime=true&multiStatements=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT)
+	Dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/?parseTime=true&multiStatements=true&loc=Local", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT)
 
 	db, err := sql.Open("mysql", Dsn)
 	if err != nil {
