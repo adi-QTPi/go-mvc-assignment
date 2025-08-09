@@ -22,6 +22,8 @@ func main() {
 
 	database.MigrateDBSchema()
 
+	database.MigrateDummyData()
+
 	router := api.SetupRouter()
 
 	server := &http.Server{

@@ -1,4 +1,5 @@
-CREATE TABLE `order` (
+USE karma_mvc_foodopiaDB;
+CREATE TABLE IF NOT EXISTS `order` (
     order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_at TIMESTAMP NOT NULL,
     table_no BIGINT,
@@ -8,5 +9,5 @@ CREATE TABLE `order` (
     FOREIGN KEY (customer_id) REFERENCES user(user_id),
     FOREIGN KEY (table_no) REFERENCES `table`(table_id)
 );
-CREATE INDEX idx_order_customer_id ON `order`(customer_id);
-CREATE INDEX idx_order_status ON `order`(status);
+-- CREATE INDEX idx_order_customer_id ON `order`(customer_id);
+-- CREATE INDEX idx_order_status ON `order`(status);

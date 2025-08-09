@@ -1,4 +1,5 @@
-CREATE TABLE user (
+USE karma_mvc_foodopiaDB;
+CREATE TABLE IF NOT EXISTS user (
     user_id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     user_name VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,

@@ -1,4 +1,5 @@
-CREATE TABLE paid_orders (
+USE karma_mvc_foodopiaDB;
+CREATE TABLE IF NOT EXISTS paid_orders (
     order_id BIGINT PRIMARY KEY,
     customer_review VARCHAR(1000),
     total_amount BIGINT NOT NULL,

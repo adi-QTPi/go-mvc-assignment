@@ -1,4 +1,5 @@
-CREATE TABLE item_order (
+USE karma_mvc_foodopiaDB;
+CREATE TABLE IF NOT EXISTS item_order (
     order_id BIGINT,
     item_id BIGINT,
     quantity INTEGER NOT NULL,

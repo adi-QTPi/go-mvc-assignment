@@ -12,8 +12,9 @@ import (
 )
 
 func MigrateDBSchema() {
-	dsnForMigrate := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT, config.MYSQL_DATABASE)
-	migrationsPath := "file://./database/migrations"
+	dsnForMigrate := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?x-migrations-table=schema_migrations&parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT, config.MYSQL_DATABASE)
+
+	migrationsPath := "file://./database/schema_migrate"
 
 	m, err := migrate.New(
 		migrationsPath,
@@ -28,4 +29,24 @@ func MigrateDBSchema() {
 	}
 
 	fmt.Println("Database migrations applied successfully!")
+}
+
+func MigrateDummyData() {
+	dsnForMigrate := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?x-migrations-table=dummy_data_migrations&parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT, config.MYSQL_DATABASE)
+
+	migrationsPath := "file://./database/dummy_data_migrate"
+
+	m, err := migrate.New(
+		migrationsPath,
+		dsnForMigrate,
+	)
+	if err != nil {
+		log.Fatalf("failed to create migrate instance: %v", err)
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		log.Fatalf("failed to apply migrations in dummy data: %v", err)
+	}
+
+	fmt.Println("Dummy Data migrations applied successfully!")
 }

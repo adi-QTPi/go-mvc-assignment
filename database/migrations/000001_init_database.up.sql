@@ -1,1 +1,0 @@
-USE karma_mvc_foodopiaDB;
