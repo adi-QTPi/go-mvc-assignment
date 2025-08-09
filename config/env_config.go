@@ -53,7 +53,7 @@ func LoadDBEnv() {
 		log.Fatal("Set pass word as MYSQL_PASSWORD=your_pass in .env file")
 	}
 	if MYSQL_DATABASE = os.Getenv("MYSQL_DATABASE"); MYSQL_DATABASE == "" {
-		MYSQL_HOST = "mvc_foodopia"
+		MYSQL_DATABASE = "karma_mvc_foodopiaDB"
 	}
 	if MYSQL_PORT = os.Getenv("MYSQL_PORT"); MYSQL_PORT == "" {
 		MYSQL_PORT = "3306"

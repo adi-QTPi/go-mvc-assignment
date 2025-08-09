@@ -1,4 +1,4 @@
-USE mvc_foodopia;
+USE karma_mvc_foodopiaDB;
 
 INSERT INTO `table` (table_id, is_empty) VALUES
 (1, 1),

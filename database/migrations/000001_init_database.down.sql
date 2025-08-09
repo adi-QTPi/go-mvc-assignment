@@ -1,1 +1,1 @@
-DROP DATABASE IF EXISTS mvc_foodopia;
+DROP DATABASE IF EXISTS karma_mvc_foodopiaDB;
