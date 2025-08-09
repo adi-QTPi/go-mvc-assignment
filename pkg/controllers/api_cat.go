@@ -16,8 +16,6 @@ func NewCatApiController() *CatApiController {
 }
 
 func (cc *CatApiController) GetCategories(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("get all categories controller called")
-
 	categories, err := models.GetAllCategories()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error fetching categories: %v", err), http.StatusInternalServerError)
