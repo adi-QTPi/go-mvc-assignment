@@ -41,12 +41,11 @@ func ImplimentApiRoutes(subRouter *mux.Router) {
 			middleware.RequiredEntries("item_name", "price", "cat_id"),
 			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
-	subRouter.Handle("/item/delete",
+	subRouter.Handle("/item/{item_id}",
 		middleware.Chain(
 			http.HandlerFunc(itemController.DeleteItem),
-			middleware.RequiredEntries("item_id"),
 			middleware.RestrictToRoles("admin"),
-		)).Methods("POST")
+		)).Methods("DELETE")
 
 	catController := controllers.NewCatApiController
 	subRouter.Handle("/categories",

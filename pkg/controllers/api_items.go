@@ -7,6 +7,7 @@ import (
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/gorilla/mux"
 )
 
 type ItemApiController struct{}
@@ -84,14 +85,10 @@ func (ic *ItemApiController) GetItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ic *ItemApiController) DeleteItem(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
-		return
-	}
+	queryParams := mux.Vars(r)
+	ItemIdStr := queryParams["item_id"]
 
-	ItemIdStr := r.Form.Get("item_id")
-	err = models.DeleteItemById(ItemIdStr)
+	err := models.DeleteItemById(ItemIdStr)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Unable to Delete item", http.StatusBadRequest)
