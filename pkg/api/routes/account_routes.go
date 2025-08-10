@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func ImplimentAccountRoutes(subRouter *mux.Router) {
+func ImplementAccountRoutes(subRouter *mux.Router) {
 	accountController := controllers.NewAccountController()
 
 	subRouter.Handle("/signup",

@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func ImplimentApiRoutes(subRouter *mux.Router) {
+func ImplementApiRoutes(subRouter *mux.Router) {
 
 	subRouter.Use(middleware.IdentifyUser)
 

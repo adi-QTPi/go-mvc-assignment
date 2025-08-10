@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func ImplimentStaticRoutes(subRouter *mux.Router) {
+func ImplementStaticRoutes(subRouter *mux.Router) {
 
 	subRouter.Use(middleware.IdentifyUser)
 
