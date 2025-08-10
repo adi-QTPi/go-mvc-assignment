@@ -34,7 +34,7 @@ func MigrateDBSchema() {
 func MigrateDummyData() {
 	dsnForMigrate := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?x-migrations-table=dummy_data_migrations&parseTime=true", config.MYSQL_USER, config.MYSQL_PASSWORD, config.MYSQL_HOST, config.MYSQL_PORT, config.MYSQL_DATABASE)
 
-	migrationsPath := "file://./database/dummy_data_migrate"
+	migrationsPath := "file://./database/seeds"
 
 	m, err := migrate.New(
 		migrationsPath,

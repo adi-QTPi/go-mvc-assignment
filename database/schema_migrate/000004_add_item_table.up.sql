@@ -1,4 +1,4 @@
-USE karma_mvc_foodopiaDB;
+
 CREATE TABLE IF NOT EXISTS item (
     item_id BIGINT AUTO_INCREMENT PRIMARY KEY ,
     item_name VARCHAR(255) NOT NULL,

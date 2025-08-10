@@ -1,4 +1,4 @@
-USE karma_mvc_foodopiaDB;
+
 CREATE TABLE IF NOT EXISTS `order` (
     order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_at TIMESTAMP NOT NULL,

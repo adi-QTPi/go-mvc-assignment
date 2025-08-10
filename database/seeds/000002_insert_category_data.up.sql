@@ -1,4 +1,4 @@
-USE karma_mvc_foodopiaDB;
+
 -- Insert Categories
 INSERT INTO category (cat_name, cat_description) VALUES
 -- Regional Categories

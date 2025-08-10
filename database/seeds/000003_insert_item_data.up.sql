@@ -1,4 +1,4 @@
-USE karma_mvc_foodopiaDB;
+
 -- Insert Items with semantic relationships to categories
 INSERT INTO item (item_name, cook_time_min, price, cat_id, subcat_id) VALUES
 -- South Indian Items
