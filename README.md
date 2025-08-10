@@ -113,7 +113,6 @@
         "user_id": "2154fc56-7543-11f0-9486-6c0f08f8c4ef",
         "user_name": "haldi",
         "name": "adi",
-        "pwd_hash": "",
         "role": "admin"
     }
 ]
@@ -127,7 +126,6 @@
     "user_id": "2154fc56-7543-11f0-9486-6c0f08f8c4ef",
     "user_name": "haldi",
     "name": "adi",
-    "pwd_hash": "",
     "role": "admin"
 }
 ```

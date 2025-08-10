@@ -9,8 +9,7 @@ type User struct {
 	UserId   string `json:"user_id"`
 	UserName string `json:"user_name"`
 	Name     string `json:"name"`
-	// PwdHash  string `json:"pwd_hash"`
-	Role string `json:"role"`
+	Role     string `json:"role"`
 }
 
 func GetAllUsers() ([]User, error) {

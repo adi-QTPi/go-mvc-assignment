@@ -71,9 +71,9 @@ func CheckPassword(next http.Handler) http.Handler {
 		r.ParseForm()
 		password := r.Form.Get("password")
 
-		pwd_hash := models.FetchHashedPassword(userId)
+		passwordHash := models.FetchHashedPassword(userId)
 
-		err := bcrypt.CompareHashAndPassword([]byte(pwd_hash), []byte(password))
+		err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
 		if err != nil {
 			var responseJson util.StandardResponseJson
 			responseJson.ErrDescription = "Incorrect password"
