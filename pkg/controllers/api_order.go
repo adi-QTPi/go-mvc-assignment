@@ -52,7 +52,7 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 	}
 
 	var responseJson util.StandardResponseJson
-	responseJson.Msg = fmt.Sprintf("Ordder Placed !!! orderId = %v", newOrder.OrderId)
+	responseJson.Msg = fmt.Sprintf("Order Placed !!! orderId = %v", newOrder.OrderId)
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
 }
 
