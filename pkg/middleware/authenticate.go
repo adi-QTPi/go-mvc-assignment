@@ -77,7 +77,7 @@ func CheckPassword(next http.Handler) http.Handler {
 		if err != nil {
 			var responseJson util.StandardResponseJson
 			responseJson.ErrDescription = "Incorrect password"
-			responseJson.Msg = "unable to login"
+			responseJson.Msg = "Login Attempt Unsuccessful"
 
 			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
 
@@ -127,16 +127,4 @@ func RestrictToRoles(allowedRoles ...string) func(http.Handler) http.Handler {
 			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
 		})
 	}
-}
-
-func AnotherMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("this is a middleware ")
-
-		// xUser := util.ExtractUserFromContext(r)
-
-		// fmt.Println(xUser)
-
-		next.ServeHTTP(w, r)
-	})
 }

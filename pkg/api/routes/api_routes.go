@@ -55,7 +55,7 @@ func ImplementApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/categories",
 		middleware.Chain(
 			http.HandlerFunc(catController().AddCategory),
-			middleware.RequiredEntries("cat_name", "cat_description"),
+			middleware.RequiredEntries("category_name", "category_description"),
 			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
 

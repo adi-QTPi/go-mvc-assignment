@@ -34,15 +34,15 @@ func (cc *CatApiController) AddCategory(w http.ResponseWriter, r *http.Request) 
 
 	var newCat models.Category
 
-	newCat.CatName = r.Form.Get("cat_name")
+	newCat.CategoryName = r.Form.Get("category_name")
 
-	descStr := r.Form.Get("cat_description")
+	descStr := r.Form.Get("category_description")
 	if descStr == "" {
-		newCat.CatDescription = sql.NullString{
+		newCat.CategoryDescription = sql.NullString{
 			Valid: false,
 		}
 	}
-	newCat.CatDescription = sql.NullString{
+	newCat.CategoryDescription = sql.NullString{
 		String: descStr,
 		Valid:  true,
 	}
@@ -60,6 +60,6 @@ func (cc *CatApiController) AddCategory(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	responseJson.Msg = fmt.Sprintf("New category added succesfully : %v", newCat.CatName)
+	responseJson.Msg = fmt.Sprintf("New category added succesfully : %v", newCat.CategoryName)
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
 }
