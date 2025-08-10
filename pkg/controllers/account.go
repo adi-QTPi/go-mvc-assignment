@@ -28,7 +28,7 @@ func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Reques
 	var newUser models.User
 	newUser.UserName = r.Form.Get("user_name")
 	newUser.Name = r.Form.Get("name")
-	newUser.PwdHash = r.Form.Get("pwd")
+	pwdHash := r.Form.Get("pwd")
 	newUser.Role = r.Form.Get("role")
 
 	alreadyExists, err, _ := models.GetUserByUsername(newUser.UserName)
@@ -44,7 +44,7 @@ func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	err = models.AddNewUser(newUser)
+	err = models.AddNewUser(newUser, pwdHash)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error Adding user: %v", err), http.StatusInternalServerError)
 		return
@@ -96,4 +96,11 @@ func (ac *AccountController) LogUserOut(w http.ResponseWriter, r *http.Request) 
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = "Successfully logged Out."
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+}
+
+func (ac *AccountController) ShowProfile(w http.ResponseWriter, r *http.Request) {
+
+	xUser := util.ExtractUserFromContext(r)
+
+	util.EncodeAndSendUsersWithStatus(w, http.StatusOK, xUser)
 }

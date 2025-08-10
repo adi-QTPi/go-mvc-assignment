@@ -20,10 +20,10 @@ func EncodeAndSendResponseWithStatus(w http.ResponseWriter, responseJson Standar
 	json.NewEncoder(w).Encode(responseJson)
 }
 
-func EncodeAndSendUsersWithStatus(w http.ResponseWriter, userSlice []models.User, statusCode int) {
+func EncodeAndSendUsersWithStatus(w http.ResponseWriter, statusCode int, users ...models.User) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(userSlice)
+	json.NewEncoder(w).Encode(users)
 }
 func EncodeAndSendCategoriesWithStatus(w http.ResponseWriter, catSlice []models.Category, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
@@ -88,10 +88,8 @@ func GetSignedJwtOfUser(w http.ResponseWriter, userId string) (string, error) {
 		return "", err
 	}
 
-	userDereference := *user
-
 	claims := JwtCustomClaim{
-		Sub: userDereference,
+		Sub: user,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},

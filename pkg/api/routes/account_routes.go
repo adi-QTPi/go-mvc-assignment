@@ -31,4 +31,11 @@ func ImplimentAccountRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(accountController.LogUserOut),
 		)).Methods("POST")
+
+	subRouter.Handle("/",
+		middleware.Chain(
+			http.HandlerFunc(accountController.ShowProfile),
+			middleware.IdentifyUser,
+		)).Methods("GET")
+
 }

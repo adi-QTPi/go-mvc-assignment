@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -24,7 +23,7 @@ func (uc *UserApiController) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.EncodeAndSendUsersWithStatus(w, users, http.StatusOK)
+	util.EncodeAndSendUsersWithStatus(w, http.StatusOK, users...)
 }
 
 func (uc *UserApiController) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -41,9 +40,7 @@ func (uc *UserApiController) GetUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error fetching user: %v", err), http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	util.EncodeAndSendUsersWithStatus(w, http.StatusOK, user)
 
 }
 

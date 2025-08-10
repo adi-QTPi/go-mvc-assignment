@@ -9,8 +9,8 @@ type User struct {
 	UserId   string `json:"user_id"`
 	UserName string `json:"user_name"`
 	Name     string `json:"name"`
-	PwdHash  string `json:"pwd_hash"`
-	Role     string `json:"role"`
+	// PwdHash  string `json:"pwd_hash"`
+	Role string `json:"role"`
 }
 
 func GetAllUsers() ([]User, error) {
@@ -35,7 +35,7 @@ func GetAllUsers() ([]User, error) {
 	return fetchedUsers, nil
 }
 
-func GetUserById(id string) (*User, error) {
+func GetUserById(id string) (User, error) {
 	sqlQuery := "SELECT user_id, user_name, name, role FROM user WHERE user_id = ?;"
 
 	row := DB.QueryRow(sqlQuery, id)
@@ -46,12 +46,12 @@ func GetUserById(id string) (*User, error) {
 	err := row.Scan(&fetchedUser.UserId, &fetchedUser.UserName, &fetchedUser.Name, &fetchedUser.Role)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("user not found")
+			return fetchedUser, fmt.Errorf("user not found")
 		}
-		return nil, fmt.Errorf("error scanning user: %v", err)
+		return fetchedUser, fmt.Errorf("error scanning user: %v", err)
 	}
 
-	return &fetchedUser, nil
+	return fetchedUser, nil
 }
 
 func GetUserByUsername(userName string) (bool, error, string) {
@@ -96,10 +96,10 @@ func FetchHashedPassword(id string) string {
 
 }
 
-func AddNewUser(u User) error {
+func AddNewUser(u User, pwdHash string) error {
 	sqlQuery := "INSERT INTO user (user_name, name, pwd_hash, role) VALUES (?,?,?,?)"
 
-	_, err := DB.Exec(sqlQuery, u.UserName, u.Name, u.PwdHash, u.Role)
+	_, err := DB.Exec(sqlQuery, u.UserName, u.Name, pwdHash, u.Role)
 	if err != nil {
 		return fmt.Errorf("unable to add user, %v", err)
 	}
