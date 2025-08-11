@@ -75,11 +75,18 @@ func CheckPassword(next http.Handler) http.Handler {
 
 		err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
 		if err != nil {
-			var responseJson util.StandardResponseJson
-			responseJson.ErrDescription = "Incorrect password"
-			responseJson.Msg = "Login Attempt Unsuccessful"
+			toLoginPage := util.Popup{
+				Msg:     "Incorrect Password... Try Again",
+				IsError: true,
+			}
 
-			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
+			err := util.InsertPopupInFlash(w, r, toLoginPage)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("error in identifyUser middleware : %v", err), http.StatusInternalServerError)
+				return
+			}
+
+			util.RedirectToSite(w, r, "/login")
 
 			return
 		}
@@ -91,12 +98,18 @@ func CheckPassword(next http.Handler) http.Handler {
 func IdentifyUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := r.Cookie("jwt_token")
+
 		if err != nil {
 			toLoginPage := util.Popup{
-				Msg:     "popup message",
+				Msg:     "Log In to continue !",
 				IsError: false,
 			}
-			r = util.PutPopupInContext(r, toLoginPage)
+
+			err := util.InsertPopupInFlash(w, r, toLoginPage)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("error in identifyUser middleware : %v", err), http.StatusInternalServerError)
+				return
+			}
 
 			util.RedirectToSite(w, r, "/login")
 			return

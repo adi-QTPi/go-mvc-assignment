@@ -24,16 +24,6 @@ func PutCartInContext(r *http.Request, orderSlice []models.ItemInCart) *http.Req
 	return r.WithContext(ctx)
 }
 
-func PutPopupInContext(r *http.Request, popup Popup) *http.Request {
-	ctx := context.WithValue(r.Context(), "popup", popup)
-	return r.WithContext(ctx)
-}
-
-func ExtractPopupFromContext(r *http.Request) Popup {
-	val, _ := r.Context().Value("popup").(Popup)
-	return val
-}
-
 func ExtractFromContext(r *http.Request, key string) string {
 	val, _ := r.Context().Value(key).(string)
 	return val

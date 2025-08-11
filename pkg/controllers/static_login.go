@@ -16,15 +16,17 @@ func NewStaticLoginController() *StaticLoginController {
 
 func (sl *StaticLoginController) RenderLoginPage(w http.ResponseWriter, r *http.Request) {
 	var responseJson util.StandardResponseJson
-
-	toPage := util.DataToPage{
-		Popup: util.ExtractPopupFromContext(r),
-		XUser: util.ExtractUserFromContext(r),
+	popup, err := util.ExtractPopupFromFlash(w, r)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error getting the token : %v", err), http.StatusInternalServerError)
+		return
 	}
 
-	fmt.Print("data to login page", toPage)
+	toPage := util.DataToPage{
+		Popup: popup,
+	}
 
-	err := config.Tmpl.ExecuteTemplate(w, "login.html", toPage)
+	err = config.Tmpl.ExecuteTemplate(w, "login.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = "Error in executing login.html"

@@ -16,21 +16,18 @@
         <div class="row w-100 justify-content-center">
             <div class="col-8 col-lg-4">
                 <h1 class="text-center">Login</h1>
-                <h1>{{$isError}}</h1>
-                <h1>
-                    {{$message}}
-                </h1>
-                <!-- {{if $isError}}
+                {{if $isError }}
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error!</strong> {{$message}}
+                        <strong>Error!</strong> 
+                        {{$message}}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                {{else}}
+                {{else if ne $message ""}}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{$message}}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                {{end}} -->
+                {{end}}
                 <form class="text-center" method="post" action="/account/login">
                     <div class="form-floating mb-3">
                         <input class="form-control" id="user_name" type="text" name="user_name" placeholder="abc" autofocus>

@@ -9,11 +9,13 @@ import (
 	"github.com/adi-QTPi/go-mvc-assignment/database"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/api"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
+	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
 )
 
 func main() {
 	config.LoadMainEnv()
 	config.LoadDBEnv()
+	config.LoadSessionsEnv()
 
 	_, err := models.InitDatabase()
 	if err != nil {
@@ -32,6 +34,7 @@ func main() {
 	}
 
 	config.MountPublicFiles(router)
+	util.InitiateStructSession()
 
 	fmt.Printf("\nStarting the server... access on port %v \n\n", config.SERVER_PORT)
 

@@ -17,11 +17,9 @@ func NewPageRenderer() *PageRenderer {
 func (pr *PageRenderer) RenderHomePage(w http.ResponseWriter, r *http.Request) {
 	var responseJson util.StandardResponseJson
 	xUser := util.ExtractUserFromContext(r)
-	popup := util.ExtractPopupFromContext(r)
 
 	toPage := util.DataToPage{
 		XUser: xUser,
-		Popup: popup,
 	}
 
 	fmt.Print("data received while rendering home page", toPage)
