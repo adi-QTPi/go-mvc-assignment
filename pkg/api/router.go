@@ -6,6 +6,7 @@ import (
 )
 
 func SetupRouter() *mux.Router {
+
 	router := mux.NewRouter()
 
 	apiRouter := router.PathPrefix("/api").Subrouter()
@@ -16,6 +17,9 @@ func SetupRouter() *mux.Router {
 
 	accountRouter := router.PathPrefix("/account").Subrouter()
 	api.ImplementAccountRoutes(accountRouter)
+
+	rootRouter := router.PathPrefix("/").Subrouter()
+	api.ImplementRootRoutes(rootRouter)
 
 	return router
 }

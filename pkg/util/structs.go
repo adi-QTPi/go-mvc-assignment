@@ -14,3 +14,13 @@ type JwtCustomClaim struct {
 	Sub models.User `json:"sub"`
 	jwt.RegisteredClaims
 }
+
+type Popup struct {
+	Msg     string
+	IsError bool
+}
+
+type DataToPage struct {
+	XUser models.User
+	Popup Popup
+}

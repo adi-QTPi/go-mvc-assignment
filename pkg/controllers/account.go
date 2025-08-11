@@ -74,9 +74,7 @@ func (ac *AccountController) LogUserIn(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &jwtCookie)
 
-	var responseJson util.StandardResponseJson
-	responseJson.Msg = "Logged in Successfully"
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+	util.RedirectToSite(w, r, "/static")
 }
 
 func (ac *AccountController) LogUserOut(w http.ResponseWriter, r *http.Request) {
@@ -93,9 +91,10 @@ func (ac *AccountController) LogUserOut(w http.ResponseWriter, r *http.Request) 
 
 	http.SetCookie(w, &jwtCookie)
 
-	var responseJson util.StandardResponseJson
-	responseJson.Msg = "Successfully logged Out."
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+	util.RedirectToSite(w, r, "/")
+	// var responseJson util.StandardResponseJson
+	// responseJson.Msg = "Successfully logged Out."
+	// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }
 
 func (ac *AccountController) ShowProfile(w http.ResponseWriter, r *http.Request) {

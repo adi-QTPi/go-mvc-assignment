@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/adi-QTPi/go-mvc-assignment/config"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 

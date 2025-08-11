@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Truculenta:opsz,wght@12..72,100..900&display=swap');
+
+.caveat-cursive {
+  font-family: "Caveat", cursive;
+  font-optical-sizing: auto;
+  font-weight:400;
+  font-style: normal;
+}
+
+.truculenta-normal {
+  font-family: "Truculenta", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+.vh-25{
+    height: 25vh;
+}
+.vh-50{
+    height: 50vh;
+}
+
+.w-80{
+    width: 80%;
+}
+
+.w-60{
+    width: 60%;
+}
+
+.bg-queen-pink{
+    background-color: #cb3466; 
+}
+.bg-light-pink{
+    background-color: #f7dfe6; 
+}
+
+.border-queen-pink{
+    border-style: solid;
+    border-color: #cb3466; 
+    border-width: 0.1rem;
+}
+
+.rounded-queen-pink-border{
+    border: solid 0.2rem #cb3466;
+}
+
+.border-filter{
+    border-right-style: solid;
+    border-color: #cb3466;
+    border-width: 0.1rem;
+    
+}
+.border-filter-clear{
+    border-right-style: none;    
+    border-left-style: solid;    
+}
+
+.btn-filter{
+    color: #cb3466;
+    background: none;
+    border: none;
+}
+
+.btn-filter-clicked{
+    color: black;
+    background: #34CB99;
+    border: none;
+}
+
+.clear-filter-button{
+    cursor: pointer;
+}
+
+.text-queen-pink{
+    color: #cb3466;
+}
+
+.hide-scrollbar {
+ scrollbar-width: none;
+ -ms-overflow-style: none; 
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+ display: none;
+}
+
+.bg-image{
+    background-image: url("/public/images/homepage_table.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.admin-display-background{
+    background: #f3eaaf;
+}
+
+.home-page-logo{
+    font-size: 10rem;
+    backdrop-filter: blur(0.2rem);
+    color: #0991be;
+    text-shadow:0.25rem 0.25rem 0rem #cb3466, -0.25rem -0.25rem 0rem #06516a;
+    border-radius: 3rem;
+}
+
+.user-profile{
+    background-color: #8fa5acad;
+}
+
+.fs-large{
+    font-size: xx-large;
+}
+
+.fs-3rem{
+    font-size: 3rem;
+}
+.fs-5rem{
+    font-size: 5rem;
+}
+.fs-6rem{
+    font-size: 6rem;
+}
+.fs-7rem{
+    font-size: 7rem;
+}
+
+.bg-glass{
+    backdrop-filter: blur(0.2rem);
+}
+
+.card-orders-page{
+    width:40vw;
+}
+
+.card-menu-page{
+    width: 40vw;
+}
+
+.full-menu-space{
+    background-color: beige;
+    width: 90vw;
+    margin: auto;
+    border-radius: 3rem;
+}
+.filtered-menu-space{
+    width: 90vw;
+    margin: auto;
+    border-radius: 3rem;
+}
+
+.go-to-cart-space{
+    background-color: #cb3466;
+    border: solid 0.2rem white;
+}
+.intent-blank{
+    height: 10rem;
+}
+.placeholder-blank-space{
+    min-height: 30vh;
+}
+
+.menu-card-image{
+    object-fit:cover;
+}

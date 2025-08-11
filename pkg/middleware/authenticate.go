@@ -92,12 +92,13 @@ func IdentifyUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := r.Cookie("jwt_token")
 		if err != nil {
-			var responseJson util.StandardResponseJson
-			responseJson.Msg = "cant use the service"
-			responseJson.ErrDescription = "Need to be signed in to use this route"
+			toLoginPage := util.Popup{
+				Msg:     "popup message",
+				IsError: false,
+			}
+			r = util.PutPopupInContext(r, toLoginPage)
 
-			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
-
+			util.RedirectToSite(w, r, "/login")
 			return
 		}
 		tokenValue := token.Value

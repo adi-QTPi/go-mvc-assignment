@@ -31,6 +31,8 @@ func main() {
 		Handler: router,
 	}
 
+	config.MountPublicFiles(router)
+
 	fmt.Printf("\nStarting the server... access on port %v \n\n", config.SERVER_PORT)
 
 	if err := server.ListenAndServe(); err != nil {
