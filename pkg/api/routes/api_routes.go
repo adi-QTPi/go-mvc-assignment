@@ -44,6 +44,7 @@ func ImplementApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/item/{item_id}",
 		middleware.Chain(
 			http.HandlerFunc(itemController.DeleteItem),
+			middleware.MethodOverride,
 			middleware.RestrictToRoles("admin"),
 		)).Methods("DELETE")
 
@@ -52,7 +53,7 @@ func ImplementApiRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(catController().GetCategories),
 		)).Methods("GET")
-	subRouter.Handle("/categories",
+	subRouter.Handle("/category",
 		middleware.Chain(
 			http.HandlerFunc(catController().AddCategory),
 			middleware.RequiredEntries("category_name", "category_description"),

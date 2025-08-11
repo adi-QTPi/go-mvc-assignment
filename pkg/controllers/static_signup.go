@@ -32,7 +32,7 @@ func (sl *StaticSignupController) RenderSignupPage(w http.ResponseWriter, r *htt
 	err = config.Tmpl.ExecuteTemplate(w, "signup.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = "Error in executing login.html"
+		responseJson.ErrDescription = "Error in executing signup.html"
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
 	}
 }

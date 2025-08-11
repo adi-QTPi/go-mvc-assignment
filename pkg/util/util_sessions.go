@@ -16,11 +16,30 @@ var sessionName = "foodopia-session"
 
 type M map[string]interface{}
 
+func registerGobTypes(values ...any) {
+	for _, v := range values {
+		gob.Register(v)
+	}
+}
+
 func InitiateStructSession() {
 	SessionStore = sessions.NewCookieStore([]byte(os.Getenv("SESSIONS_SECRET")))
-	gob.Register(&Popup{})
-	gob.Register(&M{})
-	gob.Register(&models.User{})
+
+	registerGobTypes(
+		&Popup{},
+		&M{},
+		&models.User{},
+
+		models.DisplayItem{},
+		// &models.DisplayItem{}, giving error (duplication ???why)
+		[]models.DisplayItem{},
+		[]*models.DisplayItem{},
+
+		models.Category{},
+		// &models.Category{}, giving error (duplication ???why)
+		[]models.Category{},
+		[]*models.Category{},
+	)
 }
 
 func InsertPopupInFlash(w http.ResponseWriter, r *http.Request, object Popup) error {
@@ -78,4 +97,64 @@ func InsertUserInSession(w http.ResponseWriter, r *http.Request, user models.Use
 	}
 
 	return nil
+}
+
+func InsertItemsInSession(w http.ResponseWriter, r *http.Request, itemSlice []models.DisplayItem) error {
+	session, err := SessionStore.Get(r, sessionName)
+	if err != nil {
+		return fmt.Errorf("error getting session: %v", err)
+	}
+
+	session.Values["Menu"] = itemSlice
+
+	err = session.Save(r, w)
+	if err != nil {
+		return fmt.Errorf("error saving session: %v", err)
+	}
+
+	return nil
+}
+
+func ExtractItemsFromSession(r *http.Request) ([]models.DisplayItem, error) {
+	session, err := SessionStore.Get(r, sessionName)
+	if err != nil {
+		return nil, fmt.Errorf("error getting session: %v", err)
+	}
+
+	items, ok := session.Values["Menu"].([]models.DisplayItem)
+	if !ok {
+		return nil, fmt.Errorf("no valid item slice found in session")
+	}
+
+	return items, nil
+}
+
+func InsertCategoriesInSession(w http.ResponseWriter, r *http.Request, itemSlice []models.Category) error {
+	session, err := SessionStore.Get(r, sessionName)
+	if err != nil {
+		return fmt.Errorf("error getting session: %v", err)
+	}
+
+	session.Values["CategoryList"] = itemSlice
+
+	err = session.Save(r, w)
+	if err != nil {
+		return fmt.Errorf("error saving session: %v", err)
+	}
+
+	return nil
+}
+
+func ExtractCategoriesFromSession(r *http.Request) ([]models.Category, error) {
+	session, err := SessionStore.Get(r, sessionName)
+	if err != nil {
+		return nil, fmt.Errorf("error getting session: %v", err)
+	}
+
+	items, ok := session.Values["CategoryList"].([]models.Category)
+	if !ok {
+		return nil, fmt.Errorf("no valid item slice found in session")
+	}
+
+	return items, nil
 }

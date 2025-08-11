@@ -17,7 +17,14 @@ func NewItemApiController() *ItemApiController {
 }
 
 func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	const maxMemory = 32 << 20
+
+	var err error
+	if r.Referer() == "/static/menu" {
+		err = r.ParseMultipartForm(maxMemory)
+	} else {
+		err = r.ParseForm()
+	}
 	if err != nil {
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
@@ -68,10 +75,24 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var responseJson util.StandardResponseJson
-	responseJson.Msg = "New item created successfully"
+	popup := util.Popup{
+		Msg:     "Item Added Successfully",
+		IsError: false,
+	}
 
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+	err = util.InsertPopupInFlash(w, r, popup)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error adding popup: %v", err), http.StatusInternalServerError)
+	}
+
+	requestFrom := r.Referer()
+
+	util.RedirectToSite(w, r, requestFrom)
+
+	// var responseJson util.StandardResponseJson
+	// responseJson.Msg = "New item created successfully"
+
+	// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }
 
 func (ic *ItemApiController) GetItems(w http.ResponseWriter, r *http.Request) {
@@ -81,6 +102,12 @@ func (ic *ItemApiController) GetItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// err = util.InsertItemsInSession(w, r, items)
+	// if err != nil {
+	// 	http.Error(w, fmt.Sprintf("Error puttin menu in sessions: %v", err), http.StatusInternalServerError)
+	// }
+
+	// util.RedirectToSite(w, r, "/static/menu")
 	util.EncodeAndSendItemWithStatus(w, items, http.StatusOK)
 }
 

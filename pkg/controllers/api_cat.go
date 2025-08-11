@@ -22,6 +22,9 @@ func (cc *CatApiController) GetCategories(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// err = util.InsertCategoriesInSession(w, r, categories)
+
+	// util.RedirectToSite(w, r, "/api/item")
 	util.EncodeAndSendCategoriesWithStatus(w, categories, http.StatusOK)
 }
 
@@ -52,14 +55,41 @@ func (cc *CatApiController) AddCategory(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, fmt.Sprintf("Error adding category: %v", err), http.StatusInternalServerError)
 		return
 	}
-	var responseJson util.StandardResponseJson
+
 	if !validDemand {
-		responseJson.Msg = "Uable to add new Category"
-		responseJson.ErrDescription = "Category already exists"
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
+		// responseJson.Msg = "Uable to add new Category"
+		// responseJson.ErrDescription = "Category already exists"
+		// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
+		popup := util.Popup{
+			Msg:     "This Category already Exists",
+			IsError: true,
+		}
+
+		err := util.InsertPopupInFlash(w, r, popup)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error adding popup: %v", err), http.StatusInternalServerError)
+		}
+
+		requestFrom := r.Referer()
+
+		util.RedirectToSite(w, r, requestFrom)
+
 		return
 	}
 
-	responseJson.Msg = fmt.Sprintf("New category added succesfully : %v", newCat.CategoryName)
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
+	popup := util.Popup{
+		Msg:     "Category Added Successfully",
+		IsError: false,
+	}
+
+	err = util.InsertPopupInFlash(w, r, popup)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error adding popup: %v", err), http.StatusInternalServerError)
+	}
+
+	requestFrom := r.Referer()
+
+	util.RedirectToSite(w, r, requestFrom)
+	// responseJson.Msg = fmt.Sprintf("New category added succesfully : %v", newCat.CategoryName)
+	// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
 }

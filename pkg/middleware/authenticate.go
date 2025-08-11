@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"strings"
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
@@ -13,7 +14,14 @@ import (
 func RequiredEntries(entries ...string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			err := r.ParseForm()
+			var err error
+			contentType := r.Header.Get("Content-Type")
+			if strings.HasPrefix(contentType, "multipart/form-data") {
+				const maxMemory = 32 << 20
+				err = r.ParseMultipartForm(maxMemory)
+			} else {
+				err = r.ParseForm()
+			}
 			if err != nil {
 				http.Error(w, fmt.Sprintf("Error parsing the form %v", err), http.StatusInternalServerError)
 				return

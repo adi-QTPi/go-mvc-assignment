@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/adi-QTPi/go-mvc-assignment/config"
@@ -21,8 +20,6 @@ func (pr *PageRenderer) RenderHomePage(w http.ResponseWriter, r *http.Request) {
 	toPage := util.DataToPage{
 		XUser: xUser,
 	}
-
-	fmt.Print("data received while rendering home page", toPage)
 
 	err := config.Tmpl.ExecuteTemplate(w, "homepage.html", toPage)
 	if err != nil {

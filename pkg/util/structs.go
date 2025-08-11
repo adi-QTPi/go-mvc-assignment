@@ -21,6 +21,8 @@ type Popup struct {
 }
 
 type DataToPage struct {
-	XUser models.User
-	Popup Popup
+	XUser         models.User
+	Popup         Popup
+	CategorySlice []models.Category
+	ItemSlice     []models.DisplayItem
 }
