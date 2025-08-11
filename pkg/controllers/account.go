@@ -16,9 +16,55 @@ func NewAccountController() *AccountController {
 }
 
 func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
 
-	var responseJson util.StandardResponseJson
+	var newUser models.User
+	newUser.UserName = r.Form.Get("user_name")
+	newUser.Name = r.Form.Get("name")
+	pwdHash := r.Form.Get("pwd")
+	newUser.Role = "customer"
 
+	alreadyExists, err, _ := models.GetUserByUsername(newUser.UserName)
+	if alreadyExists {
+		var popup = util.Popup{
+			Msg:     "This Username is Already Taken ... Be more creative!",
+			IsError: true,
+		}
+
+		requestFrom := r.Referer()
+		util.InsertPopupInFlash(w, r, popup)
+		util.RedirectToSite(w, r, requestFrom)
+		return
+	}
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error checking for existing user: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	err = models.AddNewUser(newUser, pwdHash)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error Adding user: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var popup = util.Popup{
+		Msg:     "Account Created Successfully",
+		IsError: false,
+	}
+
+	err = util.InsertPopupInFlash(w, r, popup)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error inserting popup before redirect (in signup page): %v", err), http.StatusInternalServerError)
+	}
+
+	util.RedirectToSite(w, r, "/login")
+}
+
+func (ac *AccountController) CreateNewUserByAdmin(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
@@ -33,10 +79,14 @@ func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Reques
 
 	alreadyExists, err, _ := models.GetUserByUsername(newUser.UserName)
 	if alreadyExists {
-		responseJson.Msg = "Unable to add user"
-		responseJson.ErrDescription = "user with this username exists"
-
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusConflict)
+		var popup = util.Popup{
+			Msg:     "Username taken, try a different username for yourself",
+			IsError: true,
+		}
+		err := util.InsertPopupInFlash(w, r, popup)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error in inserting popup: %v", err), http.StatusInternalServerError)
+		}
 		return
 	}
 	if err != nil {
@@ -49,9 +99,17 @@ func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Reques
 		http.Error(w, fmt.Sprintf("Error Adding user: %v", err), http.StatusInternalServerError)
 		return
 	}
-	responseJson.Msg = "successfully added user"
 
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
+	var popup = util.Popup{
+		Msg:     "Account Created Successfully",
+		IsError: false,
+	}
+
+	err = util.InsertPopupInFlash(w, r, popup)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error inserting popup before redirect (in signup page): %v", err), http.StatusInternalServerError)
+	}
+	util.RedirectToSite(w, r, "/signup")
 }
 
 func (ac *AccountController) LogUserIn(w http.ResponseWriter, r *http.Request) {
@@ -92,9 +150,6 @@ func (ac *AccountController) LogUserOut(w http.ResponseWriter, r *http.Request) 
 	http.SetCookie(w, &jwtCookie)
 
 	util.RedirectToSite(w, r, "/")
-	// var responseJson util.StandardResponseJson
-	// responseJson.Msg = "Successfully logged Out."
-	// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }
 
 func (ac *AccountController) ShowProfile(w http.ResponseWriter, r *http.Request) {

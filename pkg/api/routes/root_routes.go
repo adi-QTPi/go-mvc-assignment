@@ -15,6 +15,12 @@ func ImplementRootRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(staticLoginController.RenderLoginPage),
 		)).Methods("GET")
+	staticSignupController := controllers.NewStaticSignupController()
+	subRouter.Handle("/signup",
+		middleware.Chain(
+			http.HandlerFunc(staticSignupController.RenderSignupPage),
+			middleware.AddUserInfoInContext,
+		)).Methods("GET")
 
 	subRouter.Handle("/",
 		http.HandlerFunc(

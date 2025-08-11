@@ -30,10 +30,19 @@ func RequiredEntries(entries ...string) func(http.Handler) http.Handler {
 				return
 			}
 
-			var responseJson util.StandardResponseJson
-			responseJson.Msg = "Data reading failed"
-			responseJson.ErrDescription = fmt.Sprintf("Enter the given fields in x-www-form-urlencoded format only : %v", entries)
-			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
+			popup := util.Popup{
+				Msg:     "Enter ALL the fields carefully",
+				IsError: true,
+			}
+
+			requestFrom := r.Referer()
+			util.InsertPopupInFlash(w, r, popup)
+			util.RedirectToSite(w, r, requestFrom)
+
+			// var responseJson util.StandardResponseJson
+			// responseJson.Msg = "Data reading failed"
+			// responseJson.ErrDescription = fmt.Sprintf("Enter the given fields in x-www-form-urlencoded format only : %v", entries)
+			// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
 		})
 	}
 }
@@ -50,10 +59,18 @@ func CheckIfUserExists(next http.Handler) http.Handler {
 			return
 		}
 		if !isThere {
-			var responseJson util.StandardResponseJson
-			responseJson.Msg = "No such user exists, check username"
+			toLoginPage := util.Popup{
+				Msg:     "User Not Found... Signup to Create New Account !",
+				IsError: true,
+			}
 
-			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+			err := util.InsertPopupInFlash(w, r, toLoginPage)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("error in identifyUser middleware : %v", err), http.StatusInternalServerError)
+				return
+			}
+
+			util.RedirectToSite(w, r, "/login")
 
 			return
 		}
@@ -124,6 +141,22 @@ func IdentifyUser(next http.Handler) http.Handler {
 	})
 }
 
+func AddUserInfoInContext(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token, err := r.Cookie("jwt_token")
+
+		if err == nil {
+			tokenValue := token.Value
+
+			xUser := util.DecryptJwtToken(w, r, tokenValue)
+
+			r = util.PutUserInContext(r, xUser)
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func RestrictToRoles(allowedRoles ...string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -135,10 +168,19 @@ func RestrictToRoles(allowedRoles ...string) func(http.Handler) http.Handler {
 				return
 			}
 
-			var responseJson util.StandardResponseJson
-			responseJson.Msg = "User is Unauthorised"
-			responseJson.ErrDescription = fmt.Sprintf("this page is for users with roles %v only.", allowedRoles)
-			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
+			popup := util.Popup{
+				Msg:     "You are NOT Authorised to Access this Service",
+				IsError: true,
+			}
+
+			requestFrom := r.Referer()
+			util.InsertPopupInFlash(w, r, popup)
+			util.RedirectToSite(w, r, requestFrom)
+
+			// var responseJson util.StandardResponseJson
+			// responseJson.Msg = "User is Unauthorised"
+			// responseJson.ErrDescription = fmt.Sprintf("this page is for users with roles %v only.", allowedRoles)
+			// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
 		})
 	}
 }

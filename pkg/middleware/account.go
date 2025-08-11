@@ -23,12 +23,23 @@ func VerifyDuplicatePassword(next http.Handler) http.Handler {
 			return
 		}
 
-		var responseJson util.StandardResponseJson
+		popup := util.Popup{
+			Msg:     "Passwords don't Match, try again",
+			IsError: true,
+		}
 
-		responseJson.ErrDescription = "the 2 passwords dont match."
-		responseJson.Msg = "failed to signup"
+		util.InsertPopupInFlash(w, r, popup)
 
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
+		requestFrom := r.Referer()
+		util.InsertPopupInFlash(w, r, popup)
+		util.RedirectToSite(w, r, requestFrom)
+
+		// var responseJson util.StandardResponseJson
+
+		// responseJson.ErrDescription = "the 2 passwords dont match."
+		// responseJson.Msg = "failed to signup"
+
+		// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
 	})
 }
 
