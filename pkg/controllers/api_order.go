@@ -21,6 +21,20 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 
 	orderSlice := util.ExtractCartFromContext(r)
 
+	if len(orderSlice) == 0 {
+		fmt.Println("the order is empty !!")
+		popup := util.Popup{
+			Msg:     "Order Not Placed ! Empty Cart",
+			IsError: true,
+		}
+		util.InsertPopupInFlash(w, r, popup)
+
+		var responseJson util.StandardResponseJson
+		responseJson.Msg = "Order Not Placed !!! no item present"
+		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
+		return
+	}
+
 	totalOrderPrice := 0
 	for _, v := range orderSlice {
 		totalOrderPrice += int(v.Price * v.Quantity)
@@ -85,6 +99,12 @@ func (oc *OrderApiController) OrderPayment(w http.ResponseWriter, r *http.Reques
 		http.Error(w, fmt.Sprintf("Error vacating table , %v", err), http.StatusInternalServerError)
 		return
 	}
+
+	popup := util.Popup{
+		Msg: "Payment successful... happyCustomer++",
+	}
+	util.InsertPopupInFlash(w, r, popup)
+	util.RedirectToSite(w, r, "/static/menu")
 
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = fmt.Sprintf("Payment Successful for order #%v", orderId)

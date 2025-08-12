@@ -4,49 +4,59 @@
 {{$userName := .XUser.UserName}}
 
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-    <a class="navbar-brand mx-2 fs-2" href="/static/profile">Foodop1a</a>
-    <div class="fs-4 text-info caveat-cursive ">| {{$userName}}</div>
+    <div class="container-fluid d-flex justify-content-between align-items-center">
 
-    <span class="navbar-text position-absolute start-50 translate-middle-x">Your <span class="truculenta-normal fs-3">Cravings...</span> Our <span class="truculenta-normal fs-3">Responsibility</span></span>
+        <div class="d-flex align-items-start">
+            <a class="navbar-brand fs-2" href="/static/profile">Foodop1a</a>
+        </div>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse " id="navbar-text">
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/static">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/static/menu">Menu</a>
-            </li>
-            {{if eq $role "admin"}}
+        <div class="d-none d-lg-block">
+            <div class="fs-4 text-info caveat-cursive ">| {{$userName}}</div>
+        </div>
+
+        <div class="navbar-text px-2 d-lg-block flex-fill text-end">
+            Your <span class="truculenta-normal fs-3">Cravings...</span> Our <span class="truculenta-normal fs-3">Responsibility</span>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/static/admin">Manage Orders</a>
+                    <a class="nav-link" href="/static">Home</a>
                 </li>
-            {{end}}
-            {{if eq $role "customer"}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/static/order">Your Orders</a>
+                    <a class="nav-link" href="/static/menu">Menu</a>
                 </li>
-            {{end}}
-            {{if eq $role "cook"}}
+                {{if eq $role "admin"}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/static/admin">Manage Orders</a>
+                    </li>
+                {{end}}
+                {{if eq $role "customer"}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/static/order">Your Orders</a>
+                    </li>
+                {{end}}
+                {{if eq $role "cook"}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/static/cook">Cook</a>
+                    </li>
+                {{end}}
+                {{if eq $role "admin"}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">New Account</a>
+                    </li>
+                {{end}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/static/cook">Cook</a>
+                    <form action="/account/logout" method="post">
+                        <button class="btn btn-dark" type="submit">Logout</button>
+                    </form>
                 </li>
-            {{end}}
-            {{if eq $role "admin"}}
-                <li class="nav-item">
-                    <a class="nav-link" href="/signup">New Account</a>
-                </li>
-            {{end}}
-            <li class="nav-item">
-                <form action="/account/logout" method="post">
-                    <button class="btn btn-dark" type="submit">Logout</button>
-                </form>
-            </li>
-        </ul>
+            </ul>
+        </div>
     </div>
 </nav>
-
 {{end}}
