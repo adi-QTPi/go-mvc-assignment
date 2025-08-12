@@ -23,9 +23,9 @@ type DisplayItem struct {
 	CookTimeMin string         `json:"cook_time_min"`
 	Price       string         `json:"price"`
 	DisplayPic  sql.NullString `json:"display_pic"`
-	CatId       string         `json:"cat_id"`
+	CatId       int64          `json:"cat_id"`
 	Category    string         `json:"category"`
-	SubCatId    string         `json:"subcat_id"`
+	SubCatId    int64          `json:"subcat_id"`
 	SubCategory string         `json:"subcategory"`
 }
 
