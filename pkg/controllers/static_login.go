@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/adi-QTPi/go-mvc-assignment/config"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
 type StaticLoginController struct{}
@@ -26,7 +26,7 @@ func (sl *StaticLoginController) RenderLoginPage(w http.ResponseWriter, r *http.
 		Popup: popup,
 	}
 
-	err = config.Tmpl.ExecuteTemplate(w, "login.html", toPage)
+	err = template_helpers.Tmpl.ExecuteTemplate(w, "login.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = "Error in executing login.html"

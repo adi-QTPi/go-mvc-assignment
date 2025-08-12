@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/adi-QTPi/go-mvc-assignment/config"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
 type StaticSignupController struct{}
@@ -29,7 +29,7 @@ func (sl *StaticSignupController) RenderSignupPage(w http.ResponseWriter, r *htt
 		XUser: xUser,
 	}
 
-	err = config.Tmpl.ExecuteTemplate(w, "signup.html", toPage)
+	err = template_helpers.Tmpl.ExecuteTemplate(w, "signup.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = "Error in executing signup.html"

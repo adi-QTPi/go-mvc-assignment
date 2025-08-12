@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/adi-QTPi/go-mvc-assignment/config"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
 type StaticController struct{}
@@ -34,7 +34,7 @@ func (sl *StaticController) RenderMenuPage(w http.ResponseWriter, r *http.Reques
 		ItemSlice:     itemSlice,
 	}
 
-	err = config.Tmpl.ExecuteTemplate(w, "menu.html", toPage)
+	err = template_helpers.Tmpl.ExecuteTemplate(w, "menu.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing menu.html : %v", err)
@@ -61,7 +61,7 @@ func (sl *StaticController) RenderCartPage(w http.ResponseWriter, r *http.Reques
 		// ItemSlice:     itemSlice,
 	}
 
-	err = config.Tmpl.ExecuteTemplate(w, "cart.html", toPage)
+	err = template_helpers.Tmpl.ExecuteTemplate(w, "cart.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing menu.html : %v", err)

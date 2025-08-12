@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/adi-QTPi/go-mvc-assignment/config"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
 type StaticErrorController struct{}
@@ -28,7 +28,7 @@ func (asc *StaticErrorController) RenderErrorPage(w http.ResponseWriter, r *http
 	}
 
 	var responseJson util.StandardResponseJson
-	err = config.Tmpl.ExecuteTemplate(w, "error.html", toPage)
+	err = template_helpers.Tmpl.ExecuteTemplate(w, "error.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing error.html : %v", err)

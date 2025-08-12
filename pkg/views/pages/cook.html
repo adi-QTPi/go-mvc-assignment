@@ -54,55 +54,55 @@
 <body>
     <h1 class="text-center bg-glass sticky-top z-5 py-2">Cook's Page</h1>
 
+    {{$cookId := .XUser.UserId}}
+
     {{$someTaken := false}}
     {{$someComplete := false}}
     {{$somePending := false}}
 
-    {{$someTaken = booleanUpdater .KitchenOrders}}
-    {{$someComplete = booleanUpdater .KitchenOrders}}
-    {{$somePending = booleanUpdater .KitchenOrders}}
+    {{$booleanStore := booleanUpdater .KitchenOrders}}
+    
+    {{$somePending = $booleanStore.SomePending}}
+    {{$someTaken = $booleanStore.SomeTaken}}
+    {{$someComplete = $booleanStore.SomeComplete}}
+
     <div class="container">
         <div class="d-flex flex-column flex-md-row col-12">
             <div class="col-12 col-md-6 d-flex flex-column placeholder-blank-space taken-by-you">
-                {{$someTaken}}
+                {{if $someTaken}}
                     <h3 class="text-center">Taken By You</h3>
-                    <% 
-                    const taken_by_this_cook = to_cook_page.item_to_cook.filter(item => 
-                        item.cook_id === to_cook_page.x_user.user_id && item.is_complete === "taken"
-                    );
-                    %>
-                    <% for( let items of taken_by_this_cook ) { %>
-                    <div class="card d-flex flex-column m-3">
-                        <div class="card-body flex-grow">
-                            <div class="card-title fs-4 d-flex flex-row">
-                                <div class="col-8 fs-3">
-                                    <%= items.item_name %>
+                    {{range $index, $element := itemsTakenByCook .KitchenOrders $cookId}}
+                        <div class="card d-flex flex-column m-3">
+                            <div class="card-body flex-grow">
+                                <div class="card-title fs-4 d-flex flex-row">
+                                    <div class="col-8 fs-3">
+                                        {{$element.ItemName}}
+                                    </div>
+                                    <div class="flex-fill text-center qty-display fs-3"> x{{$element.Quantity}}</div>
                                 </div>
-                                <div class="flex-fill text-center qty-display fs-3"> x<%= items.quantity %></div>
-                            </div>
 
-                            <% if (items.instruction) { %>
-                                <div class="card-body">
-                                    <div class="card">
-                                        <div class="text-center">Instruction</div>
-                                        <div class="text-center fs-5">
-                                            <%= items.instruction %>
+                                {{if ne $element.Instruction.String ""}}
+                                    <div class="card-body">
+                                        <div class="card">
+                                            <div class="text-center">Instruction</div>
+                                            <div class="text-center fs-5">
+                                                {{$element.Instruction.String}}
+                                            </div>
                                         </div>
                                     </div>
+                                {{end}}
+                                <div class="flex-shrink-0 d-flex flex-row m-2 align-items-center justify-content-center">
+                                    <div class="flex-fill text-center fs-5 sub_total"> Table no. <span class="fs-3">{{$element.TableNo.Int64}}</span></div>
+                                    <form class="flex-fill d-flex justify-content-center" action="/api/cook" method="post">
+                                        <input type="hidden" name="order_id" value="{{$element.OrderId}}">
+                                        <input type="hidden" name="item_id" value="{{$element.ItemId}}">
+                                        <input type="hidden" name="is_complete" value="complete">
+                                        <button type="submit" class="delete-btn btn btn-danger">Mark Complete</button>
+                                    </form>
                                 </div>
-                            <% } %>
-                            <div class="flex-shrink-0 d-flex flex-row m-2 align-items-center justify-content-center">
-                                <div class="flex-fill text-center fs-5 sub_total"> Table no. <span class="fs-3"><%= items.table_no %></span></div>
-                                <form class="flex-fill d-flex justify-content-center" action="/api/cook" method="post">
-                                    <input type="hidden" name="order_id" value="<%= items.order_id %>">
-                                    <input type="hidden" name="item_id" value="<%= items.item_id %>">
-                                    <input type="hidden" name="is_complete" value="complete">
-                                    <button type="submit" class="delete-btn btn btn-danger">Mark Complete</button>
-                                </form>
                             </div>
                         </div>
-                    </div>
-                    <% } %>
+                    {{end}}
                 {{else}}
                     <div class="h-100 d-flex align-items-center bg-secondary text-light m-3 rounded-4">
                         <div class="text-center col-12 truculenta-normal fs-2">No Orders Taken</div>
@@ -110,7 +110,7 @@
                 {{end}}
             </div>
             <div class="col-12 col-md-6 d-flex flex-column completed-today m-3">
-                <% if (some_pending) { %>
+                {{if $somePending}}
                     <h3 class="text-center">Pending</h3>
                     <div class="d-flex col-12 justify-content-center">
                         <div class="col-12">
@@ -123,51 +123,46 @@
                                     <th>Special Instructions</th>
                                 </thead>
                                 <tbody>
-                                    <% 
-                                    const pending_items = to_cook_page.item_to_cook.filter(item => 
-                                        item.is_complete === "pending"
-                                    );
-                                    %>
-                                    <% for(let items of pending_items) { %>
+                                    {{range $index, $element := itemsPending .KitchenOrders}}
                                         <tr>
-                                            <td class="text-center"><%= items.table_no %></td>
-                                            <td class="text-center"><%= items.order_id %></td>
-                                            <td><%= items.item_name %></td>
-                                            <td class="text-center"><%= items.quantity %></td>
-                                            <% if (!items.instruction) { %>
+                                            <td class="text-center">{{$element.TableNo.Int64}}</td>
+                                            <td class="text-center">{{$element.OrderId}}</td>
+                                            <td>{{$element.ItemName}}</td>
+                                            <td class="text-center">{{$element.Quantity}}</td>
+                                            {{if eq $element.Instruction.String ""}}
                                             <td>None</td>
-                                            <% } else { %>
-                                            <td><%= items.instruction %></td>
-                                            <% } %>
+                                            {{else}}
+                                            <td>{{$element.Instruction.String}}</td>
+                                            {{end}}
 
-                                            <% if (items.is_complete === "pending") { %>
+                                            {{if eq $element.IsComplete "pending"}}
                                                 <td>
                                                     <form action="/api/cook" method="post">
-                                                        <input type="hidden" name="order_id" value="<%= items.order_id %>">
-                                                        <input type="hidden" name="item_id" value="<%= items.item_id %>">
+                                                        <input type="hidden" name="order_id" value="{{$element.OrderId}}">
+                                                        <input type="hidden" name="item_id" value="{{$element.ItemId}}">
                                                         <input type="hidden" name="is_complete" value="taken">
                                                         <button class="btn btn-primary" type="submit">Take Item</button>
                                                     </form>
                                                 </td>
-                                            <% } %>
+                                            {{end}}
                                         </tr>
-                                    <% } %>
+                                    {{end}}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                <% } else { %>
+                {{else}}
                     <div class="d-flex justify-content-center">
                         <div class="d-flex flex-column col-12 placeholder-blank-space bg-success justify-content-center rounded-4 text-light">
                             <div class="text-center fs-2 truculenta-normal">No Orders Pending!</div>
                         </div>
                     </div>
-                <% } %>
+                {{end}}
             </div>
         </div>
         <hr>
         
-        <% if (some_complete) { %>
+        {{if $someComplete}}
             <div class="d-flex flex-column align-items-center">
                 <h3 class="text-center">Completed Today</h3>
                 <div class="col-10">
@@ -179,28 +174,23 @@
                             <th class="text-center col-3">Qty</th>
                         </thead>
                         <tbody>
-                            <% 
-                            const complete_by_this_cook = to_cook_page.item_to_cook.filter(item => 
-                                item.cook_id === to_cook_page.x_user.user_id && item.is_complete === "complete" && item.order_at.toDateString() === new Date().toDateString()
-                            );
-                            %>
-                            <% for(let items of complete_by_this_cook) { %>
+                            {{range $index, $element := itemsCompletedByCookToday .KitchenOrders $cookId}}
                                 <tr>
-                                    <td class="text-center"><%= items.table_no %></td>
-                                    <td class="text-center"><%= items.order_id %></td>
-                                    <td><%= items.item_name %></td>
-                                    <td class="text-center"><%= items.quantity %></td>
+                                    <td class="text-center">{{$element.TableNo.Int64}}</td>
+                                    <td class="text-center">{{$element.OrderId}}</td>
+                                    <td>{{$element.ItemName}}</td>
+                                    <td class="text-center">{{$element.Quantity}}</td>
                                 </tr>
-                            <% } %>
+                            {{end}}
                         </tbody>
                     </table>
                 </div>
             </div>
-        <% } else { %>
+        {{else}}
             <div class="h-100 d-flex align-items-center bg-dark text-light m-3 rounded-4">
                 <div class="text-center col-12 truculenta-normal fs-3">No Orders Completed</div>
             </div>
-        <% } %>
+        {{end}}
     </div>
 </body>
 </html>

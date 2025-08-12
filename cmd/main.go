@@ -10,6 +10,7 @@ import (
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/api"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
 func main() {
@@ -33,7 +34,7 @@ func main() {
 		Handler: router,
 	}
 
-	config.MountPublicFiles(router)
+	template_helpers.MountPublicFiles(router)
 	util.InitiateStructSession()
 
 	fmt.Printf("\nStarting the server... access on port %v \n\n", config.SERVER_PORT)

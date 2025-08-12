@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/adi-QTPi/go-mvc-assignment/config"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
 type PageRenderer struct{}
@@ -21,7 +21,7 @@ func (pr *PageRenderer) RenderHomePage(w http.ResponseWriter, r *http.Request) {
 		XUser: xUser,
 	}
 
-	err := config.Tmpl.ExecuteTemplate(w, "homepage.html", toPage)
+	err := template_helpers.Tmpl.ExecuteTemplate(w, "homepage.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = "Error in executing homepage.html"
