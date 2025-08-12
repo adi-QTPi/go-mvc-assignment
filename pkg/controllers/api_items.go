@@ -88,11 +88,6 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 	requestFrom := r.Referer()
 
 	util.RedirectToSite(w, r, requestFrom)
-
-	// var responseJson util.StandardResponseJson
-	// responseJson.Msg = "New item created successfully"
-
-	// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }
 
 func (ic *ItemApiController) GetItems(w http.ResponseWriter, r *http.Request) {
@@ -101,13 +96,6 @@ func (ic *ItemApiController) GetItems(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error fetching items: %v", err), http.StatusInternalServerError)
 		return
 	}
-
-	// err = util.InsertItemsInSession(w, r, items)
-	// if err != nil {
-	// 	http.Error(w, fmt.Sprintf("Error puttin menu in sessions: %v", err), http.StatusInternalServerError)
-	// }
-
-	// util.RedirectToSite(w, r, "/static/menu")
 	util.EncodeAndSendItemWithStatus(w, items, http.StatusOK)
 }
 
@@ -117,12 +105,20 @@ func (ic *ItemApiController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 
 	err := models.DeleteItemById(ItemIdStr)
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "Unable to Delete item", http.StatusBadRequest)
 		return
 	}
 
-	var responseJson util.StandardResponseJson
-	responseJson.Msg = "Item deleted successfully"
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+	popup := util.Popup{
+		Msg:     "Item Deleted Successfully",
+		IsError: false,
+	}
+	err = util.InsertPopupInFlash(w, r, popup)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Unable to insert popup in flash : %v", err), http.StatusBadRequest)
+		return
+	}
+
+	requestFrom := r.Referer()
+	util.RedirectToSite(w, r, requestFrom)
 }

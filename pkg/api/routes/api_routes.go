@@ -38,9 +38,9 @@ func ImplementApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/item/d/{item_id}",
 		middleware.Chain(
 			http.HandlerFunc(itemController.DeleteItem),
-			// middleware.MethodOverride,
-			// middleware.RestrictToRoles("admin"),
-		)).Methods("DELETE")
+			middleware.MethodOverride,
+			middleware.RestrictToRoles("admin"),
+		)).Methods("POST")
 	subRouter.Handle("/item",
 		middleware.Chain(
 			http.HandlerFunc(itemController.AddItem),

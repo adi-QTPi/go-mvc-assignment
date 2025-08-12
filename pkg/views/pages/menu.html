@@ -202,8 +202,8 @@
                                 <button class="add-to-cart btn btn-danger" id="{{.ItemId}}">Add to Cart</button>
                             {{end}}
                             {{if eq $role "admin"}}
-                                <form action="/api/d/item/{{.ItemId}}" method="post">
-                                    <input type="hidden" name="_method" value="DELETE">
+                                <form action="/api/item/d/{{.ItemId}}" method="post">
+                                    <!-- <input type="hidden" name="_method" value="DELETE"> -->
                                     <button type="submit" class="btn btn-danger">Delete Item</button>
                                 </form>
                             {{end}}
