@@ -17,6 +17,10 @@ func ImplementStaticRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(staticController.RenderMenuPage),
 		)).Methods("GET")
+	subRouter.Handle("/cart",
+		middleware.Chain(
+			http.HandlerFunc(staticController.RenderCartPage),
+		)).Methods("GET")
 
 	cookController := controllers.NewCookStaticController()
 	subRouter.Handle("/cook",

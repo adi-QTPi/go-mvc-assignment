@@ -18,7 +18,7 @@ type Item struct {
 }
 
 type DisplayItem struct {
-	ItemId      string         `json:"item_id"`
+	ItemId      int64          `json:"item_id"`
 	ItemName    string         `json:"item_name"`
 	CookTimeMin string         `json:"cook_time_min"`
 	Price       string         `json:"price"`

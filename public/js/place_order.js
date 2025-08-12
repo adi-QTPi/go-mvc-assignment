@@ -62,42 +62,6 @@ for (let filter of filter_buttons){
     })
 }
 
-// for (let filter of filter_buttons) {
-//     filter.addEventListener("click", () => {
-//         // The listener starts here. The logs go inside.
-//         const cat_id = Number(filter.getAttribute("data-btn"));
-
-//         // ▼▼▼ ADD THE DEBUGGING LOGS RIGHT HERE ▼▼▼
-//         console.log("--- DEBUGGING FILTER ---");
-//         console.log("Searching for cat_id:", cat_id, "(Type:", typeof cat_id, ")");
-
-//         // Let's inspect the FIRST item in your menu to see its structure
-//         if (to_menu_page.ItemSlice && to_menu_page.ItemSlice.length > 0) {
-//             const firstItem = to_menu_page.ItemSlice[0];
-//             console.log("First item in ItemSlice:", firstItem);
-//             console.log("Its cat_id is:", firstItem.cat_id, "(Type:", typeof firstItem.cat_id, ")");
-//             console.log("Its subcat_id is:", firstItem.subcat_id, "(Type:", typeof firstItem.subcat_id, ")");
-//         }
-//         console.log("------------------------");
-//         // ▲▲▲ END OF DEBUGGING BLOCK ▲▲▲
-
-
-//         if (filter.classList.contains("btn-filter")) {
-//             filter.classList.remove("btn-filter");
-//             filter.classList.add("btn-filter-clicked");
-//             selected_filters.push(cat_id);
-//         } else {
-//             filter.classList.add("btn-filter");
-//             filter.classList.remove("btn-filter-clicked");
-//             selected_filters.splice(selected_filters.indexOf(cat_id), 1);
-//         }
-        
-//         create_filtered_menu(selected_filters);
-//         render_filtered_menu(filtered_menu);
-//         toggle_add_to_cart_button_label();
-//     });
-// }
-
 const clear_filter_button = document.getElementsByClassName("clear-filter-button")[0];
 clear_filter_button.addEventListener("click", ()=>{
     for(let el of filter_buttons){
@@ -296,7 +260,7 @@ async function render_filtered_menu(filtered_menu){
 
 const to_cart_button = document.getElementsByClassName("to_cart_button")[0];
 to_cart_button.addEventListener("click", ()=>{
-    localStorage.setItem("to_menu_page", JSON.stringify(to_menu_page));
-    localStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
+    sessionStorage.setItem("to_menu_page", JSON.stringify(to_menu_page));
+    sessionStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
     window.location.href="/static/cart";
 })

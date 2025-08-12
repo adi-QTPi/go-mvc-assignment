@@ -35,18 +35,18 @@ func ImplementApiRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(itemController.GetItems),
 		)).Methods("GET")
+	subRouter.Handle("/item/d/{item_id}",
+		middleware.Chain(
+			http.HandlerFunc(itemController.DeleteItem),
+			// middleware.MethodOverride,
+			// middleware.RestrictToRoles("admin"),
+		)).Methods("DELETE")
 	subRouter.Handle("/item",
 		middleware.Chain(
 			http.HandlerFunc(itemController.AddItem),
 			middleware.RequiredEntries("item_name", "price", "cat_id"),
 			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
-	subRouter.Handle("/item/{item_id}",
-		middleware.Chain(
-			http.HandlerFunc(itemController.DeleteItem),
-			middleware.MethodOverride,
-			middleware.RestrictToRoles("admin"),
-		)).Methods("DELETE")
 
 	catController := controllers.NewCatApiController
 	subRouter.Handle("/categories",
