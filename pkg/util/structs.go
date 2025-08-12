@@ -28,4 +28,11 @@ type DataToPage struct {
 	OrderData     []models.Order
 	OrderMetaData models.Order
 	BillData      []models.ItemOrderDescriptive
+	KitchenOrders []models.KitchenOrder
+}
+
+type CookPageHelperStruct struct {
+	SomeTaken    bool
+	SomeComplete bool
+	SomePending  bool
 }

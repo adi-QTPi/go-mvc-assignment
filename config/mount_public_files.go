@@ -1,10 +1,10 @@
 package config
 
 import (
-	"encoding/json"
 	"html/template"
 	"net/http"
 
+	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 	"github.com/gorilla/mux"
 )
 
@@ -18,23 +18,8 @@ func MountPublicFiles(router *mux.Router) {
 }
 
 var FuncMap = template.FuncMap{
-	"ToJSON":   ToJSON,
-	"add":      Add,
-	"multiply": Multiply,
-}
-
-func ToJSON(v interface{}) (template.JS, error) {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return "", err
-	}
-	return template.JS(b), nil
-}
-
-func Multiply(a, b int) int {
-	return a * b
-}
-
-func Add(a, b int) int {
-	return a + b
+	"ToJSON":         template_helpers.ToJSON,
+	"add":            template_helpers.Add,
+	"multiply":       template_helpers.Multiply,
+	"booleanUpdater": template_helpers.CookPageHelper,
 }

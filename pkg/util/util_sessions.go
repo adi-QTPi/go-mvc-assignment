@@ -47,6 +47,9 @@ func InitiateStructSession() {
 		models.ItemOrderDescriptive{},
 		[]models.ItemOrderDescriptive{},
 		[]*models.ItemOrderDescriptive{},
+
+		models.KitchenOrder{},
+		[]models.KitchenOrder{},
 	)
 }
 

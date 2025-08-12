@@ -69,7 +69,6 @@ func (cuc *StaticOrderCotroller) RenderOrderById(w http.ResponseWriter, r *http.
 	orderMetaData, err := models.FetchOrderByOrderId(orderId)
 	billData, err := models.FetchBillDetailsByOrderId(orderId)
 
-	fmt.Println("hello from the render order page by id controller, data is : ", orderMetaData, billData)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error fetching bill data : %v", err), http.StatusInternalServerError)
 		return
