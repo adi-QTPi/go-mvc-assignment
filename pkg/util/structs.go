@@ -25,4 +25,5 @@ type DataToPage struct {
 	Popup         Popup
 	CategorySlice []models.Category
 	ItemSlice     []models.DisplayItem
+	OrderData     []models.Order
 }

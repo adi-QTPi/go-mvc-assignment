@@ -51,6 +51,15 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	popup := util.Popup{
+		Msg:     fmt.Sprintf("Successfully placed Order #%v", newOrder.OrderId),
+		IsError: false,
+	}
+
+	util.InsertPopupInFlash(w, r, popup)
+
+	// util.RedirectToSite(w, r, "/static/order")
+
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = fmt.Sprintf("Order Placed !!! orderId = %v", newOrder.OrderId)
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)

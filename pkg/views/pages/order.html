@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders page</title>
+
+    <link rel="stylesheet" href="/public/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+</head>
+{{$role := .XUser.Role}}{{$userName := .XUser.UserName}}
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+    <a class="navbar-brand mx-2 fs-2" href="/static/profile">Foodop1a</a>
+    <div class="fs-4 text-info caveat-cursive">| {{$userName}}</div>
+    <span class="navbar-text position-absolute start-50 translate-middle-x">Your <span class="truculenta-normal fs-3">Cravings...</span> Our <span class="truculenta-normal fs-3">Responsibility</span></span>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbar-text">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/static">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/static/menu">Menu</a>
+            </li>
+            {{if eq $role "admin"}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/admin">Manage Orders</a>
+                </li>
+            {{end}}
+            {{if eq $role "customer"}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/order">Your Orders</a>
+                </li>
+            {{end}}
+            {{if eq $role "cook"}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/cook">Cook</a>
+                </li>
+            {{end}}
+            <li class="nav-item d-flex flex-row">
+                <form action="/api/user/logout" method="post">
+                    <button class="btn btn-dark" type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+<body>
+    <h1 class="text-center bg-glass sticky-top z-5 py-2">Your Orders</h1>
+    <div class="d-flex flex-column flex-md-row bg-info sticky-top z-2">
+        <div class="flex-fill text-center fs-1 caveat-cursive">Pick a Date !</div>
+        <div class="flex-fill d-flex justify-content-center align-items-center"> 
+            <form class="" action="/static/orderbydate" method="get">
+                <div class="d-flex justify-content-center bg-dark text-light p-1 px-3 rounded-3 my-2 ">
+                    <input type="date" value="" name="date" id="date">
+                    <button class="btn text-light" type="submit">Go</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{$isError := .Popup.IsError}}{{$message := .Popup.Msg}}
+    {{if $isError }}
+        <div class="alert alert-danger alert-dismissible fade show col-lg-6 col-10 mx-auto my-2" role="alert">
+            <strong>Error!</strong> 
+            {{$message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {{else if ne $message ""}}
+        <div class="alert alert-success alert-dismissible fade show col-lg-6 col-10 mx-auto my-2" role="alert">
+            {{$message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {{end}}
+
+    <div class="d-flex flex-column flex-lg-row flex-wrap align-items-center justify-content-center m-1 m-md-4 gap-4 gap-md-4">
+
+        <a class="card card-orders-page d-flex flex-row border-2 border-dashed bg-light text-decoration-none btn btn-secondary" href='/static/menu'>
+            <div class="card-body flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+            <div class="display-1 text-dark mb-2">+</div>
+            <h5 class="text-info text-center mb-0 text-dark">Place New Order</h5>
+            </div>
+            <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center">
+            </div>
+        </a>
+
+        {{range .OrderData}}
+            <div class="card card-orders-page d-flex flex-row">
+                <div class="card-body flex-grow">
+                    <h5 class="card-title fs-1">Order #{{.OrderId}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <!-- <%= new Date(order.order_at).toLocaleTimeString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        }) %>  -->
+                        {{.OrderAt}}                  
+                    </h6>
+                    {{$status := .Status}}
+                    <h5 class="fs-3">
+                        {{if eq $status "paid"}}
+                            <span class="text-success">{{$status}}</span>
+                        {{else}}
+                            <span class="text-info">{{$status}}</span>
+                        {{end}}
+                    </h5>
+                    {{$orderId := .OrderId}}
+                    <form method="get" action="/static/order/{{$orderId}}">
+                        {{if eq $status "ready_to_serve"}}
+                            <button type="submit" class="btn btn-danger">Proceed to Pay</button>
+                        {{else if eq $status "paid"}}
+                            <button type="submit" class="btn btn-secondary">View Bill</button>
+                        {{else}}
+                            <button type="submit" class="btn btn-primary">Details</button>
+                        {{end}}
+                    </form>
+                </div>
+                <div class="flex-shrink-1 d-flex flex-column me-2">
+                    <div class="flex-grow text-center mt-auto truculenta-normal">Table No.</div>
+                    <div class="flex-shrink-1 fs-3rem text-center truculenta-normal">{{.TableNo.Int64}}</div>
+                </div>
+            </div>
+        {{end}}
+    </div>
+    <hr>
+</body>
+</html>

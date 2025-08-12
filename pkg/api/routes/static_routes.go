@@ -47,7 +47,7 @@ func ImplementStaticRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(customerSaticController.RenderCustOrderPage),
 			middleware.RestrictToRoles("customer"),
 		)).Methods("GET")
-	subRouter.Handle("/order/{date}",
+	subRouter.Handle("/orderbydate",
 		middleware.Chain(
 			http.HandlerFunc(customerSaticController.RenderCustOrderPage),
 			middleware.RestrictToRoles("customer"),

@@ -39,6 +39,10 @@ func InitiateStructSession() {
 		// &models.Category{}, giving error (duplication ???why)
 		[]models.Category{},
 		[]*models.Category{},
+
+		models.Order{},
+		[]models.Order{},
+		[]*models.Order{},
 	)
 }
 
