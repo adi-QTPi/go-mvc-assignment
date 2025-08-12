@@ -60,10 +60,6 @@ func (cuc *StaticOrderCotroller) RenderCustOrderPage(w http.ResponseWriter, r *h
 	// util.EncodeAndSendOrderWithStatus(w, orderSlice, http.StatusOK)
 }
 
-func (cuc *StaticOrderCotroller) RanderAdminOrderPage(w http.ResponseWriter, r *http.Request) {
-
-}
-
 func (cuc *StaticOrderCotroller) RenderOrderById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	orderId := params["id"]
@@ -92,7 +88,7 @@ func (cuc *StaticOrderCotroller) RenderOrderById(w http.ResponseWriter, r *http.
 	}
 
 	var responseJson util.StandardResponseJson
-	err = template_helpers.Tmpl.ExecuteTemplate(w, "order_by_id.html", toPage)
+	err = template_helpers.Tmpl.ExecuteTemplate(w, "bill_by_order_id.html", toPage)
 	if err != nil {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing order_by_id.html : %v", err)
