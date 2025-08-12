@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error Page</title>
+
+    {{template "headers"}}
 </head>
 <body>
+    {{template "navbar" .}}
     {{$message := .Popup.Msg}}{{$isError := .Popup.IsError}}
     <div>
         the error is : {{$message}}
