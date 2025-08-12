@@ -23,7 +23,7 @@ document.addEventListener("click", function(event) {
                 let new_item_for_cart = {
                     item_id: foundItem.item_id,
                     item_name: foundItem.item_name,
-                    price: foundItem.price,
+                    price: parseInt(foundItem.price, 10),
                     quantity: 1
                 }
                 event.target.innerText = "Remove";

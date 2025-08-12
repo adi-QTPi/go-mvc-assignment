@@ -39,7 +39,7 @@ func DecodeCartJsonInput(next http.Handler) http.Handler {
 
 		err := json.NewDecoder(r.Body).Decode(&orderSlice)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Invalid formatted request: %v", err), http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf("Invalid farmatting, from Decode Cart JSON Input middleware : %v", err), http.StatusBadRequest)
 			return
 		}
 

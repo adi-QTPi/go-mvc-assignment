@@ -26,4 +26,6 @@ type DataToPage struct {
 	CategorySlice []models.Category
 	ItemSlice     []models.DisplayItem
 	OrderData     []models.Order
+	OrderMetaData models.Order
+	BillData      []models.ItemOrderDescriptive
 }

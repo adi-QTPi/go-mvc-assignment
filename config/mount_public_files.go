@@ -18,7 +18,9 @@ func MountPublicFiles(router *mux.Router) {
 }
 
 var FuncMap = template.FuncMap{
-	"ToJSON": ToJSON,
+	"ToJSON":   ToJSON,
+	"add":      Add,
+	"multiply": Multiply,
 }
 
 func ToJSON(v interface{}) (template.JS, error) {
@@ -27,4 +29,12 @@ func ToJSON(v interface{}) (template.JS, error) {
 		return "", err
 	}
 	return template.JS(b), nil
+}
+
+func Multiply(a, b int) int {
+	return a * b
+}
+
+func Add(a, b int) int {
+	return a + b
 }

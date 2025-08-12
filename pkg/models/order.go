@@ -9,7 +9,7 @@ import (
 type ItemInCart struct {
 	ItemId      int64  `json:"item_id"`
 	Quantity    int64  `json:"quantity"`
-	TotalPrice  int64  `json:"total_price"`
+	Price       int64  `json:"price"`
 	Instruction string `json:"instruction"`
 }
 
@@ -26,6 +26,17 @@ type Order struct {
 type ItemOrder struct {
 	OrderId     int64          `json:"order_id"`
 	ItemId      int64          `json:"item_id"`
+	Quantity    int            `json:"quantity"`
+	Instruction sql.NullString `json:"instruction"`
+	IsComplete  string         `json:"is_complete"`
+	CookId      sql.NullString `json:"cook_id"`
+}
+
+type ItemOrderDescriptive struct {
+	OrderId     int64          `json:"order_id"`
+	ItemId      int64          `json:"item_id"`
+	ItemName    string         `json:"item_name"`
+	ItemPrice   int            `json:"price"`
 	Quantity    int            `json:"quantity"`
 	Instruction sql.NullString `json:"instruction"`
 	IsComplete  string         `json:"is_complete"`
@@ -212,4 +223,27 @@ func FetchOrderByOrderId(orderId string) (Order, error) {
 	}
 
 	return order, nil
+}
+
+func FetchBillDetailsByOrderId(orderId string) ([]ItemOrderDescriptive, error) {
+	sqlQuery := "SELECT o.order_id, io.item_id, i.item_name, i.price, io.quantity, io.instruction, io.is_complete, io.cook_id FROM `order` o INNER JOIN item_order io ON o.order_id = io.order_id INNER JOIN item i ON io.item_id = i.item_id INNER JOIN user u ON o.customer_id = u.user_id WHERE o.order_id = ?;"
+
+	rows, err := DB.Query(sqlQuery, orderId)
+	if err != nil {
+		return nil, fmt.Errorf("error in fetching order meta data and itemorderdescriptives : %v", err)
+	}
+	defer rows.Close()
+
+	var billData []ItemOrderDescriptive
+	for rows.Next() {
+		var i ItemOrderDescriptive
+		err := rows.Scan(&i.OrderId, &i.ItemId, &i.ItemName, &i.ItemPrice, &i.Quantity, &i.Instruction, &i.IsComplete, &i.CookId)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning the rows, %v", err)
+		}
+		fmt.Print(i)
+		billData = append(billData, i)
+	}
+
+	return billData, nil
 }

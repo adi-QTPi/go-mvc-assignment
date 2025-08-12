@@ -43,6 +43,10 @@ func InitiateStructSession() {
 		models.Order{},
 		[]models.Order{},
 		[]*models.Order{},
+
+		models.ItemOrderDescriptive{},
+		[]models.ItemOrderDescriptive{},
+		[]*models.ItemOrderDescriptive{},
 	)
 }
 

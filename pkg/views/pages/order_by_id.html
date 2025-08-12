@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>one order page</title>
+
+    <link rel="stylesheet" href="/public/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>    
+</head>
+<!-- <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+    <a class="navbar-brand mx-2 fs-2" href="/static/profile">Foodop1a</a>
+    <div class="fs-4 text-info caveat-cursive ">| <%= to_order_by_id_page.x_user.user_name %></div>
+
+    <span class="navbar-text position-absolute start-50 translate-middle-x">Your <span class="truculenta-normal fs-3">Cravings...</span> Our <span class="truculenta-normal fs-3">Responsibility</span></span>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbar-text">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/static/profile">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/static/menu">Menu</a>
+            </li>
+            <% if (to_order_by_id_page.x_user.role === "admin") { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/admin">Manage Orders</a>
+                </li>
+            <% } %>
+            <% if (to_order_by_id_page.x_user.role === "customer") { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/orders">Your Orders</a>
+                </li>
+            <% } %>
+            <% if (to_order_by_id_page.x_user.role === "cook") { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/cook">Cook</a>
+                </li>
+            <% } %>
+            <% if (to_order_by_id_page.x_user.role === "admin") { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/static/admin/create_new">New Account</a>
+                </li>
+            <% } %>
+            <li class="nav-item">
+                <form action="/api/user/logout" method="post">
+                    <button class="btn btn-dark" type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav> -->
+<body>
+    {{$role := .XUser.Role}}
+    {{$orderMetaData := .OrderMetaData}}
+    {{$orderId := $orderMetaData.OrderId}}
+    {{$orderStatus := $orderMetaData.Status}}
+    {{$orderAt := $orderMetaData.OrderAt}}
+    {{$orderBy := $orderMetaData.CustomerName}}
+    {{$tableNo := $orderMetaData.TableNo.Int64}}
+    {{$totalPrice := $orderMetaData.TotalPrice}}
+    {{$billData := .BillData}}
+    <h1 class="truculenta-normal text-center bg-glass sticky-top z-5 py-2 mt-5">Order #{{$orderMetaData.OrderId}} ->
+        <span class="
+        {{if eq $orderStatus "paid"}}
+        text-success
+        {{else if eq $orderStatus "ready_to_serve"}}
+        text-danger
+        {{else}}
+         text-info
+        {{end}}
+        ">{{$orderStatus}}</span>
+    </h1>
+
+
+    <div class="container">
+        <div class="text-center truculenta-normal">On <span class="fs-4 text-primary ">{{$orderAt}}</span> @ <span class="fs-4 text-primary">{{$orderAt}}</span> 
+            {{if eq $role "admin"}}
+                by <span class="fs-4 text-primary">{{$orderBy}}</span>
+            {{end}}
+        </div>
+        <div class=" fs-3 text-center truculenta-normal">Table Number : <span class="text-primary">{{$tableNo}}</span></div>
+        <table class="bg-light-pink col-10 mx-auto rounded-4">
+            <thead>
+                <th class="text-center">S.No.</th>
+                <th>Item</th>
+                <th class="text-center">Qty</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Progress</th>
+                {{if and (ne $orderStatus "paid") (ne $orderStatus "ready_to_serve")}}
+                    <th>Instruction</th>
+                {{end}}
+            </thead>
+            <tbody>
+                {{range $index, $element := $billData}}
+                <tr>
+                    <td class="col-1 text-center">{{add $index 1}}</td>
+                    <td class="col-4 fs-4">{{$element.ItemName}}</td>
+                    <td class="col-1 text-center">{{$element.Quantity}}</td>
+                    <td class="col-2 text-center">₹{{multiply $element.Quantity $element.ItemPrice}}</td>
+                    <td class="col-auto text-center">{{$element.IsComplete}}</td>
+                    {{if ne $element.IsComplete "complete"}}
+                        {{if eq $element.Instruction.String ""}}
+                            <td>None</td>
+                        {{else}}
+                            <td>{{$element.Instruction.String}}</td>
+                        {{end}}
+                    {{end}}
+                </tr>
+                {{end}}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="col-1 text-center caveat-cursive fs-2">Total</td>
+                    <td class="col-2 text-center caveat-cursive fs-2">₹{{$totalPrice}}/-</td>
+                </tr>
+            </tbody>
+        </table>
+        {{if and (eq $orderStatus "ready_to_serve") (eq $role "customer") }}
+            <div class="text-center mt-5 truculenta-normal fs-3">Happy to Serve you...</div>
+            <form class="form-floating col-10 col-lg-5 mx-auto d-flex flex-column align-items-center gap-2" method="post" action="/api/pay">
+                <input type="hidden" name="order_id" value={{$orderId}} >
+                <input type="hidden" name="total_amount" value={{$totalPrice}} >
+                <input class="form-control" type="text" name="customer_review" id = "customer_review" placeholder="abc">
+                <label for="customer_review">Leave a Review and help us Improve !</label>
+                <button class="btn btn-danger" type="submit">Proceed with the Payment</button>
+            </form>
+        {{end}}
+    </div>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 const to_menu_page = JSON.parse(sessionStorage.getItem("to_menu_page"));
-const item_in_cart = JSON.parse(sessionStorage.getItem("item_in_cart"));
+let item_in_cart = JSON.parse(sessionStorage.getItem("item_in_cart"));
 
 async function render_cart(item_in_cart){
     const cart_space = document.getElementsByClassName("cart_space")[0];
@@ -91,6 +91,16 @@ cart_form.addEventListener("submit", (e)=>{
     }
 
     sessionStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
+    console.log(item_in_cart)
+
+    let cart_items_string = sessionStorage.getItem("item_in_cart");
+    item_in_cart = JSON.parse(cart_items_string);
+
+    for (let item of item_in_cart){
+        let priceString = item.price
+        item.price = 0
+        item.price = parseInt(priceString,10)
+    }
 
     fetch("/api/order", {
     method: "POST",

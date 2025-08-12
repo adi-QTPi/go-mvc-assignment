@@ -23,7 +23,7 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 
 	totalOrderPrice := 0
 	for _, v := range orderSlice {
-		totalOrderPrice += int(v.TotalPrice)
+		totalOrderPrice += int(v.Price * v.Quantity)
 	}
 
 	var newOrder models.Order
