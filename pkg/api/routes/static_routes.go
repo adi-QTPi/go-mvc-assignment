@@ -35,11 +35,11 @@ func ImplementStaticRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(adminStaticController.FetchAdminOrderDashboardByDate),
 			middleware.RestrictToRoles("admin"),
 		)).Methods("GET")
-	subRouter.Handle("/admin/{date}",
-		middleware.Chain(
-			http.HandlerFunc(adminStaticController.FetchAdminOrderDashboardByDate),
-			middleware.RestrictToRoles("admin"),
-		)).Methods("GET")
+	// subRouter.Handle("/adminbydate",
+	// 	middleware.Chain(
+	// 		http.HandlerFunc(adminStaticController.FetchAdminOrderDashboardByDate),
+	// 		middleware.RestrictToRoles("admin"),
+	// 	)).Methods("GET")
 
 	customerSaticController := controllers.NewCustStaticController()
 	subRouter.Handle("/order",
@@ -47,11 +47,11 @@ func ImplementStaticRoutes(subRouter *mux.Router) {
 			http.HandlerFunc(customerSaticController.RenderCustOrderPage),
 			middleware.RestrictToRoles("customer"),
 		)).Methods("GET")
-	subRouter.Handle("/orderbydate",
-		middleware.Chain(
-			http.HandlerFunc(customerSaticController.RenderCustOrderPage),
-			middleware.RestrictToRoles("customer"),
-		)).Methods("GET")
+	// subRouter.Handle("/orderbydate",
+	// 	middleware.Chain(
+	// 		http.HandlerFunc(customerSaticController.RenderCustOrderPage),
+	// 		middleware.RestrictToRoles("customer"),
+	// 	)).Methods("GET")
 
 	renderer := controllers.NewPageRenderer()
 	subRouter.Handle("",

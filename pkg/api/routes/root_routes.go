@@ -22,6 +22,13 @@ func ImplementRootRoutes(subRouter *mux.Router) {
 			middleware.AddUserInfoInContext,
 		)).Methods("GET")
 
+	staticErrorController := controllers.NewStaticErrorController()
+	subRouter.Handle("/error",
+		middleware.Chain(
+			http.HandlerFunc(staticErrorController.RenderErrorPage),
+			middleware.AddUserInfoInContext,
+		)).Methods("GET")
+
 	subRouter.Handle("/",
 		http.HandlerFunc(
 			func(w http.ResponseWriter, r *http.Request) {

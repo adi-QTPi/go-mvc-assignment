@@ -46,7 +46,14 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 	PriceStr := r.Form.Get("price")
 	newItem.Price, err = strconv.ParseInt(PriceStr, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid input for price ", http.StatusBadRequest)
+		// http.Error(w, "Invalid input for price ", http.StatusBadRequest)
+		popup := util.Popup{
+			Msg:     "Invalid input for price",
+			IsError: true,
+		}
+		util.InsertPopupInFlash(w, r, popup)
+		reqFrom := r.Referer()
+		util.RedirectToSite(w, r, reqFrom)
 		return
 	}
 

@@ -44,7 +44,7 @@ func ImplementApiRoutes(subRouter *mux.Router) {
 	subRouter.Handle("/item",
 		middleware.Chain(
 			http.HandlerFunc(itemController.AddItem),
-			middleware.RequiredEntries("item_name", "price", "cat_id"),
+			middleware.RequiredEntries("item_name", "cook_time_min", "price", "cat_id", "subcat_id"),
 			middleware.RestrictToRoles("admin"),
 		)).Methods("POST")
 

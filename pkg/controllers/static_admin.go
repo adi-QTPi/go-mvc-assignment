@@ -7,7 +7,6 @@ import (
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
-	"github.com/gorilla/mux"
 )
 
 type AdminStaticController struct{}
@@ -19,8 +18,8 @@ func NewAdminStaticController() *AdminStaticController {
 func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.ResponseWriter, r *http.Request) {
 	xUser := util.ExtractUserFromContext(r)
 
-	params := mux.Vars(r)
-	reqDate := params["date"]
+	queryParams := r.URL.Query()
+	reqDate := queryParams.Get("date")
 
 	if reqDate == "" {
 		today := time.Now()

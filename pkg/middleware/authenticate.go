@@ -181,9 +181,10 @@ func RestrictToRoles(allowedRoles ...string) func(http.Handler) http.Handler {
 				IsError: true,
 			}
 
-			requestFrom := r.Referer()
+			// requestFrom := r.Referer()
+			// fmt.Println(requestFrom)
 			util.InsertPopupInFlash(w, r, popup)
-			util.RedirectToSite(w, r, requestFrom)
+			util.RedirectToSite(w, r, "/error")
 
 			// var responseJson util.StandardResponseJson
 			// responseJson.Msg = "User is Unauthorised"
