@@ -142,14 +142,13 @@ async function render_filtered_menu(filtered_menu){
     
     let reverse_filtered_menu = [...filtered_menu].reverse();
 
-
     for( let items of reverse_filtered_menu){
         let new_el = document.createElement("div");
         new_el.classList.add("card" ,"col-10", "col-lg-5" ,"d-flex" ,"flex-column");
 
         let img_path = "/public/images/sample_food.png";
-        if(items.display_pic.String !== ""){
-            img_path = "/"+items.display_pic.String;
+        if(items.display_pic.Valid ){
+            img_path = items.display_pic.String;
         }
 
         if(to_menu_page.XUser.role === "admin"){
@@ -171,17 +170,16 @@ async function render_filtered_menu(filtered_menu){
                     </div>
                     <div class="d-flex flex-row col-10">
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.cat_name}
+                            ${items.category}
                         </div>
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.subcat_name}
+                            ${items.subcategory}
                         </div>
                     </div>
                 </div>
                 <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center">
                     <div class="fs-3">₹ ${items.price}</div>
-                    <form action="/api/item/delete"  method="post">
-                        <input type="hidden" name="item_id" value="${items.item_id}">
+                    <form action="/api/item/d/${items.item_id}"  method="post">
                         <button type="submit" class="btn btn-danger">Delete Item</button>
                     </form>
                 </div>
@@ -207,10 +205,10 @@ async function render_filtered_menu(filtered_menu){
                     </div>
                     <div class="d-flex flex-row col-10">
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.cat_name}
+                            ${items.category}
                         </div>
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.subcat_name}
+                            ${items.subcategory}
                         </div>
                     </div>
                 </div>
@@ -239,10 +237,10 @@ async function render_filtered_menu(filtered_menu){
                     </div>
                     <div class="d-flex flex-row col-10">
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.cat_name}
+                            ${items.category}
                         </div>
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.subcat_name}
+                            ${items.subcategory}
                         </div>
                     </div>
                 </div>

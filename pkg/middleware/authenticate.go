@@ -61,11 +61,7 @@ func CheckIfUserExists(next http.Handler) http.Handler {
 		userName := r.Form.Get("user_name")
 		// password := r.Form.Get("password")
 		var userId string
-		isThere, err, userId := models.GetUserByUsername(userName)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Error running the query for get user by username: %v", err), http.StatusInternalServerError)
-			return
-		}
+		isThere, _, userId := models.GetUserByUsername(userName)
 		if !isThere {
 			toLoginPage := util.Popup{
 				Msg:     "User Not Found... Signup to Create New Account !",
