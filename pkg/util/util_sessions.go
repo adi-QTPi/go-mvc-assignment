@@ -54,14 +54,14 @@ func InitiateStructSession() {
 }
 
 func InsertPopupInFlash(w http.ResponseWriter, r *http.Request, object Popup) error {
-	session, err := SessionStore.Get(r, sessionName)
-	if err != nil {
-		return fmt.Errorf("error getting the session from session store : %v", err)
-	}
+	session, _ := SessionStore.Get(r, sessionName)
+	// if err != nil {
+	// 	return fmt.Errorf("error getting the session from session store : %v", err)
+	// }
 
 	session.AddFlash(object)
 
-	err = session.Save(r, w)
+	err := session.Save(r, w)
 	if err != nil {
 		return fmt.Errorf("error saving the flash session : %v", err)
 	}

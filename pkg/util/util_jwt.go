@@ -47,8 +47,12 @@ func DecryptJwtToken(w http.ResponseWriter, r *http.Request, tokenValue string) 
 	})
 
 	if err != nil || !token.Valid {
-		http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
 		var blankUser models.User
+		popup := Popup{
+			Msg:     "Invalid or Expired token, login again",
+			IsError: true,
+		}
+		InsertPopupInFlash(w, r, popup)
 		return blankUser
 	}
 
