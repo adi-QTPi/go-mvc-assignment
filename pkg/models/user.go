@@ -6,11 +6,10 @@ import (
 )
 
 type User struct {
-	UserId     string `json:"user_id"`
-	UserName   string `json:"user_name"`
-	Name       string `json:"name"`
-	Role       string `json:"role"`
-	DisplayPic string `json:"display_pic"`
+	UserId   string `json:"user_id"`
+	UserName string `json:"user_name"`
+	Name     string `json:"name"`
+	Role     string `json:"role"`
 }
 
 func GetAllUsers() ([]User, error) {

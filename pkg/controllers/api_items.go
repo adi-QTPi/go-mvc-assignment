@@ -46,7 +46,6 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 	PriceStr := r.Form.Get("price")
 	newItem.Price, err = strconv.ParseInt(PriceStr, 10, 64)
 	if err != nil {
-		// http.Error(w, "Invalid input for price ", http.StatusBadRequest)
 		popup := util.Popup{
 			Msg:     "Invalid input for price",
 			IsError: true,
@@ -57,7 +56,13 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// newItem.DisplayPic = r.Form.Get("display_pic")
+	newItem.DisplayPic.String, err = util.ManageImageUpload(r)
+	if err != nil {
+		newItem.DisplayPic.Valid = false
+		http.Error(w, "error in image upload ", http.StatusBadRequest)
+		return
+	}
+	newItem.DisplayPic.Valid = true
 
 	CatIdStr := r.Form.Get("cat_id")
 	newItem.CatId, err = strconv.ParseInt(CatIdStr, 10, 64)

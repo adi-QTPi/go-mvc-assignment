@@ -18,15 +18,15 @@ type Item struct {
 }
 
 type DisplayItem struct {
-	ItemId      int64          `json:"item_id"`
-	ItemName    string         `json:"item_name"`
-	CookTimeMin string         `json:"cook_time_min"`
-	Price       string         `json:"price"`
-	DisplayPic  sql.NullString `json:"display_pic"`
-	CatId       int64          `json:"cat_id"`
-	Category    string         `json:"category"`
-	SubCatId    int64          `json:"subcat_id"`
-	SubCategory string         `json:"subcategory"`
+	ItemId      int64  `json:"item_id"`
+	ItemName    string `json:"item_name"`
+	CookTimeMin string `json:"cook_time_min"`
+	Price       string `json:"price"`
+	DisplayPic  string `json:"display_pic"`
+	CatId       int64  `json:"cat_id"`
+	Category    string `json:"category"`
+	SubCatId    int64  `json:"subcat_id"`
+	SubCategory string `json:"subcategory"`
 }
 
 func GetAllItems() ([]DisplayItem, error) {
@@ -42,10 +42,14 @@ func GetAllItems() ([]DisplayItem, error) {
 
 	for rows.Next() {
 		var oneItem DisplayItem
-		err := rows.Scan(&oneItem.ItemId, &oneItem.ItemName, &oneItem.CookTimeMin, &oneItem.Price, &oneItem.DisplayPic, &oneItem.CatId, &oneItem.Category, &oneItem.SubCatId, &oneItem.SubCategory)
-
+		var displayPic sql.NullString
+		err := rows.Scan(&oneItem.ItemId, &oneItem.ItemName, &oneItem.CookTimeMin, &oneItem.Price, &displayPic, &oneItem.CatId, &oneItem.Category, &oneItem.SubCatId, &oneItem.SubCategory)
 		if err != nil {
 			return nil, fmt.Errorf("error fetching items -> %v", err)
+		}
+
+		if displayPic.Valid {
+			oneItem.DisplayPic = displayPic.String
 		}
 		fetchedItems = append(fetchedItems, oneItem)
 	}

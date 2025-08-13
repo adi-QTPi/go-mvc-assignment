@@ -20,7 +20,15 @@ func (sl *StaticController) RenderMenuPage(w http.ResponseWriter, r *http.Reques
 
 	xUser := util.ExtractUserFromContext(r)
 	categorySlice, err := models.GetAllCategories()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error getting category slice from sessions and db : %v", err), http.StatusInternalServerError)
+		return
+	}
 	itemSlice, err := models.GetAllItems()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error getting itemSlice from sessions and db : %v", err), http.StatusInternalServerError)
+		return
+	}
 	popup, err := util.ExtractPopupFromFlash(w, r)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting stuff from sessions and db : %v", err), http.StatusInternalServerError)
