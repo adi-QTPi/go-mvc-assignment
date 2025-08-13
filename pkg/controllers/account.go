@@ -105,10 +105,10 @@ func (ac *AccountController) CreateNewUserByAdmin(w http.ResponseWriter, r *http
 		IsError: false,
 	}
 
-	err = util.InsertPopupInFlash(w, r, popup)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Error inserting popup before redirect (in signup page): %v", err), http.StatusInternalServerError)
-	}
+	util.InsertPopupInFlash(w, r, popup)
+	// if err != nil {
+	// 	http.Error(w, fmt.Sprintf("Error inserting popup before redirect (in signup page): %v", err), http.StatusInternalServerError)
+	// }
 	util.RedirectToSite(w, r, "/signup")
 }
 

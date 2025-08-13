@@ -69,7 +69,7 @@ function removeItem(itemId) {
     if (item_index !== -1) {
         item_in_cart.splice(item_index, 1);
         sessionStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
-        if (item_in_cart.length === 1) {
+        if (item_in_cart.length === 0) {
             window.location.href = "/static/menu";
         } else {
             render_cart(item_in_cart);
