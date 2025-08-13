@@ -16,7 +16,26 @@ var (
 	MYSQL_PORT      string
 	JWT_SECRET      string
 	SESSIONS_SECRET string
+	ADMIN_USERNAME  string
+	ADMIN_NAME      string
+	ADMIN_PASSWORD  string
 )
+
+func LoadAdminDetailsEnv() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("Error loading .env file (from : LoadMainEnv)")
+	}
+
+	if ADMIN_USERNAME = os.Getenv("ADMIN_USERNAME"); ADMIN_USERNAME == "" {
+		log.Fatal("Set a proper ADMIN_USERNAME secret in .env file")
+	}
+	if ADMIN_NAME = os.Getenv("ADMIN_NAME"); ADMIN_NAME == "" {
+		log.Fatal("Set a proper ADMIN_NAME secret in .env file")
+	}
+	if ADMIN_PASSWORD = os.Getenv("ADMIN_PASSWORD"); ADMIN_PASSWORD == "" {
+		log.Fatal("Set a proper ADMIN_PASSWORD secret in .env file")
+	}
+}
 
 func LoadJwtEnv() {
 	if err := godotenv.Load(".env"); err != nil {
@@ -25,7 +44,6 @@ func LoadJwtEnv() {
 
 	if JWT_SECRET = os.Getenv("JWT_SECRET"); JWT_SECRET == "" {
 		log.Fatal("Set a proper JWT secret in .env file")
-
 	}
 }
 

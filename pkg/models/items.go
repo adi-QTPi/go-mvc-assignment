@@ -18,15 +18,15 @@ type Item struct {
 }
 
 type DisplayItem struct {
-	ItemId      int64  `json:"item_id"`
-	ItemName    string `json:"item_name"`
-	CookTimeMin string `json:"cook_time_min"`
-	Price       string `json:"price"`
-	DisplayPic  string `json:"display_pic"`
-	CatId       int64  `json:"cat_id"`
-	Category    string `json:"category"`
-	SubCatId    int64  `json:"subcat_id"`
-	SubCategory string `json:"subcategory"`
+	ItemId      int64          `json:"item_id"`
+	ItemName    string         `json:"item_name"`
+	CookTimeMin string         `json:"cook_time_min"`
+	Price       string         `json:"price"`
+	DisplayPic  sql.NullString `json:"display_pic"`
+	CatId       int64          `json:"cat_id"`
+	Category    string         `json:"category"`
+	SubCatId    int64          `json:"subcat_id"`
+	SubCategory string         `json:"subcategory"`
 }
 
 func GetAllItems() ([]DisplayItem, error) {
@@ -49,7 +49,7 @@ func GetAllItems() ([]DisplayItem, error) {
 		}
 
 		if displayPic.Valid {
-			oneItem.DisplayPic = displayPic.String
+			oneItem.DisplayPic = displayPic
 		}
 		fetchedItems = append(fetchedItems, oneItem)
 	}

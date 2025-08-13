@@ -241,7 +241,6 @@ func FetchBillDetailsByOrderId(orderId string) ([]ItemOrderDescriptive, error) {
 		if err != nil {
 			return nil, fmt.Errorf("error scanning the rows, %v", err)
 		}
-		fmt.Print(i)
 		billData = append(billData, i)
 	}
 

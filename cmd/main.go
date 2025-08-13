@@ -10,6 +10,7 @@ import (
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/api"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
+	"github.com/adi-QTPi/go-mvc-assignment/setup"
 	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
 )
 
@@ -34,8 +35,14 @@ func main() {
 		Handler: router,
 	}
 
+	template_helpers.MountUploadsFolder(router)
 	template_helpers.MountPublicFiles(router)
 	util.InitiateStructSession()
+
+	err = setup.MakeAdminUser()
+	if err != nil {
+		log.Fatalf("error in making admin user : %v", err)
+	}
 
 	fmt.Printf("\nStarting the server... access on port %v \n\n", config.SERVER_PORT)
 

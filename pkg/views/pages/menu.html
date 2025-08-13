@@ -47,8 +47,11 @@
             {{range $itemSlice}}
                 <div class="card d-flex flex-column col-10 col-lg-5">
                     <div class="ratio ratio-21x9 menu-card-image-container">
-                        <img class="card-img-top menu-card-image" src="/public/images/sample_food.png"
-                        alt="sample-pic">
+                        {{if .DisplayPic.Valid}}
+                            <img class="card-img-top menu-card-image" src="{{.DisplayPic.String}}" alt="food item image">
+                        {{else}}
+                            <img class="card-img-top menu-card-image" src="/public/images/sample_food.png" alt="sample-pic">
+                        {{end}}
                     </div>
                     <div class="d-flex flex-row">
                         <div class="card-body flex-grow">

@@ -15,3 +15,8 @@ func MountPublicFiles(router *mux.Router) {
 
 	Tmpl = template.Must(template.New("").Funcs(FuncMap).ParseGlob("pkg/views/**/*.html"))
 }
+
+func MountUploadsFolder(router *mux.Router) {
+	fs := http.FileServer(http.Dir("uploads"))
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/uploads/", fs))
+}
