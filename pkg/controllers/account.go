@@ -87,6 +87,7 @@ func (ac *AccountController) CreateNewUserByAdmin(w http.ResponseWriter, r *http
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error in inserting popup: %v", err), http.StatusInternalServerError)
 		}
+		util.RedirectToSite(w, r, "/signup")
 		return
 	}
 	if err != nil {
