@@ -71,7 +71,8 @@ for (let filter of filter_buttons){
             selected_filters.splice(selected_filters.indexOf(cat_id), 1);
         }
         create_filtered_menu(selected_filters);
-        render_filtered_menu(filtered_menu);
+        // render_filtered_menu(filtered_menu);
+        renderWithSearchResults();
         toggle_add_to_cart_button_label();
     })
 }
@@ -86,7 +87,8 @@ clear_filter_button.addEventListener("click", ()=>{
         selected_filters = [];
     }
     create_filtered_menu(selected_filters);
-    render_filtered_menu(filtered_menu);
+    // render_filtered_menu(filtered_menu);
+    renderWithSearchResults();
     toggle_add_to_cart_button_label();
 })
 
@@ -228,7 +230,11 @@ async function render_filtered_menu(filtered_menu){
 const search_input = document.getElementById("search-input");
 
 search_input.addEventListener("input", (e) => {
-    const searchTerm = e.target.value.trim();
+    renderWithSearchResults();
+});
+
+async function renderWithSearchResults(){
+    const searchTerm = search_input.value.trim();
     if (searchTerm === "") {
         create_filtered_menu(selected_filters);
         render_filtered_menu(filtered_menu);
@@ -240,10 +246,38 @@ search_input.addEventListener("input", (e) => {
             const filteredBySearchAndCategory = searchResults.filter(item => 
                 selected_filters.includes(item.cat_id) || selected_filters.includes(item.subcat_id)
             );
-            render_filtered_menu(filteredBySearchAndCategory);
+
+            if (filteredBySearchAndCategory.length === 0) {
+                filtered_menu_space.innerHTML = "";
+                let noItemsCard = document.createElement("div");
+                noItemCardRender(noItemsCard);
+                filtered_menu_space.appendChild(noItemsCard);
+                filtered_menu_space.style.display = "block";
+            } else {
+                render_filtered_menu(filteredBySearchAndCategory);
+            }
         } else {
-            render_filtered_menu(searchResults);
+            if (searchResults.length == 0) {
+                filtered_menu_space.innerHTML = "";
+                let noItemsCard = document.createElement("div");
+                noItemCardRender(noItemsCard)
+                
+                filtered_menu_space.appendChild(noItemsCard);
+                filtered_menu_space.style.display = "block";
+            } else {
+                render_filtered_menu(searchResults);
+            }
         }
     }
     toggle_add_to_cart_button_label();
-});
+}
+
+function noItemCardRender(element){
+    element.classList.add("card", "col-12", "d-flex", "flex-column", "m-4", "mx-auto", "p-4", "text-center");
+    element.innerHTML = `
+        <div class="card-body"> 
+            <div class="card-title fs-2">No Items Found</div>
+            <div class="card-text">Try searching for something else or clearing your filters.</div>
+        </div>
+    `;
+}
