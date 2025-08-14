@@ -9,7 +9,7 @@ async function render_cart(item_in_cart){
     cart_space.innerHTML = ``;
     for (let items of item_in_cart){
         let new_el = document.createElement("div");
-        new_el.classList.add("card", "d-flex", "flex-row", "col-12", "col-lg-10", "mx-auto");
+        new_el.classList.add("card", "d-flex", "flex-row", "col-12", "col-lg-10", "mx-auto", "rounded-5");
         let sub_total = items.quantity * items.price;
 
         new_el.innerHTML = `
@@ -18,7 +18,7 @@ async function render_cart(item_in_cart){
                     ${items.item_name}
                 </div>
                 <div class="card-subtitle text-muted form-floating col-12">
-                    <input type="text" class="form-control item_instruction_input" data-item-id="${items.item_id}" placeholder="abc" id="instruction">
+                    <input type="text" class="form-control item_instruction_input rounded-5" data-item-id="${items.item_id}" placeholder="abc" id="instruction">
                     <label for="instruction">Instruction for the Chef</label>
                 </div>
             </div>
@@ -31,7 +31,7 @@ async function render_cart(item_in_cart){
                 </div>
             </div>
             <div class="flex-shrink-1 d-flex align-items-center justify-content-center mx-1 me-3">
-                <button type="button" class="delete-btn btn btn-danger">Remove</button>
+                <button type="button" class="delete-btn btn bg-queen-pink text-white rounded-pill fs-3">Remove</button>
             </div>
         `;
         cart_space.appendChild(new_el);

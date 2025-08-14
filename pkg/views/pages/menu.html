@@ -21,37 +21,51 @@
 {{$message := .Popup.Msg}}  {{$isError := .Popup.IsError}}
 {{$categorySlice := .CategorySlice}}
 <body>
-    <input type="text" id="search-input" placeholder="Search for a dish...">
-    {{template "popup" .}}
-    <h1 class="text-center bg-glass sticky-top z-5 py-2">Menu Page</h1>
-
-    {{template "adminMenuFragment" .}}
-
-    <div class="d-flex col-11 col-lg-8 mx-auto border-queen-pink rounded-4">
-        <div class="flex-shrink-1 p-2 text-queen-pink fs-4 border-filter mx-1 caveat-cursive">Filters</div>
-        <div class=" d-flex  overflow-auto filter-buttons">
-            {{range $categorySlice}}
-                <button class="btn-filter rounded-2 m-2 col-auto" data-btn="{{.CategoryId}}">{{.CategoryName}}</button>
-            {{end}}
+    <div class=" col-12 d-flex justify-content-center bg-glass sticky-top z-5 py-2 mb-4">
+        {{if eq $role "admin"}}
+        <div class="col-9 d-flex flex-column flex-lg-row align-items-center justify-content-lg-between gap-4 ">
+            <h1 class="">Menu Page</h1>
+            <div class="d-flex col-4 justify-content-end gap-4">
+                <button class="btn bg-turq-bold text-wheat col-6 fs-3" data-bs-toggle="modal" data-bs-target="#item-modal">Add Item</button>
+                <button class="btn bg-turq-bold text-wheat col-6 fs-3" data-bs-toggle="modal" data-bs-target="#category-modal">Add Category</button>
+            </div>
         </div>
-        <div class="clear-filter-button flex-shrink-1 p-2 text-queen-pink fs-4 border-filter border-filter-clear ms-auto mx-1 caveat-cursive">Clear</div>
+        {{else}}
+        <div class="col-9 d-flex flex-column flex-lg-row align-items-center justify-content-lg-center gap-4 ">
+            <h1 class="">Menu Page</h1>
+        </div>
+        {{end}}
+    </div>    
+    <div class="d-flex flex-column flex-lg-row col-11 col-lg-9 mx-auto gap-2">
+        <div class="d-flex col-11 col-lg-8 mx-auto border-queen-pink rounded-4">
+            <div class="flex-shrink-1 p-2 text-queen-pink fs-2 border-filter mx-1 truculenta-normal ">Filters</div>
+            <div class=" d-flex  overflow-auto filter-buttons">
+                {{range $categorySlice}}
+                    <button class="btn-filter rounded-2 m-2 col-auto fs-5" data-btn="{{.CategoryId}}">{{.CategoryName}}</button>
+                {{end}}
+            </div>
+            <div class="clear-filter-button flex-shrink-1 p-2 text-queen-pink fs-2 border-filter border-filter-clear ms-auto mx-1 truculenta-normal">Clear</div>
+        </div>
+        <input class="border-queen-pink rounded-4 col-8 mx-auto  flex-lg-fill truculenta-normal fs-3 bg-search px-4" type="text" id="search-input" placeholder="Search for a dish...">
     </div>
 
-    <div class="filtered-menu-space py-3 my-2"></div>
+    {{template "adminModals" .}}
+    
+    {{template "popup" .}}
 
-    <div class="full-menu-space py-3 my-2">
-        <div class="fs-2 text-center">Complete Menu</div>
+    <div class="filtered-menu-space py-3 bg-light-pink"></div>
+
+    <div class="full-menu-space py-3 bg-turq">
         <div
             class="d-flex flex-column flex-lg-row flex-wrap align-items-center justify-content-center m-1 m-md-4 gap-2 gap-md-4">
-
             {{$itemSlice := .ItemSlice}}
             {{range $itemSlice}}
-                <div class="card d-flex flex-column col-10 col-lg-5">
-                    <div class="ratio ratio-21x9 menu-card-image-container">
+                <div class="card d-flex flex-column col-10 col-lg-5 rounded-5">
+                    <div class="ratio ratio-21x9 menu-card-image-container rounded-5">
                         {{if .DisplayPic.Valid}}
-                            <img class="card-img-top menu-card-image" src="{{.DisplayPic.String}}" alt="food item image">
+                            <img class="card-img-top menu-card-image rounded-top-5" src="{{.DisplayPic.String}}" alt="food item image">
                         {{else}}
-                            <img class="card-img-top menu-card-image" src="/public/images/sample_food.png" alt="sample-pic">
+                            <img class="card-img-top menu-card-image rounded-top-5" src="/public/images/sample_food.png" alt="sample-pic">
                         {{end}}
                     </div>
                     <div class="d-flex flex-row">
@@ -59,31 +73,30 @@
                             <div class="card-title fs-2">
                                 {{.ItemName}}
                             </div>
-                            <div class="card-subtitle text-muted">
+                            <div class="card-subtitle text-muted ">
                                 wait time : <span class="text-queen-pink">
                                     {{.CookTimeMin}}
                                 </span> Minutes
                             </div>
                             <div class="d-flex flex-row col-10">
-                                <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
+                                <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5 rounded-5 bg-turq">
                                     {{.Category}}
                                 </div>
                                 {{if .SubCategory}}
-                                    <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
+                                    <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5 rounded-5 bg-turq">
                                         {{.SubCategory}}
                                     </div>
                                 {{end}}
                             </div>
                         </div>
-                        <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center col-2">
+                        <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-around ">
                             <div class="fs-3 mx-auto">₹{{.Price}}</div>
                             {{if eq $role "customer"}}
-                                <button class="add-to-cart btn btn-danger" id="{{.ItemId}}">Add to Cart</button>
+                                <button class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="{{.ItemId}}">Add to Cart</button>
                             {{end}}
                             {{if eq $role "admin"}}
                                 <form action="/api/item/d/{{.ItemId}}" method="post">
-                                    <!-- <input type="hidden" name="_method" value="DELETE"> -->
-                                    <button type="submit" class="btn btn-danger">Delete Item</button>
+                                    <button type="submit" class="btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4">Delete Item</button>
                                 </form>
                             {{end}}
                         </div>

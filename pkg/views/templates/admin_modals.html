@@ -1,0 +1,100 @@
+{{define "adminModals"}}
+
+{{$role := .XUser.Role}}
+{{$categorySlice := .CategorySlice}}
+
+<div class="col-10 d-flex justify-content-between">
+    
+</div>
+
+
+<div class="modal fade" id="item-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Add New Item</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+        <form class="text-center mx-auto d-flex flex-column gap-2 align-items-center" action="/api/item" method="post" enctype="multipart/form-data">
+    
+            <div class="form-floating col-10">
+                <input type="text" name="item_name" id="item_name" class="form-control" placeholder="abc">
+                <label for="item_name">Item Name</label>
+            </div>
+
+            <div class="d-flex flex-row justify-content-between gap-2 col-10">
+                <div class="form-floating flex-fill">
+                    <select placeholder="abc" name="cat_id" id="cat_id" class="form-control">
+                        <option selected disabled></option>
+                        {{range $categorySlice}}
+                            <option value="{{.CategoryId}}">{{.CategoryName}}</option>
+                        {{end}}
+                    </select>
+                    <label for="cat_id">Category</label>
+                </div>
+                <div class="form-floating flex-fill">
+                    <select placeholder="abc" name="subcat_id" id="subcat_id" class="form-control">
+                        <option selected disabled></option>
+                        {{range $categorySlice}}
+                            <option value="{{.CategoryId}}">{{.CategoryName}}</option>
+                        {{end}}
+                    </select>
+                    <label for="subcat_id">Sub-Category</label>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-between gap-2 col-10">
+                <div class="form-floating flex-fill w-100">
+                    <input type="number" id="cook_time_min" name="cook_time_min" min="0" max="120" class="form-control" placeholder="abc">
+                    <label for="cook_time_min">Cook Time (minutes)</label>
+                </div>
+                <div class="form-floating flex-fill w-100">
+                    <input type="text" name="price" id="price" class="form-control" placeholder="abc">
+                    <label for="price">Price</label>
+                </div>
+            </div>
+            <div class="mb-3 col-10">
+                <label for="display_pic" class="form-label fw-bold">Display Image</label>
+                <input type="file" class="form-control" id="display_pic" name="display_pic" accept="image/*">
+                <div class="form-text">Choose an image file (JPG, PNG, etc.)</div>
+            </div>
+
+            <button class="btn bg-queen-pink text-white col-6" type="submit">Submit</button>
+        </form>
+      </div>      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="category-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Add New Category</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/api/category" method ="post" class="mx-auto col-10 d-flex flex-column align-items-center gap-2">
+            <div class="form-floating col-12">
+                <input id="category_name" class="form-control" type="text" name="category_name"  placeholder="abc">
+                <label for="cat_name">Category Name</label>
+            </div>
+            <div class="form-floating col-12">
+                <input  class="form-control" type="text" id="category_description" name="category_description"  placeholder="abc">
+                <label for="category_description">Category Description</label>
+            </div>
+            <button class="btn bg-queen-pink text-white col-6 mt-3" type="submit">Submit</button>
+          </form>
+        
+      </div>      
+    </div>
+  </div>
+</div>
+
+
+
+
+{{end}}

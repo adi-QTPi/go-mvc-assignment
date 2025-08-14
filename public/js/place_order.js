@@ -71,7 +71,6 @@ for (let filter of filter_buttons){
             selected_filters.splice(selected_filters.indexOf(cat_id), 1);
         }
         create_filtered_menu(selected_filters);
-        // render_filtered_menu(filtered_menu);
         renderWithSearchResults();
         toggle_add_to_cart_button_label();
     })
@@ -86,33 +85,24 @@ clear_filter_button.addEventListener("click", ()=>{
         }
         selected_filters = [];
     }
+    search_input.value = ""
     create_filtered_menu(selected_filters);
-    // render_filtered_menu(filtered_menu);
     renderWithSearchResults();
     toggle_add_to_cart_button_label();
 })
-
-async function toggle_to_cart_button_visibility(){
-    if(!item_in_cart.length){
-        toggle_to_cart_space_visibility("none");
-    }
-    else{
-        toggle_to_cart_space_visibility("block");
-    }
-}
 
 async function toggle_add_to_cart_button_label(){
     let add_to_cart_buttons = document.getElementsByClassName("add-to-cart");
     for(let buttons of add_to_cart_buttons){
         let id = Number(buttons.id);
-        buttons.classList.remove("btn-danger", "btn-dark");
+        buttons.classList.remove("bg-queen-pink", "btn-dark", "text-white");
         buttons.innerText = "";
         if(item_in_cart.some((item)=> item.item_id === id)){
             buttons.classList.add("btn-dark");
             buttons.innerText = "Remove from Cart";
         }
         else {
-            buttons.classList.add("btn-danger");
+            buttons.classList.add("bg-queen-pink", "text-white");
             buttons.innerText = "Add to Cart"
         }
     }
@@ -131,7 +121,10 @@ async function create_filtered_menu(selected_filters){
     filtered_menu = [];
 
     for(let cat_id of selected_filters){
+
+
         const target_item_array = to_menu_page.ItemSlice.filter(item => item.cat_id === cat_id || item.subcat_id === cat_id);
+
         for(let target_item of target_item_array){
             if(target_item && !filtered_menu.some(item => item.item_id === target_item.item_id)){
                 filtered_menu.push(target_item);
@@ -141,6 +134,7 @@ async function create_filtered_menu(selected_filters){
 }
 
 const filtered_menu_space = document.getElementsByClassName("filtered-menu-space")[0];
+const full_menu_space = document.getElementsByClassName("full-menu-space")[0];
 
 create_filtered_menu(selected_filters);
 render_filtered_menu(filtered_menu);
@@ -161,7 +155,7 @@ function generateMenuItemHtml(item, role) {
     if (role === "admin") {
         action_button_html = `
             <form action="/api/item/d/${item.item_id}" method="post">
-                <button type="submit" class="btn btn-danger">Delete Item</button>
+                <button type="submit" class="btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4">Delete Item</button>
             </form>
         `;
     } else if (role === "cook") {
@@ -170,13 +164,13 @@ function generateMenuItemHtml(item, role) {
         `;
     } else {
         action_button_html = `
-            <button class="add-to-cart btn btn-danger" id="${item.item_id}">Add to Cart</button>
+            <button class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="${item.item_id}">Add to Cart</button>
         `;
     }
 
     return `
-        <div class="ratio ratio-21x9 menu-card-image-container">
-                <img class="card-img-top menu-card-image" src="${img_path}" alt="sample-pic">
+        <div class="ratio ratio-21x9 menu-card-image-container rounded-5">
+                <img class="card-img-top menu-card-image rounded-top-5" src="${img_path}" alt="sample-pic">
             </div>
             <div class="d-flex flex-row">
                 <div class="card-body flex-grow">
@@ -185,11 +179,11 @@ function generateMenuItemHtml(item, role) {
                         wait time : <span class="text-queen-pink">${item.cook_time_min}</span> Minutes
                     </div>
                     <div class="d-flex flex-row col-10">
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">${item.category}</div>
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">${item.subcategory}</div>
+                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5 rounded-5 bg-light-pink">${item.category}</div>
+                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5 rounded-5 bg-light-pink">${item.subcategory}</div>
                     </div>
                 </div>
-                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center">
+                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-around ">
                     <div class="fs-3">₹ ${item.price}</div>
                     ${action_button_html}
                 </div>
@@ -200,9 +194,11 @@ function generateMenuItemHtml(item, role) {
 async function render_filtered_menu(filtered_menu){
     if(filtered_menu_space.style.display === "none"){
         filtered_menu_space.style.display = "block";
+        full_menu_space.style.display = "none"
     }
     if(!filtered_menu.length){
         filtered_menu_space.style.display = "none";
+        full_menu_space.style.display = "block"
     }
     filtered_menu_space.innerHTML = "";
 
@@ -213,7 +209,7 @@ async function render_filtered_menu(filtered_menu){
 
     for( let items of reverse_filtered_menu){
         let new_el = document.createElement("div");
-        new_el.classList.add("card" ,"col-10", "col-lg-5" ,"d-flex" ,"flex-column");
+        new_el.classList.add("card" ,"col-10", "col-lg-5" ,"d-flex" ,"flex-column", "rounded-5");
 
         let img_path = "/public/images/sample_food.png";
         if(items.display_pic.Valid ){
@@ -273,11 +269,20 @@ async function renderWithSearchResults(){
 }
 
 function noItemCardRender(element){
-    element.classList.add("card", "col-12", "d-flex", "flex-column", "m-4", "mx-auto", "p-4", "text-center");
+    element.classList.add("card", "col-12", "col-lg-8", "rounded-pill","d-flex", "flex-column", "m-4", "mx-auto", "p-4", "text-center");
     element.innerHTML = `
-        <div class="card-body"> 
-            <div class="card-title fs-2">No Items Found</div>
-            <div class="card-text">Try searching for something else or clearing your filters.</div>
+        <div class="card-body col-12"> 
+            <div class="card-title fs-1 truculenta-normal">No Items Found</div>
+            <div class="card-text fs-4 truculenta-normal">Try searching for something else or clearing your filters.</div>
         </div>
     `;
+}
+
+async function toggle_to_cart_button_visibility(){
+    if(!item_in_cart.length){
+        toggle_to_cart_space_visibility("none");
+    }
+    else{
+        toggle_to_cart_space_visibility("block");
+    }
 }
