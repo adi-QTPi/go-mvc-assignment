@@ -147,6 +147,54 @@ toggle_to_cart_button_visibility();
 
 filtered_menu_space.style.display = "none";
 
+function generateMenuItemHtml(item, role) {
+    let action_button_html = '';
+    let img_path;
+    if (item.display_pic.Valid) {
+        img_path = item.display_pic.String;
+    } else {
+        img_path = "/public/images/sample_food.png";
+    }
+
+    if (role === "admin") {
+        action_button_html = `
+            <form action="/api/item/d/${item.item_id}" method="post">
+                <button type="submit" class="btn btn-danger">Delete Item</button>
+            </form>
+        `;
+    } else if (role === "cook") {
+        action_button_html = `
+            <div class="mx-auto"></div>
+        `;
+    } else {
+        action_button_html = `
+            <button class="add-to-cart btn btn-danger" id="${item.item_id}">Add to Cart</button>
+        `;
+    }
+
+    return `
+        <div class="ratio ratio-21x9 menu-card-image-container">
+                <img class="card-img-top menu-card-image" src="${img_path}" alt="sample-pic">
+            </div>
+            <div class="d-flex flex-row">
+                <div class="card-body flex-grow">
+                    <div class="card-title fs-2">${item.item_name}</div>
+                    <div class="card-subtitle text-muted">
+                        wait time : <span class="text-queen-pink">${item.cook_time_min}</span> Minutes
+                    </div>
+                    <div class="d-flex flex-row col-10">
+                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">${item.category}</div>
+                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">${item.subcategory}</div>
+                    </div>
+                </div>
+                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center">
+                    <div class="fs-3">₹ ${item.price}</div>
+                    ${action_button_html}
+                </div>
+            </div>
+    `;
+}
+
 async function render_filtered_menu(filtered_menu){
     if(filtered_menu_space.style.display === "none"){
         filtered_menu_space.style.display = "block";
@@ -170,106 +218,8 @@ async function render_filtered_menu(filtered_menu){
             img_path = items.display_pic.String;
         }
 
-        if(to_menu_page.XUser.role === "admin"){
-            new_el.innerHTML = `
-            <div class="ratio ratio-21x9 menu-card-image-container">
-                <img class="card-img-top menu-card-image" src=
-                "${img_path}"
-                alt="sample-pic">
-            </div>
-            <div class="d-flex flex-row">
-                <div class="card-body flex-grow">
-                    <div class="card-title fs-2">
-                        ${items.item_name}
-                    </div>
-                    <div class="card-subtitle text-muted">
-                        wait time : <span class="text-queen-pink">
-                            ${items.cook_time_min}
-                        </span> Minutes
-                    </div>
-                    <div class="d-flex flex-row col-10">
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.category}
-                        </div>
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.subcategory}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center">
-                    <div class="fs-3">₹ ${items.price}</div>
-                    <form action="/api/item/d/${items.item_id}"  method="post">
-                        <button type="submit" class="btn btn-danger">Delete Item</button>
-                    </form>
-                </div>
-            </div>
-            `;
-        }
-        else if (to_menu_page.XUser.role === "cook") {
-            new_el.innerHTML = `
-            <div class="ratio ratio-21x9 menu-card-image-container">
-                <img class="card-img-top menu-card-image" src=
-                "${img_path}"
-                alt="sample-pic">
-            </div>
-            <div class="d-flex flex-row">
-                <div class="card-body flex-grow">
-                    <div class="card-title fs-2">
-                        ${items.item_name}
-                    </div>
-                    <div class="card-subtitle text-muted">
-                        wait time : <span class="text-queen-pink">
-                            ${items.cook_time_min}
-                        </span> Minutes
-                    </div>
-                    <div class="d-flex flex-row col-10">
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.category}
-                        </div>
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.subcategory}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center col-2">
-                    <div class="fs-3 mx-auto">₹ ${items.price}</div>
-                </div>
-            </div>
-            `;
-        }
-        else{
-            new_el.innerHTML = `
-            <div class="ratio ratio-21x9 menu-card-image-container">
-                <img class="card-img-top menu-card-image" src=
-                "${img_path}"
-                alt="sample-pic">
-            </div>
-            <div class="d-flex flex-row">
-                <div class="card-body flex-grow">
-                    <div class="card-title fs-2">
-                        ${items.item_name}
-                    </div>
-                    <div class="card-subtitle text-muted">
-                        wait time : <span class="text-queen-pink">
-                            ${items.cook_time_min}
-                        </span> Minutes
-                    </div>
-                    <div class="d-flex flex-row col-10">
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.category}
-                        </div>
-                        <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5">
-                            ${items.subcategory}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-center">
-                    <div class="fs-3">₹ ${items.price}</div>
-                    <button class="add-to-cart btn btn-danger" id="${items.item_id}">Add to Cart</button>
-                </div>
-            </div>
-            `;
-        }
+        new_el.innerHTML = generateMenuItemHtml(items, to_menu_page.XUser.role);
+     
         menu_space.appendChild(new_el);
     }
     filtered_menu_space.appendChild(menu_space);
