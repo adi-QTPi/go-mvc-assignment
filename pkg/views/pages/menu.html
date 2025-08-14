@@ -21,6 +21,7 @@
 {{$message := .Popup.Msg}}  {{$isError := .Popup.IsError}}
 {{$categorySlice := .CategorySlice}}
 <body>
+    <input type="text" id="search-input" placeholder="Search for a dish...">
     {{template "popup" .}}
     <h1 class="text-center bg-glass sticky-top z-5 py-2">Menu Page</h1>
 

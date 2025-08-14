@@ -274,3 +274,26 @@ async function render_filtered_menu(filtered_menu){
     }
     filtered_menu_space.appendChild(menu_space);
 }
+
+const search_input = document.getElementById("search-input");
+
+search_input.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.trim();
+    if (searchTerm === "") {
+        create_filtered_menu(selected_filters);
+        render_filtered_menu(filtered_menu);
+    } else {
+        const searchResults = to_menu_page.ItemSlice.filter(item =>
+            item.item_name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (selected_filters.length > 0) {
+            const filteredBySearchAndCategory = searchResults.filter(item => 
+                selected_filters.includes(item.cat_id) || selected_filters.includes(item.subcat_id)
+            );
+            render_filtered_menu(filteredBySearchAndCategory);
+        } else {
+            render_filtered_menu(searchResults);
+        }
+    }
+    toggle_add_to_cart_button_label();
+});
