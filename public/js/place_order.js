@@ -1,4 +1,18 @@
-let item_in_cart = [];
+function save_cart(){
+    localStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
+    localStorage.setItem("to_menu_page", JSON.stringify(to_menu_page));
+}
+
+function load_cart(){
+    const item_in_storage = localStorage.getItem("item_in_cart");
+    if (item_in_storage) {
+        return JSON.parse(item_in_storage);
+    } else {
+        return [];
+    }
+}
+
+item_in_cart = load_cart()
 
 const metaTag = document.querySelector('meta[name="menu-data"]');
 const to_menu_page = JSON.parse(metaTag.getAttribute('content'));
@@ -13,9 +27,6 @@ document.addEventListener("click", function(event) {
         let id = Number(event.target.id);
         if (item_in_cart.find((item) => item.item_id === id)) {
             const item_index = item_in_cart.findIndex(item => item.item_id === id);
-            event.target.innerText = "add to cart";
-            event.target.classList.remove("btn-dark");
-            event.target.classList.add("btn-danger");
             item_in_cart.splice(item_index, 1);
         } else {
             const foundItem = to_menu_page.ItemSlice.find(el => el.item_id === id);
@@ -32,13 +43,16 @@ document.addEventListener("click", function(event) {
                 item_in_cart.push(new_item_for_cart);
             }
         }
+        save_cart();
         toggle_add_to_cart_button_label();
         toggle_to_cart_button_visibility();
         update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`);
     }
 });
 
-toggle_to_cart_space_visibility("none");
+toggle_to_cart_button_visibility()
+
+update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`);
 
 let selected_filters = []; let filtered_menu = [];
 const filter_buttons = document.getElementsByClassName("filter-buttons")[0].children;
@@ -78,11 +92,9 @@ clear_filter_button.addEventListener("click", ()=>{
 
 async function toggle_to_cart_button_visibility(){
     if(!item_in_cart.length){
-
         toggle_to_cart_space_visibility("none");
     }
     else{
-
         toggle_to_cart_space_visibility("block");
     }
 }
@@ -127,7 +139,14 @@ async function create_filtered_menu(selected_filters){
 }
 
 const filtered_menu_space = document.getElementsByClassName("filtered-menu-space")[0];
+
+create_filtered_menu(selected_filters);
+render_filtered_menu(filtered_menu);
+toggle_add_to_cart_button_label();
+toggle_to_cart_button_visibility();
+
 filtered_menu_space.style.display = "none";
+
 async function render_filtered_menu(filtered_menu){
     if(filtered_menu_space.style.display === "none"){
         filtered_menu_space.style.display = "block";
@@ -255,10 +274,3 @@ async function render_filtered_menu(filtered_menu){
     }
     filtered_menu_space.appendChild(menu_space);
 }
-
-const to_cart_button = document.getElementsByClassName("to_cart_button")[0];
-to_cart_button.addEventListener("click", ()=>{
-    sessionStorage.setItem("to_menu_page", JSON.stringify(to_menu_page));
-    sessionStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
-    window.location.href="/static/cart";
-})

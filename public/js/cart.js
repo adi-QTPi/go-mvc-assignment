@@ -1,5 +1,8 @@
-const to_menu_page = JSON.parse(sessionStorage.getItem("to_menu_page"));
-let item_in_cart = JSON.parse(sessionStorage.getItem("item_in_cart"));
+// const to_menu_page = JSON.parse(localStorage.getItem("to_menu_page"));
+// let item_in_cart = JSON.parse(localStorage.getItem("item_in_cart"));
+
+const to_menu_page = JSON.parse(localStorage.getItem("to_menu_page"));
+let item_in_cart = JSON.parse(localStorage.getItem("item_in_cart"));
 
 async function render_cart(item_in_cart){
     const cart_space = document.getElementsByClassName("cart_space")[0];
@@ -68,7 +71,7 @@ function removeItem(itemId) {
     const item_index = item_in_cart.findIndex(item => item.item_id === itemId);
     if (item_index !== -1) {
         item_in_cart.splice(item_index, 1);
-        sessionStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
+        localStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
         if (item_in_cart.length === 0) {
             window.location.href = "/static/menu";
         } else {

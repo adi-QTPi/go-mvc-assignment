@@ -16,6 +16,10 @@
     "wdth" 100;
 }
 
+.vw-100{
+    width: 98vw;
+}
+
 .vh-25{
     height: 25vh;
 }
