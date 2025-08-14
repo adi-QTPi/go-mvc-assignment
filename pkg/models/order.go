@@ -40,7 +40,7 @@ type ItemOrderDescriptive struct {
 	Quantity    int            `json:"quantity"`
 	Instruction sql.NullString `json:"instruction"`
 	IsComplete  string         `json:"is_complete"`
-	CookId      sql.NullString `json:"cook_id"`
+	CookName    sql.NullString `json:"cook_name"`
 }
 
 type KitchenOrder struct {
@@ -226,7 +226,7 @@ func FetchOrderByOrderId(orderId string) (Order, error) {
 }
 
 func FetchBillDetailsByOrderId(orderId string) ([]ItemOrderDescriptive, error) {
-	sqlQuery := "SELECT o.order_id, io.item_id, i.item_name, i.price, io.quantity, io.instruction, io.is_complete, io.cook_id FROM `order` o INNER JOIN item_order io ON o.order_id = io.order_id INNER JOIN item i ON io.item_id = i.item_id INNER JOIN user u ON o.customer_id = u.user_id WHERE o.order_id = ?;"
+	sqlQuery := "SELECT o.order_id, io.item_id, i.item_name, i.price, io.quantity, io.instruction, io.is_complete, cook.name AS cook_name FROM `order` o INNER JOIN item_order io ON o.order_id = io.order_id INNER JOIN item i ON io.item_id = i.item_id INNER JOIN user u ON o.customer_id = u.user_id INNER JOIN user cook ON io.cook_id = cook.user_id WHERE o.order_id = ?;"
 
 	rows, err := DB.Query(sqlQuery, orderId)
 	if err != nil {
@@ -237,7 +237,7 @@ func FetchBillDetailsByOrderId(orderId string) ([]ItemOrderDescriptive, error) {
 	var billData []ItemOrderDescriptive
 	for rows.Next() {
 		var i ItemOrderDescriptive
-		err := rows.Scan(&i.OrderId, &i.ItemId, &i.ItemName, &i.ItemPrice, &i.Quantity, &i.Instruction, &i.IsComplete, &i.CookId)
+		err := rows.Scan(&i.OrderId, &i.ItemId, &i.ItemName, &i.ItemPrice, &i.Quantity, &i.Instruction, &i.IsComplete, &i.CookName.String)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning the rows, %v", err)
 		}

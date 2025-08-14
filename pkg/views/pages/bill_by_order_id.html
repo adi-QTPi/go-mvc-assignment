@@ -56,7 +56,13 @@
                     <td class="col-4 fs-4">{{$element.ItemName}}</td>
                     <td class="col-1 text-center">{{$element.Quantity}}</td>
                     <td class="col-2 text-center">₹{{multiply $element.Quantity $element.ItemPrice}}</td>
-                    <td class="col-auto text-center">{{$element.IsComplete}}</td>
+                    <td class="col-auto text-center">
+                        {{if eq $element.IsComplete "taken"}}
+                            Taken by <strong>Chef {{$element.CookName.String}}</strong>
+                        {{else}}
+                            {{$element.IsComplete}}
+                        {{end}}
+                    </td>
                     {{if ne $element.IsComplete "complete"}}
                         {{if eq $element.Instruction.String ""}}
                             <td>None</td>
