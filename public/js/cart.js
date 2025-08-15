@@ -101,9 +101,9 @@ cart_form.addEventListener("submit", (e)=>{
         }
     }
 
-    sessionStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
+    localStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
 
-    let cart_items_string = sessionStorage.getItem("item_in_cart");
+    let cart_items_string = localStorage.getItem("item_in_cart");
     item_in_cart = JSON.parse(cart_items_string);
 
     for (let item of item_in_cart){
@@ -113,14 +113,23 @@ cart_form.addEventListener("submit", (e)=>{
     }
 
     fetch("/api/order", {
-    method: "POST",
-    body: JSON.stringify(item_in_cart),
-    headers: {
-        "Content-type": "application/json; charset=UTF-8"
-    }
+        method: "POST",
+        body: JSON.stringify(item_in_cart),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
     })
     .then((response) => response.json())
     .then((data)=>{
+        console.log("Order placed successfully, clearing cart...");
+        item_in_cart = [];
+        localStorage.removeItem("item_in_cart");
+        sessionStorage.removeItem("item_in_cart");
+        localStorage.setItem("item_in_cart", "[]");
+        console.log("Cart cleared, localStorage now contains:", localStorage.getItem("item_in_cart"));
         window.location.href="/static/order"
+    })
+    .catch((error) => {
+        console.error("Error placing order:", error);
     });
-})
+});
