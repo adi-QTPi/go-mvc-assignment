@@ -5,3 +5,5 @@ uploads/*
 !uploads/.gitkeep
 
 docker/data/*
+
+.vscode/
