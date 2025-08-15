@@ -185,7 +185,17 @@ input::placeholder {
 }
 
 .bg-glass {
-  backdrop-filter: blur(0.2rem);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25),
+    rgba(255, 255, 255, 0.08)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.04), 0 8px 30px rgba(0, 0, 0, 0.18);
 }
 
 .card-orders-page {
