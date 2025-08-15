@@ -18,9 +18,6 @@ func NewStaticOrderController() *StaticOrderCotroller {
 }
 
 func (cuc *StaticOrderCotroller) RenderCustOrderPage(w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	// reqDate := params["date"]
-
 	queryParams := r.URL.Query()
 	reqDate := queryParams.Get("date")
 
@@ -48,6 +45,7 @@ func (cuc *StaticOrderCotroller) RenderCustOrderPage(w http.ResponseWriter, r *h
 		Popup:     popup,
 		XUser:     xUser,
 		OrderData: orderSlice,
+		ReqDate:   reqDate,
 	}
 
 	var responseJson util.StandardResponseJson

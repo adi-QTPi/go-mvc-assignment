@@ -73,8 +73,6 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 
 	util.InsertPopupInFlash(w, r, popup)
 
-	// util.RedirectToSite(w, r, "/static/order")
-
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = fmt.Sprintf("Order Placed !!! orderId = %v", newOrder.OrderId)
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
@@ -105,7 +103,7 @@ func (oc *OrderApiController) OrderPayment(w http.ResponseWriter, r *http.Reques
 		Msg: "Payment successful... happyCustomer++",
 	}
 	util.InsertPopupInFlash(w, r, popup)
-	util.RedirectToSite(w, r, "/static/menu")
+	util.RedirectToSite(w, r, "/static/order")
 
 	var responseJson util.StandardResponseJson
 	responseJson.Msg = fmt.Sprintf("Payment Successful for order #%v", orderId)

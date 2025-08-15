@@ -29,6 +29,7 @@ type DataToPage struct {
 	OrderMetaData models.Order
 	BillData      []models.ItemOrderDescriptive
 	KitchenOrders []models.KitchenOrder
+	ReqDate       string
 }
 
 type CookPageHelperStruct struct {

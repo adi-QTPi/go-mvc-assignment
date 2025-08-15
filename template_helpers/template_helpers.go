@@ -17,6 +17,16 @@ var FuncMap = template.FuncMap{
 	"itemsTakenByCook":          ItemsTakenByCook,
 	"itemsPending":              ItemsPending,
 	"itemsCompletedByCookToday": ItemsCompletedByCookToday,
+	"formatTime":                FormatTime,
+	"formatDate":                FormatDate,
+}
+
+func FormatTime(t time.Time) string {
+	return t.Format("3:04 PM")
+}
+
+func FormatDate(t time.Time) string {
+	return t.Format("02 January 2006")
 }
 
 func ToJSON(v interface{}) (template.JS, error) {

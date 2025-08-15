@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"slices"
 	"strings"
+	"unicode"
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
@@ -46,11 +47,6 @@ func RequiredEntries(entries ...string) func(http.Handler) http.Handler {
 			requestFrom := r.Referer()
 			util.InsertPopupInFlash(w, r, popup)
 			util.RedirectToSite(w, r, requestFrom)
-
-			// var responseJson util.StandardResponseJson
-			// responseJson.Msg = "Data reading failed"
-			// responseJson.ErrDescription = fmt.Sprintf("Enter the given fields in x-www-form-urlencoded format only : %v", entries)
-			// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusBadRequest)
 		})
 	}
 }
@@ -59,7 +55,6 @@ func CheckIfUserExists(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		userName := r.Form.Get("user_name")
-		// password := r.Form.Get("password")
 		var userId string
 		isThere, _, userId := models.GetUserByUsername(userName)
 		if !isThere {
@@ -176,16 +171,48 @@ func RestrictToRoles(allowedRoles ...string) func(http.Handler) http.Handler {
 				Msg:     "You are NOT Authorised to Access this Service",
 				IsError: true,
 			}
-
-			// requestFrom := r.Referer()
-			// fmt.Println(requestFrom)
 			util.InsertPopupInFlash(w, r, popup)
 			util.RedirectToSite(w, r, "/error")
-
-			// var responseJson util.StandardResponseJson
-			// responseJson.Msg = "User is Unauthorised"
-			// responseJson.ErrDescription = fmt.Sprintf("this page is for users with roles %v only.", allowedRoles)
-			// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusForbidden)
 		})
 	}
+}
+
+func PasswordStrengthTest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Failed to parse form in verify duplicate password middleware", http.StatusBadRequest)
+			return
+		}
+		pwd := r.Form.Get("pwd")
+
+		popup := util.Popup{
+			Msg:     "Password must be 10 characters long, combination of sMALL, Capital and Spec1al characters..",
+			IsError: true,
+		}
+
+		var (
+			hasUpperCase bool
+			hasLowerCase bool
+			hasDigit     bool
+			hasSpecial   bool
+		)
+
+		for _, char := range pwd {
+			if unicode.IsUpper(char) {
+				hasUpperCase = true
+			} else if unicode.IsLower(char) {
+				hasLowerCase = true
+			} else if unicode.IsDigit(char) {
+				hasDigit = true
+			} else {
+				hasSpecial = true
+			}
+		}
+		if len(pwd) < 10 || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecial {
+			util.InsertPopupInFlash(w, r, popup)
+			util.RedirectToSite(w, r, "/signup")
+		}
+
+	})
 }

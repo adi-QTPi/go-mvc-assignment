@@ -17,8 +17,6 @@ func NewAdminStaticController() *AdminStaticController {
 }
 
 func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	// reqDate := params["date"]
 
 	queryParams := r.URL.Query()
 	reqDate := queryParams.Get("date")
@@ -47,6 +45,7 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 		Popup:     popup,
 		XUser:     xUser,
 		OrderData: orderSlice,
+		ReqDate:   reqDate,
 	}
 
 	var responseJson util.StandardResponseJson

@@ -14,19 +14,19 @@ input::placeholder {
 }
 
 .caveat-cursive {
-  font-family: "Caveat", cursive;
-  font-optical-sizing: auto;
-  font-weight:400;
-  font-style: normal;
+  font-family: "Caveat", cursive !important;
+  font-optical-sizing: auto !important;
+  font-weight:400 !important;
+  font-style: normal !important;
 }
 
 .truculenta-normal {
-  font-family: "Truculenta", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Truculenta", sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
   font-variation-settings:
-    "wdth" 100;
+    "wdth" 100 !important;
 }
 
 .vw-100{
@@ -52,6 +52,9 @@ input::placeholder {
     background-color: var(--turq) !important;
 }
 
+.bg-turq-bold-no-hover{
+    background-color: var(--turq-bold) !important;
+}
 .bg-turq-bold{
     background-color: var(--turq-bold) !important;
 }
@@ -84,9 +87,11 @@ input::placeholder {
 }
 
 .border-queen-pink{
-    border-style: solid;
+    /* border-style: solid;
     border-color: var(--old-pink); 
-    border-width: 0.1rem;
+    border-width: 0.1rem; */
+
+    border: solid 0.1rem var(--old-pink) !important;
 }
 
 .rounded-queen-pink-border{
@@ -230,4 +235,9 @@ input::placeholder {
 
 .menu-card-image{
     object-fit:cover;
+}
+
+ .custom-date-picker {
+    background-color: var(--turq-bold);
+    color: var(--old-pink); 
 }

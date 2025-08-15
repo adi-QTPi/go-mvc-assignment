@@ -7,40 +7,25 @@
 
     {{template "headers"}}
 </head>
-{{$role := .XUser.Role}}{{$userName := .XUser.UserName}}
+
+{{$role := .XUser.Role}}
+{{$userName := .XUser.UserName}}
+{{$reqDate := .ReqDate}}
 
 {{template "navbar" .}}
+
 <body>
-    <h1 class="text-center bg-glass sticky-top z-5 py-2">Your Orders</h1>
-    <div class="d-flex flex-column flex-md-row bg-info sticky-top z-2">
-        <div class="flex-fill text-center fs-1 caveat-cursive">Pick a Date !</div>
-        <div class="flex-fill d-flex justify-content-center align-items-center"> 
-            <form class="" action="/static/order" method="get">
-                <div class="d-flex justify-content-center bg-dark text-light p-1 px-3 rounded-3 my-2 ">
-                    <input type="date" value="" name="date" id="date">
-                    <button class="btn text-light" type="submit">Go</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     {{$isError := .Popup.IsError}}{{$message := .Popup.Msg}}
-    {{if $isError }}
-        <div class="alert alert-danger alert-dismissible fade show col-lg-6 col-10 mx-auto my-2" role="alert">
-            <strong>Error!</strong> 
-            {{$message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {{else if ne $message ""}}
-        <div class="alert alert-success alert-dismissible fade show col-lg-6 col-10 mx-auto my-2" role="alert">
-            {{$message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {{end}}
+
+    {{template "datePicker" .}}
+
+    {{template "popup" .}}
 
     <div class="d-flex flex-column flex-lg-row flex-wrap align-items-center justify-content-center m-1 m-md-4 gap-4 gap-md-4">
 
-        <a class="card card-orders-page d-flex flex-row border-2 border-dashed bg-light text-decoration-none btn btn-secondary" href='/static/menu'>
+        <a class="card card-orders-page d-flex flex-row border-2 border-dashed bg-light text-decoration-none btn btn-secondary rounded-5" href='/static/menu'>
             <div class="card-body flex-grow-1 d-flex flex-column align-items-center justify-content-center">
             <div class="display-1 text-dark mb-2">+</div>
             <h5 class="text-info text-center mb-0 text-dark">Place New Order</h5>
@@ -50,16 +35,11 @@
         </a>
 
         {{range .OrderData}}
-            <div class="card card-orders-page d-flex flex-row">
+            <div class="card card-orders-page d-flex flex-row rounded-5 border-queen-pink">
                 <div class="card-body flex-grow">
                     <h5 class="card-title fs-1">Order #{{.OrderId}}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">
-                        <!-- <%= new Date(order.order_at).toLocaleTimeString('en-US', {
-                            hour: 'numeric',
-                            minute: '2-digit',
-                            hour12: true
-                        }) %>  -->
-                        {{.OrderAt}}                  
+                        {{formatTime .OrderAt}}                  
                     </h6>
                     {{$status := .Status}}
                     <h5 class="fs-3">
@@ -72,16 +52,16 @@
                     {{$orderId := .OrderId}}
                     <form method="get" action="/static/order/{{$orderId}}">
                         {{if eq $status "ready_to_serve"}}
-                            <button type="submit" class="btn btn-danger">Proceed to Pay</button>
+                            <button type="submit" class="btn bg-queen-pink text-white rounded-5">Proceed to Pay</button>
                         {{else if eq $status "paid"}}
-                            <button type="submit" class="btn btn-secondary">View Bill</button>
+                            <button type="submit" class="btn bg-light-pink rounded-5">View Bill</button>
                         {{else}}
-                            <button type="submit" class="btn btn-primary">Details</button>
+                            <button type="submit" class="btn bg-light-pink rounded-5">Details</button>
                         {{end}}
                     </form>
                 </div>
                 <div class="flex-shrink-1 d-flex flex-column me-2">
-                    <div class="flex-grow text-center mt-auto truculenta-normal">Table No.</div>
+                    <div class="flex-grow text-center mt-auto truculenta-normal fs-3">Table No.</div>
                     <div class="flex-shrink-1 fs-3rem text-center truculenta-normal">{{.TableNo.Int64}}</div>
                 </div>
             </div>

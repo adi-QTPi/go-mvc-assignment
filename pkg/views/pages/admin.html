@@ -8,87 +8,35 @@
     {{template "headers"}}
 </head>
 {{template "navbar" .}}
-<!-- <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-    <a class="navbar-brand mx-2 fs-2" href="/static/profile">Foodop1a</a>
-    <div class="fs-4 text-info caveat-cursive ">| <%= to_admin_page.x_user.user_name %></div>
 
-    <span class="navbar-text position-absolute start-50 translate-middle-x">Your <span class="truculenta-normal fs-3">Cravings...</span> Our <span class="truculenta-normal fs-3">Responsibility</span></span>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse " id="navbar-text">
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/static/profile">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/static/menu">Menu</a>
-            </li>
-            <% if (to_admin_page.x_user.role === "admin") { %>
-                <li class="nav-item">
-                    <a class="nav-link" href="/static/admin">Manage Orders</a>
-                </li>
-            <% } %>
-            <% if (to_admin_page.x_user.role === "admin") { %>
-                <li class="nav-item">
-                    <a class="nav-link" href="/static/admin/create_new">New Account</a>
-                </li>
-            <% } %>
-            <% if (to_admin_page.x_user.role === "customer") { %>
-                <li class="nav-item">
-                    <a class="nav-link" href="/static/orders">Your Orders</a>
-                </li>
-            <% } %>
-            <% if (to_admin_page.x_user.role === "cook") { %>
-                <li class="nav-item">
-                    <a class="nav-link" href="/static/cook">Cook</a>
-                </li>
-            <% } %>
-            <li class="nav-item">
-                <form action="/api/user/logout" method="post">
-                    <button class="btn btn-dark" type="submit">Logout</button>
-                </form>
-            </li>
-        </ul>
-    </div>
-</nav> -->
 <body>
 
     {{$orderData := .OrderData}}
     <h1 class="text-center bg-glass sticky-top z-5 py-2">Admin Page</h1>
-    <div class="d-flex flex-column flex-md-row bg-info sticky-top z-2">
-        <div class="flex-fill text-center fs-1 caveat-cursive">Pick a Date !</div>
-        <div class="flex-fill d-flex justify-content-center align-items-center"> 
-            <form class="" action="/static/admin" method="get">
-                <div class="d-flex justify-content-center bg-dark text-light p-1 px-3 rounded-3 my-2 ">
-                    <input type="date" value="" name="date" id="date">
-                    <button class="btn text-light" type="submit">Go</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    {{template "datePicker" . }}
 
     <div class="container mt-3 ">
         <table class="table table-striped table-bordered admin-display-background">
             <thead class="text-center">
-                <th>Table Number</th>
-                <th>Customer name</th>
-                <th>Order ID</th>
-                <th>Status</th>
-                <th>View</th>
+                <th class="align-middle">Table Number</th>
+                <th class="align-middle">Customer name</th>
+                <th class="align-middle">Order ID</th>
+                <th class="align-middle">Status</th>
+                <th class="align-middle">Bill Total (₹)</th>
+                <th class="align-middle">View</th>
             </thead>
             <tbody>
                 {{range $index, $element := $orderData}}
                     <tr>
-                        <td class="text-center col-1 fs-3">{{$element.TableNo.Int64}}</td>
-                        <td class="col-5">{{$element.CustomerName}}</td>
-                        <td class="text-center col-1">{{$element.OrderId}}</td>
-                        <td class="text-center">{{$element.Status}}</td>
-                        <td class="text-center">
+                        <td class=" align-middle text-center col-1 fs-3">{{$element.TableNo.Int64}}</td>
+                        <td class=" align-middle text-center col-3">{{$element.CustomerName}}</td>
+                        <td class=" align-middle text-center col-1">{{$element.OrderId}}</td>
+                        <td class=" align-middle text-center">{{$element.Status}}</td>
+                        <td class=" align-middle text-center">₹{{$element.TotalPrice}}/-</td>
+                        <td class=" align-middle text-center">
                             <form method="get" action="/static/order/{{$element.OrderId}}">
                                 {{if eq $element.Status "paid"}}
-                                    <button class="btn btn-secondary" type="submit">Bill</button>
+                                    <button class="btn bg-light-pink" type="submit">Bill</button>
                                 {{else}}
                                     <button class="btn btn-success" type="submit">Details</button>
                                 {{end}}

@@ -32,7 +32,7 @@
 
 
     <div class="container">
-        <div class="text-center truculenta-normal">On <span class="fs-4 text-primary ">{{$orderAt}}</span> @ <span class="fs-4 text-primary">{{$orderAt}}</span> 
+        <div class="text-center truculenta-normal">On <span class="fs-4 text-primary ">{{formatDate $orderAt}}</span> @ <span class="fs-4 text-primary">{{formatTime $orderAt}}</span> 
             {{if eq $role "admin"}}
                 by <span class="fs-4 text-primary">{{$orderBy}}</span>
             {{end}}

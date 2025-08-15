@@ -15,6 +15,7 @@ func ImplementAccountRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(accountController.CreateNewUser),
 			middleware.HashPasword,
+			middleware.PasswordStrengthTest,
 			middleware.VerifyDuplicatePassword,
 			middleware.RequiredEntries("user_name", "name", "pwd", "re_pwd"),
 		)).Methods("POST")
@@ -22,6 +23,7 @@ func ImplementAccountRoutes(subRouter *mux.Router) {
 		middleware.Chain(
 			http.HandlerFunc(accountController.CreateNewUserByAdmin),
 			middleware.HashPasword,
+			middleware.PasswordStrengthTest,
 			middleware.VerifyDuplicatePassword,
 			middleware.RequiredEntries("user_name", "name", "pwd", "re_pwd", "role"),
 			middleware.RestrictToRoles("admin"),
