@@ -38,7 +38,6 @@ func GetUserById(id string) (User, error) {
 	sqlQuery := "SELECT user_id, user_name, name, role FROM user WHERE user_id = ?;"
 
 	row := DB.QueryRow(sqlQuery, id)
-	// defer row.Close() not work here
 
 	var fetchedUser User
 
@@ -61,7 +60,6 @@ func GetUserByUsername(userName string) (bool, error, string) {
 	var userId string
 	err := row.Scan(&userId)
 	if err == sql.ErrNoRows {
-		//no usr found case
 		return false, nil, userId
 	} else if err != nil {
 		return false, fmt.Errorf("error in running query %v", err), userId

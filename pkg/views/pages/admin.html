@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin</title>
 
     {{template "headers"}}
-</head>
-{{template "navbar" .}}
+  </head>
+  {{template "navbar" .}}
 
-<body>
-
+  <body>
     {{$orderData := .OrderData}}
     <h1 class="text-center bg-glass sticky-top z-5 py-2">Admin Page</h1>
     {{template "datePicker" . }}
 
-    <div class="container mt-3 ">
-        <table class="table table-striped table-bordered admin-display-background">
-            <thead class="text-center">
-                <th class="align-middle">Table Number</th>
-                <th class="align-middle">Customer name</th>
-                <th class="align-middle">Order ID</th>
-                <th class="align-middle">Status</th>
-                <th class="align-middle">Bill Total (₹)</th>
-                <th class="align-middle">View</th>
-            </thead>
-            <tbody>
-                {{range $index, $element := $orderData}}
-                    <tr>
-                        <td class=" align-middle text-center col-1 fs-3">{{$element.TableNo.Int64}}</td>
-                        <td class=" align-middle text-center col-3">{{$element.CustomerName}}</td>
-                        <td class=" align-middle text-center col-1">{{$element.OrderId}}</td>
-                        <td class=" align-middle text-center">{{$element.Status}}</td>
-                        <td class=" align-middle text-center">₹{{$element.TotalPrice}}/-</td>
-                        <td class=" align-middle text-center">
-                            <form method="get" action="/static/order/{{$element.OrderId}}">
-                                {{if eq $element.Status "paid"}}
-                                    <button class="btn bg-light-pink" type="submit">Bill</button>
-                                {{else}}
-                                    <button class="btn btn-success" type="submit">Details</button>
-                                {{end}}
-                            </form>
-                        </td>
-                    </tr>
+    <div class="container mt-3">
+      <table
+        class="table table-striped table-bordered admin-display-background"
+      >
+        <thead class="text-center">
+          <th class="align-middle">Table Number</th>
+          <th class="align-middle">Customer name</th>
+          <th class="align-middle">Order ID</th>
+          <th class="align-middle">Status</th>
+          <th class="align-middle">Bill Total (₹)</th>
+          <th class="align-middle">View</th>
+        </thead>
+        <tbody>
+          {{range $index, $element := $orderData}}
+          <tr>
+            <td class="align-middle text-center col-1 fs-3">
+              {{$element.TableNo.Int64}}
+            </td>
+            <td class="align-middle text-center col-3">
+              {{$element.CustomerName}}
+            </td>
+            <td class="align-middle text-center col-1">{{$element.OrderId}}</td>
+            <td class="align-middle text-center">{{$element.Status}}</td>
+            <td class="align-middle text-center">₹{{$element.TotalPrice}}/-</td>
+            <td class="align-middle text-center">
+              <form method="get" action="/static/order/{{$element.OrderId}}">
+                {{if eq $element.Status "paid"}}
+                <button class="btn bg-light-pink" type="submit">Bill</button>
+                {{else}}
+                <button class="btn btn-success" type="submit">Details</button>
                 {{end}}
-            </tbody>
-        </table>
+              </form>
+            </td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
     </div>
-</body>
+  </body>
 </html>

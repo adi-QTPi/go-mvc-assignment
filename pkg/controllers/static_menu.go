@@ -54,8 +54,6 @@ func (sl *StaticController) RenderCartPage(w http.ResponseWriter, r *http.Reques
 	var responseJson util.StandardResponseJson
 
 	xUser := util.ExtractUserFromContext(r)
-	// categorySlice, err := models.GetAllCategories()
-	// itemSlice, err := models.GetAllItems()
 	popup, err := util.ExtractPopupFromFlash(w, r)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting stuff from sessions and db : %v", err), http.StatusInternalServerError)
@@ -65,8 +63,6 @@ func (sl *StaticController) RenderCartPage(w http.ResponseWriter, r *http.Reques
 	toPage := util.DataToPage{
 		Popup: popup,
 		XUser: xUser,
-		// CategorySlice: categorySlice,
-		// ItemSlice:     itemSlice,
 	}
 
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "cart.html", toPage)

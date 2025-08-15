@@ -1,154 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cook Page</title>
     {{template "headers"}}
-</head>
+  </head>
 
-{{template "navbar" .}}
+  {{template "navbar" .}}
 
-<body>
+  <body>
     <h1 class="text-center bg-glass sticky-top z-5 py-2">Cook's Page</h1>
 
-    {{$cookId := .XUser.UserId}}
-
-    {{$someTaken := false}}
-    {{$someComplete := false}}
-    {{$somePending := false}}
-
-    {{$booleanStore := booleanUpdater .KitchenOrders}}
-    
-    {{$somePending = $booleanStore.SomePending}}
-    {{$someTaken = $booleanStore.SomeTaken}}
-    {{$someComplete = $booleanStore.SomeComplete}}
+    {{$cookId := .XUser.UserId}} {{$someTaken := false}} {{$someComplete :=
+    false}} {{$somePending := false}} {{$booleanStore := booleanUpdater
+    .KitchenOrders}} {{$somePending = $booleanStore.SomePending}} {{$someTaken =
+    $booleanStore.SomeTaken}} {{$someComplete = $booleanStore.SomeComplete}}
 
     <div class="container">
-        <div class="d-flex flex-column flex-md-row col-12">
-            <div class="col-12 col-md-6 d-flex flex-column placeholder-blank-space taken-by-you">
-                {{if $someTaken}}
-                    <h3 class="text-center">Taken By You</h3>
-                    {{range $index, $element := itemsTakenByCook .KitchenOrders $cookId}}
-                        <div class="card d-flex flex-column m-3">
-                            <div class="card-body flex-grow">
-                                <div class="card-title fs-4 d-flex flex-row">
-                                    <div class="col-8 fs-3">
-                                        {{$element.ItemName}}
-                                    </div>
-                                    <div class="flex-fill text-center qty-display fs-3"> x{{$element.Quantity}}</div>
-                                </div>
-
-                                {{if ne $element.Instruction.String ""}}
-                                    <div class="card-body">
-                                        <div class="card">
-                                            <div class="text-center">Instruction</div>
-                                            <div class="text-center fs-5">
-                                                {{$element.Instruction.String}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{end}}
-                                <div class="flex-shrink-0 d-flex flex-row m-2 align-items-center justify-content-center">
-                                    <div class="flex-fill text-center fs-5 sub_total"> Table no. <span class="fs-3">{{$element.TableNo.Int64}}</span></div>
-                                    <form class="flex-fill d-flex justify-content-center" action="/api/cook" method="post">
-                                        <input type="hidden" name="order_id" value="{{$element.OrderId}}">
-                                        <input type="hidden" name="item_id" value="{{$element.ItemId}}">
-                                        <input type="hidden" name="is_complete" value="complete">
-                                        <button type="submit" class="delete-btn btn btn-danger">Mark Complete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    {{end}}
-                {{else}}
-                    <div class="h-100 d-flex align-items-center bg-secondary text-light m-3 rounded-4">
-                        <div class="text-center col-12 truculenta-normal fs-2">No Orders Taken</div>
-                    </div>
-                {{end}}
-            </div>
-            <div class="col-12 col-md-6 d-flex flex-column completed-today m-3">
-                {{if $somePending}}
-                    <h3 class="text-center">Pending</h3>
-                    <div class="d-flex col-12 justify-content-center">
-                        <div class="col-12">
-                            <table class="table table-striped">
-                                <thead>
-                                    <th class="text-center">Table No.</th>
-                                    <th class="text-center">Order ID</th>
-                                    <th>Item</th>
-                                    <th class="text-center">Qty.</th>
-                                    <th>Special Instructions</th>
-                                </thead>
-                                <tbody>
-                                    {{range $index, $element := itemsPending .KitchenOrders}}
-                                        <tr>
-                                            <td class="text-center">{{$element.TableNo.Int64}}</td>
-                                            <td class="text-center">{{$element.OrderId}}</td>
-                                            <td>{{$element.ItemName}}</td>
-                                            <td class="text-center">{{$element.Quantity}}</td>
-                                            {{if eq $element.Instruction.String ""}}
-                                            <td>None</td>
-                                            {{else}}
-                                            <td>{{$element.Instruction.String}}</td>
-                                            {{end}}
-
-                                            {{if eq $element.IsComplete "pending"}}
-                                                <td>
-                                                    <form action="/api/cook" method="post">
-                                                        <input type="hidden" name="order_id" value="{{$element.OrderId}}">
-                                                        <input type="hidden" name="item_id" value="{{$element.ItemId}}">
-                                                        <input type="hidden" name="is_complete" value="taken">
-                                                        <button class="btn btn-primary" type="submit">Take Item</button>
-                                                    </form>
-                                                </td>
-                                            {{end}}
-                                        </tr>
-                                    {{end}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                {{else}}
-                    <div class="d-flex justify-content-center">
-                        <div class="d-flex flex-column col-12 placeholder-blank-space bg-success justify-content-center rounded-4 text-light">
-                            <div class="text-center fs-2 truculenta-normal">No Orders Pending!</div>
-                        </div>
-                    </div>
-                {{end}}
-            </div>
-        </div>
-        <hr>
-        
-        {{if $someComplete}}
-            <div class="d-flex flex-column align-items-center">
-                <h3 class="text-center">Completed Today</h3>
-                <div class="col-10">
-                    <table class="table table-striped">
-                        <thead>
-                            <th class="text-center col-1">Table No.</th>
-                            <th class="text-center col-2">Order ID</th>
-                            <th>Item</th>
-                            <th class="text-center col-3">Qty</th>
-                        </thead>
-                        <tbody>
-                            {{range $index, $element := itemsCompletedByCookToday .KitchenOrders $cookId}}
-                                <tr>
-                                    <td class="text-center">{{$element.TableNo.Int64}}</td>
-                                    <td class="text-center">{{$element.OrderId}}</td>
-                                    <td>{{$element.ItemName}}</td>
-                                    <td class="text-center">{{$element.Quantity}}</td>
-                                </tr>
-                            {{end}}
-                        </tbody>
-                    </table>
+      <div class="d-flex flex-column flex-md-row col-12">
+        <div
+          class="col-12 col-md-6 d-flex flex-column placeholder-blank-space taken-by-you"
+        >
+          {{if $someTaken}}
+          <h3 class="text-center">Taken By You</h3>
+          {{range $index, $element := itemsTakenByCook .KitchenOrders $cookId}}
+          <div class="card d-flex flex-column m-3">
+            <div class="card-body flex-grow">
+              <div class="card-title fs-4 d-flex flex-row">
+                <div class="col-8 fs-3">{{$element.ItemName}}</div>
+                <div class="flex-fill text-center qty-display fs-3">
+                  x{{$element.Quantity}}
                 </div>
+              </div>
+
+              {{if ne $element.Instruction.String ""}}
+              <div class="card-body">
+                <div class="card">
+                  <div class="text-center">Instruction</div>
+                  <div class="text-center fs-5">
+                    {{$element.Instruction.String}}
+                  </div>
+                </div>
+              </div>
+              {{end}}
+              <div
+                class="flex-shrink-0 d-flex flex-row m-2 align-items-center justify-content-center"
+              >
+                <div class="flex-fill text-center fs-5 sub_total">
+                  Table no. <span class="fs-3">{{$element.TableNo.Int64}}</span>
+                </div>
+                <form
+                  class="flex-fill d-flex justify-content-center"
+                  action="/api/cook"
+                  method="post"
+                >
+                  <input
+                    type="hidden"
+                    name="order_id"
+                    value="{{$element.OrderId}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="item_id"
+                    value="{{$element.ItemId}}"
+                  />
+                  <input type="hidden" name="is_complete" value="complete" />
+                  <button type="submit" class="delete-btn btn btn-danger">
+                    Mark Complete
+                  </button>
+                </form>
+              </div>
             </div>
-        {{else}}
-            <div class="h-100 d-flex align-items-center bg-dark text-light m-3 rounded-4">
-                <div class="text-center col-12 truculenta-normal fs-3">No Orders Completed</div>
+          </div>
+          {{end}} {{else}}
+          <div
+            class="h-100 d-flex align-items-center bg-secondary text-light m-3 rounded-4"
+          >
+            <div class="text-center col-12 truculenta-normal fs-2">
+              No Orders Taken
             </div>
-        {{end}}
+          </div>
+          {{end}}
+        </div>
+        <div class="col-12 col-md-6 d-flex flex-column completed-today m-3">
+          {{if $somePending}}
+          <h3 class="text-center">Pending</h3>
+          <div class="d-flex col-12 justify-content-center">
+            <div class="col-12">
+              <table class="table table-striped">
+                <thead>
+                  <th class="text-center">Table No.</th>
+                  <th class="text-center">Order ID</th>
+                  <th>Item</th>
+                  <th class="text-center">Qty.</th>
+                  <th>Special Instructions</th>
+                </thead>
+                <tbody>
+                  {{range $index, $element := itemsPending .KitchenOrders}}
+                  <tr>
+                    <td class="text-center">{{$element.TableNo.Int64}}</td>
+                    <td class="text-center">{{$element.OrderId}}</td>
+                    <td>{{$element.ItemName}}</td>
+                    <td class="text-center">{{$element.Quantity}}</td>
+                    {{if eq $element.Instruction.String ""}}
+                    <td>None</td>
+                    {{else}}
+                    <td>{{$element.Instruction.String}}</td>
+                    {{end}} {{if eq $element.IsComplete "pending"}}
+                    <td>
+                      <form action="/api/cook" method="post">
+                        <input
+                          type="hidden"
+                          name="order_id"
+                          value="{{$element.OrderId}}"
+                        />
+                        <input
+                          type="hidden"
+                          name="item_id"
+                          value="{{$element.ItemId}}"
+                        />
+                        <input type="hidden" name="is_complete" value="taken" />
+                        <button class="btn btn-primary" type="submit">
+                          Take Item
+                        </button>
+                      </form>
+                    </td>
+                    {{end}}
+                  </tr>
+                  {{end}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {{else}}
+          <div class="d-flex justify-content-center">
+            <div
+              class="d-flex flex-column col-12 placeholder-blank-space bg-success justify-content-center rounded-4 text-light"
+            >
+              <div class="text-center fs-2 truculenta-normal">
+                No Orders Pending!
+              </div>
+            </div>
+          </div>
+          {{end}}
+        </div>
+      </div>
+      <hr />
+
+      {{if $someComplete}}
+      <div class="d-flex flex-column align-items-center">
+        <h3 class="text-center">Completed Today</h3>
+        <div class="col-10">
+          <table class="table table-striped">
+            <thead>
+              <th class="text-center col-1">Table No.</th>
+              <th class="text-center col-2">Order ID</th>
+              <th>Item</th>
+              <th class="text-center col-3">Qty</th>
+            </thead>
+            <tbody>
+              {{range $index, $element := itemsCompletedByCookToday
+              .KitchenOrders $cookId}}
+              <tr>
+                <td class="text-center">{{$element.TableNo.Int64}}</td>
+                <td class="text-center">{{$element.OrderId}}</td>
+                <td>{{$element.ItemName}}</td>
+                <td class="text-center">{{$element.Quantity}}</td>
+              </tr>
+              {{end}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{else}}
+      <div
+        class="h-100 d-flex align-items-center bg-dark text-light m-3 rounded-4"
+      >
+        <div class="text-center col-12 truculenta-normal fs-3">
+          No Orders Completed
+        </div>
+      </div>
+      {{end}}
     </div>
-</body>
+  </body>
 </html>

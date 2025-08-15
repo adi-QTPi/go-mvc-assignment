@@ -55,7 +55,6 @@ func (cuc *StaticOrderCotroller) RenderCustOrderPage(w http.ResponseWriter, r *h
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing order.html : %v", err)
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
 	}
-	// util.EncodeAndSendOrderWithStatus(w, orderSlice, http.StatusOK)
 }
 
 func (cuc *StaticOrderCotroller) RenderOrderById(w http.ResponseWriter, r *http.Request) {
@@ -92,5 +91,4 @@ func (cuc *StaticOrderCotroller) RenderOrderById(w http.ResponseWriter, r *http.
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing order_by_id.html : %v", err)
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
 	}
-	// util.EncodeAndSendOrderWithStatus(w, orderSlice, http.StatusOK)
 }

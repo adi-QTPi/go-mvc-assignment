@@ -53,7 +53,6 @@ func DecryptJwtToken(w http.ResponseWriter, r *http.Request, tokenValue string) 
 			IsError: true,
 		}
 		InsertPopupInFlash(w, r, popup)
-		// return blankUser
 
 		RedirectToSite(w, r, "/login")
 		return blankUser

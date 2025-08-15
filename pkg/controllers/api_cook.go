@@ -44,8 +44,4 @@ func (coc *CookApiController) ChangeKitchenOrderStatus(w http.ResponseWriter, r 
 	}
 
 	util.RedirectToSite(w, r, "/static/cook")
-
-	// var responseJson util.StandardResponseJson
-	// responseJson.Msg = fmt.Sprintf("changed the status of order %v item %v to %v", orderIdStr, itemIdStr, isComplete)
-	// util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }

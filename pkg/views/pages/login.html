@@ -1,38 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
 
     {{template "headers"}}
-</head>
-<body>
-
-{{$isError := .Popup.IsError}}{{$message := .Popup.Msg}}
+  </head>
+  <body>
+    {{$isError := .Popup.IsError}}{{$message := .Popup.Msg}}
     <div class="container min-vh-100 d-flex align-items-center">
-        <div class="row w-100 justify-content-center">
-            <div class="col-8 col-lg-4">
-                <h1 class="text-center">Login</h1>
-                {{template "popupCore" .}}
-                <form class="text-center" method="post" action="/account/login">
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="user_name" type="text" name="user_name" placeholder="abc" autofocus>
-                        <label for="user_name">Enter User Name</label>
-                    </div>
-                    
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="password" type="password" name="password" placeholder="abc">
-                        <label for="password">Enter Password</label>
-                    </div>
-
-                    <button class="btn btn-dark w-50" type="submit">Submit</button>
-                </form>
-                <div class="mt-3 text-center">
-                    <p class="text-muted">Don't have an account? <a href="/signup" class="text-decoration-none">Create one here</a></p>
-                </div>
+      <div class="row w-100 justify-content-center">
+        <div class="col-8 col-lg-4">
+          <h1 class="text-center">Login</h1>
+          {{template "popupCore" .}}
+          <form class="text-center" method="post" action="/account/login">
+            <div class="form-floating mb-3">
+              <input
+                class="form-control"
+                id="user_name"
+                type="text"
+                name="user_name"
+                placeholder="abc"
+                autofocus
+              />
+              <label for="user_name">Enter User Name</label>
             </div>
+
+            <div class="form-floating mb-3">
+              <input
+                class="form-control"
+                id="password"
+                type="password"
+                name="password"
+                placeholder="abc"
+              />
+              <label for="password">Enter Password</label>
+            </div>
+
+            <button class="btn btn-dark w-50" type="submit">Submit</button>
+          </form>
+          <div class="mt-3 text-center">
+            <p class="text-muted">
+              Don't have an account?
+              <a href="/signup" class="text-decoration-none">Create one here</a>
+            </p>
+          </div>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

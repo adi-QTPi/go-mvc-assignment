@@ -42,6 +42,4 @@ func (cc *CookStaticController) CookDashboardInfo(w http.ResponseWriter, r *http
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing cook.html : %v", err)
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
 	}
-
-	// util.EncodeAndSendKitchenOrderWithStatus(w, kitchenOrderSlice, http.StatusOK)
 }

@@ -1,61 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile</title>
 
-   {{template "headers"}}
-</head>
-{{ $role := .XUser.Role }}
+    {{template "headers"}}
+  </head>
+  {{ $role := .XUser.Role }} {{template "navbar" .}}
 
-{{template "navbar" .}}
-
-<body>
-    <div class="col-12 d-flex align-items-center justify-content-center bg-image vh-50">
-        <h2 class="p-3 home-page-logo bg-glass caveat-cursive">Foodop1a</h2>
+  <body>
+    <div
+      class="col-12 d-flex align-items-center justify-content-center bg-image vh-50"
+    >
+      <h2 class="p-3 home-page-logo bg-glass caveat-cursive">Foodop1a</h2>
     </div>
 
-    <div class="col-10 col-lg-8 m-4 p-4 mx-auto user-profile rounded-4 d-flex flex-column flex-lg-row">
-        <div class="flex-fill caveat-cursive">
-            <h1>Welcome <span class="fw-bold truculenta-normal">{{.XUser.UserName}}</span> !</h1>
-            <div>
-                <span class="fst-italic fs-4">Name -> </span><span class="fs-4 truculenta-normal">{{.XUser.Name}}</span>
-            </div>
-            <div>
-                <span class="fst-italic fs-4">Role -> </span><span class="fs-4 truculenta-normal">{{.XUser.Role}}</span>
-            </div>
+    <div
+      class="col-10 col-lg-8 m-4 p-4 mx-auto user-profile rounded-4 d-flex flex-column flex-lg-row"
+    >
+      <div class="flex-fill caveat-cursive">
+        <h1>
+          Welcome
+          <span class="fw-bold truculenta-normal">{{.XUser.UserName}}</span> !
+        </h1>
+        <div>
+          <span class="fst-italic fs-4">Name -> </span
+          ><span class="fs-4 truculenta-normal">{{.XUser.Name}}</span>
         </div>
-        <div class="flex-fill">
-            <span class="caveat-cursive fs-large caveat-cursive">Where to ?</span> 
-            <div class="d-flex flex-column gap-2 w-75 truculenta-normal">
-                <a href="/static/menu" class="btn btn-dark fs-2">
-                {{if eq $role "admin"}}
-                    Manage Menu
-                {{else}}
-                    Menu
-                {{end}}
-                </a>
-                {{if eq $role "cook"}}
-                <a href="/static/cook" class="btn btn-dark fs-2">Start Cooking</a>
-                {{end}}
-                {{if eq $role "admin"}}
-                <a href="/static/admin" class="btn btn-dark fs-2">
-                    Manage Orders
-                </a>
-                {{end}}
-                {{if eq $role "admin"}}
-                <a href="/signup" class="btn btn-dark fs-2">
-                    Create New Account
-                </a>
-                {{end}}
-                {{if eq $role "customer"}}
-                <a href="/static/order" class="btn btn-dark fs-2">
-                    Your Orders
-                </a>
-                {{end}}
-            </div>
+        <div>
+          <span class="fst-italic fs-4">Role -> </span
+          ><span class="fs-4 truculenta-normal">{{.XUser.Role}}</span>
         </div>
+      </div>
+      <div class="flex-fill">
+        <span class="caveat-cursive fs-large caveat-cursive">Where to ?</span>
+        <div class="d-flex flex-column gap-2 w-75 truculenta-normal">
+          <a href="/static/menu" class="btn btn-dark fs-2">
+            {{if eq $role "admin"}} Manage Menu {{else}} Menu {{end}}
+          </a>
+          {{if eq $role "cook"}}
+          <a href="/static/cook" class="btn btn-dark fs-2">Start Cooking</a>
+          {{end}} {{if eq $role "admin"}}
+          <a href="/static/admin" class="btn btn-dark fs-2"> Manage Orders </a>
+          {{end}} {{if eq $role "admin"}}
+          <a href="/signup" class="btn btn-dark fs-2"> Create New Account </a>
+          {{end}} {{if eq $role "customer"}}
+          <a href="/static/order" class="btn btn-dark fs-2"> Your Orders </a>
+          {{end}}
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -31,7 +31,6 @@ func MakeAdminUser() error {
 
 	err = models.AddNewUser(admin, string(hashedPassword))
 	if err != nil {
-		// http.Error(w, fmt.Sprintf("Error Adding user: %v", err), http.StatusInternalServerError)
 		return fmt.Errorf("error creating the admin user : %v", err)
 	}
 

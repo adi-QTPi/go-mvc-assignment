@@ -55,5 +55,4 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 		responseJson.ErrDescription = fmt.Sprintf("Error in executing admin.html : %v", err)
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
 	}
-	// util.EncodeAndSendOrderWithStatus(w, orderSlice, http.StatusOK)
 }

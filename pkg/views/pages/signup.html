@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup-foodopia</title>
 
-   {{template "headers"}}
+    {{template "headers"}}
 </head>
+
 <body>
     {{$role := .XUser.Role }}{{$message := .Popup.Msg}}{{$isError := .Popup.IsError}}
     <div class="container min-vh-100 d-flex align-items-center">
         <div class="row w-100 justify-content-center">
             <div class="col-8 col-lg-4">
                 {{if eq $role "admin"}}
-                    <h1 class="text-center fs-2">! Admin Exclusive !</h1>
-                    <h1 class="text-center">Create New User</h1>
+                <h1 class="text-center fs-2">! Admin Exclusive !</h1>
+                <h1 class="text-center">Create New User</h1>
                 {{else}}
-                    <h1 class="text-center">Signup</h1>
+                <h1 class="text-center">Signup</h1>
                 {{end}}
                 {{if eq $isError true}}
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error!</strong> {{$message}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error!</strong> {{$message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
                 {{else if ne $message ""}}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{$message}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{$message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
                 {{end}}
 
-                <form class="text-center" method="post" action="{{if eq $role "admin"}}/account/admin/createaccount {{else}} /account/signup{{end}}"
-                >
+                <form class="text-center" method="post" action="{{if eq $role " admin"}}/account/admin/createaccount
+                    {{else}} /account/signup{{end}}">
                     <div class="form-floating mb-3">
-                        <input type="text" name="user_name" placeholder="abc" autofocus class="form-control" id = "user_name">
+                        <input type="text" name="user_name" placeholder="abc" autofocus class="form-control"
+                            id="user_name">
                         <label for="user_name">Username</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -49,33 +52,34 @@
                         <label for="password">Confirm Password</label>
                     </div>
                     {{if eq $role "admin"}}
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-select mb-3" id="role" name="role">
-                            <option selected disabled>Choose a Role</option>
-                            <option value="admin">Admin</option>
-                            <option value="cook">Cook</option>
-                            <option value="customer">Customer</option>
-                        </select>
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-select mb-3" id="role" name="role">
+                        <option selected disabled>Choose a Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="cook">Cook</option>
+                        <option value="customer">Customer</option>
+                    </select>
                     {{else}}
-                       <input type="hidden" id="role" name="role" value="customer">
+                    <input type="hidden" id="role" name="role" value="customer">
                     {{end}}
                     <button class="btn btn-danger w-50 fs-4" type="submit">
                         {{if eq $role "admin"}}
-                            Create Account
+                        Create Account
                         {{else}}
-                            Submit
+                        Submit
                         {{end}}
                     </button>
                 </form>
                 {{if eq $role "admin"}}
                 <div class="col-12 d-flex justify-content-center mt-2">
                     <a href="/" class=" mx-auto">
-                    <button class="btn btn-dark mx-auto">Back Home</button>
+                        <button class="btn btn-dark mx-auto">Back Home</button>
                     </a>
                 </div>
                 {{end}}
                 <div class="mt-3 text-center">
-                    <p class="text-muted">Already have an account? <a href="/login" class="text-decoration-none">Log in using it</a></p>
+                    <p class="text-muted">Already have an account? <a href="/login" class="text-decoration-none">Log in
+                            using it</a></p>
                 </div>
             </div>
         </div>

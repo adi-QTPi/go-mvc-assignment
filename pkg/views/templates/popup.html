@@ -1,24 +1,22 @@
-{{define "popupCore"}}
-
-    {{$message := .Popup.Msg}} {{$isError := .Popup.IsError}}
-
-    {{if $isError}}
-        <div class="alert alert-danger alert-dismissible fade show col-12 mx-auto" role="alert">
-            <strong>Error!</strong> {{$message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {{else if ne $message ""}}
-        <div class="alert alert-success alert-dismissible fade show col-12 mx-auto" role="alert">
-            {{$message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {{end}}
-{{end}}
-
-{{define "popup"}}
-    <div class="d-flex justify-content-center p-2 mx-auto col-12 mt-3">
-        <div class="col-10 col-lg-6">
-            {{template "popupCore" .}}
-        </div>
-    </div>
+{{define "popupCore"}} {{$message := .Popup.Msg}} {{$isError := .Popup.IsError}}
+{{if $isError}}
+<div
+  class="alert alert-danger alert-dismissible fade show col-12 mx-auto"
+  role="alert"
+>
+  <strong>Error!</strong> {{$message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{{else if ne $message ""}}
+<div
+  class="alert alert-success alert-dismissible fade show col-12 mx-auto"
+  role="alert"
+>
+  {{$message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{{end}} {{end}} {{define "popup"}}
+<div class="d-flex justify-content-center p-2 mx-auto col-12 mt-3">
+  <div class="col-10 col-lg-6">{{template "popupCore" .}}</div>
+</div>
 {{end}}

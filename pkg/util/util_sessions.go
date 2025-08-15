@@ -31,12 +31,10 @@ func InitiateStructSession() {
 		&models.User{},
 
 		models.DisplayItem{},
-		// &models.DisplayItem{}, giving error (duplication ???why)
 		[]models.DisplayItem{},
 		[]*models.DisplayItem{},
 
 		models.Category{},
-		// &models.Category{}, giving error (duplication ???why)
 		[]models.Category{},
 		[]*models.Category{},
 

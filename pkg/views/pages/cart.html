@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cart</title>
     <script src="/public/js/cart.js" defer></script>
 
     {{template "headers"}}
-</head>
-{{$userName := .XUser.UserName}}
-{{$role := .XUser.Role}}
+  </head>
+  {{$userName := .XUser.UserName}} {{$role := .XUser.Role}} {{template "navbar"
+  .}}
 
-{{template "navbar" .}}
-
-<body>
+  <body>
     <h1 class="text-center bg-glass sticky-top z-5 py-2">Your Cart</h1>
-    <form action="" class="cart_form d-flex flex-column d-flex align-items-center gap-4">
-        <div class="cart_space d-flex flex-column justify-content-center gap-3 col-10 col-lg-6">
-
-        </div>
-        <div class="bg-glass col-12 sticky-bottom d-flex align-items-center justify-content-center py-5">
-            <button class=" btn bg-turq-bold text-wheat fs-3 col-6 col-lg-4 rounded-5 " type="submit">Place Order</button>
-        </div>
+    <form
+      action=""
+      class="cart_form d-flex flex-column d-flex align-items-center gap-4"
+    >
+      <div
+        class="cart_space d-flex flex-column justify-content-center gap-3 col-10 col-lg-6"
+      ></div>
+      <div
+        class="bg-glass col-12 sticky-bottom d-flex align-items-center justify-content-center py-5"
+      >
+        <button
+          class="btn bg-turq-bold text-wheat fs-3 col-6 col-lg-4 rounded-5"
+          type="submit"
+        >
+          Place Order
+        </button>
+      </div>
     </form>
-</body>
+  </body>
 </html>

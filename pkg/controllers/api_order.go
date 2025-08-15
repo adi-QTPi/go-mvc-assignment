@@ -28,8 +28,6 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 			IsError: true,
 		}
 		util.InsertPopupInFlash(w, r, popup)
-
-		// util.RedirectToSite(w, r, "/static/menu")
 		var responseJson util.StandardResponseJson
 		responseJson.Msg = "Order Not Placed !!! no item present"
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
