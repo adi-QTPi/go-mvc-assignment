@@ -92,7 +92,9 @@
                         <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-around ">
                             <div class="fs-3 mx-auto">₹{{.Price}}</div>
                             {{if eq $role "customer"}}
-                                <button class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="{{.ItemId}}">Add to Cart</button>
+                                <div id="{{.ItemId}}" class="qty-controls">
+                                    <button class="add-to-cart qty-controls btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="{{.ItemId}}">Add to Cart</button>
+                                </div>
                             {{end}}
                             {{if eq $role "admin"}}
                                 <form action="/api/item/d/{{.ItemId}}" method="post">

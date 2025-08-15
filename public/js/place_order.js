@@ -22,37 +22,142 @@ console.log(to_menu_page)
 const go_to_cart_space = document.getElementsByClassName("go-to-cart-space")[0];
 const go_to_cart_space_text = document.getElementsByClassName("go-to-cart-space-text")[0];
 
+// New functions for quantity control
+function createQuantityControls(itemId, currentQuantity = 1) {
+    const isInCart = item_in_cart.find((item) => item.item_id === itemId);
+    const quantity = isInCart ? isInCart.quantity : 0;
+    
+    if (quantity === 0) {
+        return `<button class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="${itemId}">Add to Cart</button>`;
+    }
+    
+    let controlsHtml = `
+        <div class="d-flex flex-column gap-2 align-items-center">
+            <button class="quantity-btn increment-btn btn btn-dark text-white rounded-pill p-2 fs-5" data-item-id="${itemId}">+</button>
+    `;
+    
+    if (quantity > 1) {
+        controlsHtml += `
+            <button class="quantity-btn decrement-btn btn btn-dark text-white rounded-pill p-2 fs-5" data-item-id="${itemId}">-</button>
+        `;
+    }
+    
+    controlsHtml += `
+            <button class="quantity-btn remove-btn btn btn-dark text-white rounded-pill p-2 fs-5" data-item-id="${itemId}" style="flex-grow: 1;">×</button>
+        </div>
+    `;
+    
+    return controlsHtml;
+}
+
+function updateQuantityControls(itemId) {
+    const buttonContainer = document.querySelector(`[data-item-id="${itemId}"]`).closest('.d-flex.flex-column');
+    if (buttonContainer) {
+        const item = item_in_cart.find((item) => item.item_id === itemId);
+        if (item) {
+            buttonContainer.innerHTML = createQuantityControls(itemId, item.quantity);
+            attachQuantityEventListeners(itemId);
+        }
+    }
+}
+
+function attachQuantityEventListeners(itemId) {
+    const incrementBtn = document.querySelector(`[data-item-id="${itemId}"].increment-btn`);
+    const decrementBtn = document.querySelector(`[data-item-id="${itemId}"].decrement-btn`);
+    const removeBtn = document.querySelector(`[data-item-id="${itemId}"].remove-btn`);
+    
+    if (incrementBtn) {
+        incrementBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            incrementQuantity(itemId);
+        });
+    }
+    
+    if (decrementBtn) {
+        decrementBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            decrementQuantity(itemId);
+        });
+    }
+    
+    if (removeBtn) {
+        removeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            removeItemFromCart(itemId);
+        });
+    }
+}
+
+function incrementQuantity(itemId) {
+    const itemIndex = item_in_cart.findIndex(item => item.item_id === itemId);
+    if (itemIndex !== -1) {
+        item_in_cart[itemIndex].quantity++;
+        save_cart();
+        updateQuantityControls(itemId);
+        toggle_to_cart_button_visibility();
+        update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${getTotalCartQuantity()} </span> item(s) in your cart !`);
+    }
+}
+
+function decrementQuantity(itemId) {
+    const itemIndex = item_in_cart.findIndex(item => item.item_id === itemId);
+    if (itemIndex !== -1 && item_in_cart[itemIndex].quantity > 1) {
+        item_in_cart[itemIndex].quantity--;
+        save_cart();
+        updateQuantityControls(itemId);
+        toggle_to_cart_button_visibility();
+        update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${getTotalCartQuantity()} </span> item(s) in your cart !`);
+    }
+}
+
+function getTotalCartQuantity() {
+    return item_in_cart.reduce((total, item) => total + item.quantity, 0);
+}
+
+function removeItemFromCart(itemId) {
+    const itemIndex = item_in_cart.findIndex(item => item.item_id === itemId);
+    if (itemIndex !== -1) {
+        item_in_cart.splice(itemIndex, 1);
+        save_cart();
+        updateQuantityControls(itemId);
+        toggle_to_cart_button_visibility();
+        update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${getTotalCartQuantity()} </span> item(s) in your cart !`);
+    }
+}
+
+function initializeQuantityControls() {
+    // Initialize quantity controls for all items
+    const allQuantityButtons = document.querySelectorAll('.quantity-btn');
+    allQuantityButtons.forEach(button => {
+        const itemId = Number(button.getAttribute('data-item-id'));
+        attachQuantityEventListeners(itemId);
+    });
+}
+
+// Modified event listener for add-to-cart button
 document.addEventListener("click", function(event) {
     if (event.target.classList.contains("add-to-cart")) {
         let id = Number(event.target.id);
-        if (item_in_cart.find((item) => item.item_id === id)) {
-            const item_index = item_in_cart.findIndex(item => item.item_id === id);
-            item_in_cart.splice(item_index, 1);
-        } else {
-            const foundItem = to_menu_page.ItemSlice.find(el => el.item_id === id);
-            if (foundItem) {
-                let new_item_for_cart = {
-                    item_id: foundItem.item_id,
-                    item_name: foundItem.item_name,
-                    price: parseInt(foundItem.price, 10),
-                    quantity: 1
-                }
-                event.target.innerText = "Remove";
-                event.target.classList.remove("btn-danger");
-                event.target.classList.add("btn-dark")
-                item_in_cart.push(new_item_for_cart);
+        const foundItem = to_menu_page.ItemSlice.find(el => el.item_id === id);
+        if (foundItem) {
+            let new_item_for_cart = {
+                item_id: foundItem.item_id,
+                item_name: foundItem.item_name,
+                price: parseInt(foundItem.price, 10),
+                quantity: 1
             }
+            item_in_cart.push(new_item_for_cart);
+            save_cart();
+            updateQuantityControls(id);
+            toggle_to_cart_button_visibility();
+            update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${getTotalCartQuantity()} </span> item(s) in your cart !`);
         }
-        save_cart();
-        toggle_add_to_cart_button_label();
-        toggle_to_cart_button_visibility();
-        update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`);
     }
 });
 
 toggle_to_cart_button_visibility()
 
-update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`);
+update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${getTotalCartQuantity()} </span> item(s) in your cart !`);
 
 let selected_filters = []; let filtered_menu = [];
 const filter_buttons = document.getElementsByClassName("filter-buttons")[0].children;
@@ -72,7 +177,7 @@ for (let filter of filter_buttons){
         }
         create_filtered_menu(selected_filters);
         renderWithSearchResults();
-        toggle_add_to_cart_button_label();
+        initializeQuantityControls();
     })
 }
 
@@ -88,24 +193,12 @@ clear_filter_button.addEventListener("click", ()=>{
     search_input.value = ""
     create_filtered_menu(selected_filters);
     renderWithSearchResults();
-    toggle_add_to_cart_button_label();
+    initializeQuantityControls();
 })
 
 async function toggle_add_to_cart_button_label(){
-    let add_to_cart_buttons = document.getElementsByClassName("add-to-cart");
-    for(let buttons of add_to_cart_buttons){
-        let id = Number(buttons.id);
-        buttons.classList.remove("bg-queen-pink", "btn-dark", "text-white");
-        buttons.innerText = "";
-        if(item_in_cart.some((item)=> item.item_id === id)){
-            buttons.classList.add("btn-dark");
-            buttons.innerText = "Remove from Cart";
-        }
-        else {
-            buttons.classList.add("bg-queen-pink", "text-white");
-            buttons.innerText = "Add to Cart"
-        }
-    }
+    // This function is now handled by the new quantity control system
+    // All buttons are updated dynamically when needed
 }
 
 async function toggle_to_cart_space_visibility(vis_value){
@@ -138,7 +231,7 @@ const full_menu_space = document.getElementsByClassName("full-menu-space")[0];
 
 create_filtered_menu(selected_filters);
 render_filtered_menu(filtered_menu);
-toggle_add_to_cart_button_label();
+initializeQuantityControls();
 toggle_to_cart_button_visibility();
 
 filtered_menu_space.style.display = "none";
@@ -163,9 +256,7 @@ function generateMenuItemHtml(item, role) {
             <div class="mx-auto"></div>
         `;
     } else {
-        action_button_html = `
-            <button class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="${item.item_id}">Add to Cart</button>
-        `;
+        action_button_html = createQuantityControls(item.item_id);
     }
 
     return `
@@ -234,6 +325,7 @@ async function renderWithSearchResults(){
     if (searchTerm === "") {
         create_filtered_menu(selected_filters);
         render_filtered_menu(filtered_menu);
+        initializeQuantityControls();
     } else {
         const searchResults = to_menu_page.ItemSlice.filter(item =>
             item.item_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -251,6 +343,7 @@ async function renderWithSearchResults(){
                 filtered_menu_space.style.display = "block";
             } else {
                 render_filtered_menu(filteredBySearchAndCategory);
+                initializeQuantityControls();
             }
         } else {
             if (searchResults.length == 0) {
@@ -262,10 +355,11 @@ async function renderWithSearchResults(){
                 filtered_menu_space.style.display = "block";
             } else {
                 render_filtered_menu(searchResults);
+                initializeQuantityControls();
             }
         }
     }
-    toggle_add_to_cart_button_label();
+    initializeQuantityControls();
 }
 
 function noItemCardRender(element){
@@ -286,3 +380,6 @@ async function toggle_to_cart_button_visibility(){
         toggle_to_cart_space_visibility("block");
     }
 }
+
+// Initialize quantity controls when page loads
+initializeQuantityControls();
