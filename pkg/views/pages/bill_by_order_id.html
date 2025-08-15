@@ -59,6 +59,8 @@
                     <td class="col-auto text-center">
                         {{if eq $element.IsComplete "taken"}}
                             Taken by <strong>Chef {{$element.CookName.String}}</strong>
+                        {{else if eq $element.IsComplete "complete"}}
+                            Complete ( prepared by <strong>Chef {{$element.CookName.String}}</strong> )
                         {{else}}
                             {{$element.IsComplete}}
                         {{end}}
