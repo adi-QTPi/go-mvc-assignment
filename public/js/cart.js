@@ -1,15 +1,20 @@
-// const to_menu_page = JSON.parse(localStorage.getItem("to_menu_page"));
-// let item_in_cart = JSON.parse(localStorage.getItem("item_in_cart"));
-
 const to_menu_page = JSON.parse(localStorage.getItem("to_menu_page"));
 let item_in_cart = JSON.parse(localStorage.getItem("item_in_cart"));
 
-async function render_cart(item_in_cart){
+async function render_cart(item_in_cart) {
     const cart_space = document.getElementsByClassName("cart_space")[0];
     cart_space.innerHTML = ``;
-    for (let items of item_in_cart){
+    for (let items of item_in_cart) {
         let new_el = document.createElement("div");
-        new_el.classList.add("card", "d-flex", "flex-row", "col-12", "col-lg-10", "mx-auto", "rounded-5");
+        new_el.classList.add(
+            "card",
+            "d-flex",
+            "flex-row",
+            "col-12",
+            "col-lg-10",
+            "mx-auto",
+            "rounded-5"
+        );
         let sub_total = items.quantity * items.price;
 
         new_el.innerHTML = `
@@ -43,17 +48,16 @@ async function render_cart(item_in_cart){
         const subtotal_space = new_el.getElementsByClassName("sub_total")[0];
 
         minus_button.addEventListener("click", () => {
-            if (items.quantity > 1){
+            if (items.quantity > 1) {
                 items.quantity--;
-                quantity_space.innerText = items.quantity; 
+                quantity_space.innerText = items.quantity;
                 subtotal_space.innerText = `₹${items.quantity * items.price}`;
-            }
-            else {
+            } else {
                 quantity_space.innerText = items.quantity;
                 subtotal_space.innerText = `₹${items.quantity * items.price}`;
             }
         });
-        
+
         plus_button.addEventListener("click", () => {
             items.quantity++;
             quantity_space.innerText = items.quantity;
@@ -68,7 +72,7 @@ async function render_cart(item_in_cart){
 }
 
 function removeItem(itemId) {
-    const item_index = item_in_cart.findIndex(item => item.item_id === itemId);
+    const item_index = item_in_cart.findIndex((item) => item.item_id === itemId);
     if (item_index !== -1) {
         item_in_cart.splice(item_index, 1);
         localStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
@@ -82,21 +86,23 @@ function removeItem(itemId) {
 
 render_cart(item_in_cart);
 
-
-
 const cart_form = document.getElementsByClassName("cart_form")[0];
-cart_form.addEventListener("submit", (e)=>{
+cart_form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const item_instruction_input = document.getElementsByClassName("item_instruction_input");
+    const item_instruction_input = document.getElementsByClassName(
+        "item_instruction_input"
+    );
 
-    for (let input of item_instruction_input){
+    for (let input of item_instruction_input) {
         const item_id = Number(input.getAttribute("data-item-id"));
         const instruction_from_form = input.value.trim();
 
-        const item_index = item_in_cart.findIndex(item => item.item_id === item_id);
+        const item_index = item_in_cart.findIndex(
+            (item) => item.item_id === item_id
+        );
 
-        if(item_index !== -1){
+        if (item_index !== -1) {
             item_in_cart[item_index].instruction = instruction_from_form;
         }
     }
@@ -106,30 +112,33 @@ cart_form.addEventListener("submit", (e)=>{
     let cart_items_string = localStorage.getItem("item_in_cart");
     item_in_cart = JSON.parse(cart_items_string);
 
-    for (let item of item_in_cart){
-        let priceString = item.price
-        item.price = 0
-        item.price = parseInt(priceString,10)
+    for (let item of item_in_cart) {
+        let priceString = item.price;
+        item.price = 0;
+        item.price = parseInt(priceString, 10);
     }
 
     fetch("/api/order", {
         method: "POST",
         body: JSON.stringify(item_in_cart),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
+            "Content-type": "application/json; charset=UTF-8",
+        },
     })
-    .then((response) => response.json())
-    .then((data)=>{
-        console.log("Order placed successfully, clearing cart...");
-        item_in_cart = [];
-        localStorage.removeItem("item_in_cart");
-        sessionStorage.removeItem("item_in_cart");
-        localStorage.setItem("item_in_cart", "[]");
-        console.log("Cart cleared, localStorage now contains:", localStorage.getItem("item_in_cart"));
-        window.location.href="/static/order"
-    })
-    .catch((error) => {
-        console.error("Error placing order:", error);
-    });
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Order placed successfully, clearing cart...");
+            item_in_cart = [];
+            localStorage.removeItem("item_in_cart");
+            sessionStorage.removeItem("item_in_cart");
+            localStorage.setItem("item_in_cart", "[]");
+            console.log(
+                "Cart cleared, localStorage now contains:",
+                localStorage.getItem("item_in_cart")
+            );
+            window.location.href = "/static/order";
+        })
+        .catch((error) => {
+            console.error("Error placing order:", error);
+        });
 });

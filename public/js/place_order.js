@@ -1,9 +1,9 @@
-function save_cart(){
+function save_cart() {
     localStorage.setItem("item_in_cart", JSON.stringify(item_in_cart));
     localStorage.setItem("to_menu_page", JSON.stringify(to_menu_page));
 }
 
-function load_cart(){
+function load_cart() {
     const item_in_storage = localStorage.getItem("item_in_cart");
     if (item_in_storage) {
         return JSON.parse(item_in_storage);
@@ -12,60 +12,69 @@ function load_cart(){
     }
 }
 
-item_in_cart = load_cart()
+item_in_cart = load_cart();
 
 const metaTag = document.querySelector('meta[name="menu-data"]');
-const to_menu_page = JSON.parse(metaTag.getAttribute('content'));
+const to_menu_page = JSON.parse(metaTag.getAttribute("content"));
 
-console.log(to_menu_page)
+console.log(to_menu_page);
 
 const go_to_cart_space = document.getElementsByClassName("go-to-cart-space")[0];
-const go_to_cart_space_text = document.getElementsByClassName("go-to-cart-space-text")[0];
+const go_to_cart_space_text = document.getElementsByClassName(
+    "go-to-cart-space-text"
+)[0];
 
-document.addEventListener("click", function(event) {
+document.addEventListener("click", function (event) {
     if (event.target.classList.contains("add-to-cart")) {
         let id = Number(event.target.id);
         if (item_in_cart.find((item) => item.item_id === id)) {
-            const item_index = item_in_cart.findIndex(item => item.item_id === id);
+            const item_index = item_in_cart.findIndex((item) => item.item_id === id);
             item_in_cart.splice(item_index, 1);
         } else {
-            const foundItem = to_menu_page.ItemSlice.find(el => el.item_id === id);
+            const foundItem = to_menu_page.ItemSlice.find((el) => el.item_id === id);
             if (foundItem) {
                 let new_item_for_cart = {
                     item_id: foundItem.item_id,
                     item_name: foundItem.item_name,
                     price: parseInt(foundItem.price, 10),
-                    quantity: 1
-                }
+                    quantity: 1,
+                };
                 event.target.innerText = "Remove";
                 event.target.classList.remove("btn-danger");
-                event.target.classList.add("btn-dark")
+                event.target.classList.add("btn-dark");
                 item_in_cart.push(new_item_for_cart);
             }
         }
         save_cart();
         toggle_add_to_cart_button_label();
         toggle_to_cart_button_visibility();
-        update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`);
+        update_text_in_element(
+            go_to_cart_space_text,
+            `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`
+        );
     }
 });
 
-toggle_to_cart_button_visibility()
+toggle_to_cart_button_visibility();
 
-update_text_in_element(go_to_cart_space_text, `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`);
+update_text_in_element(
+    go_to_cart_space_text,
+    `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`
+);
 
-let selected_filters = []; let filtered_menu = [];
-const filter_buttons = document.getElementsByClassName("filter-buttons")[0].children;
+let selected_filters = [];
+let filtered_menu = [];
+const filter_buttons =
+    document.getElementsByClassName("filter-buttons")[0].children;
 
-for (let filter of filter_buttons){
-    filter.addEventListener("click", ()=>{
+for (let filter of filter_buttons) {
+    filter.addEventListener("click", () => {
         const cat_id = Number(filter.getAttribute("data-btn"));
-        if(filter.classList.contains("btn-filter")){
+        if (filter.classList.contains("btn-filter")) {
             filter.classList.remove("btn-filter");
             filter.classList.add("btn-filter-clicked");
             selected_filters.push(cat_id);
-        }
-        else{
+        } else {
             filter.classList.add("btn-filter");
             filter.classList.remove("btn-filter-clicked");
             selected_filters.splice(selected_filters.indexOf(cat_id), 1);
@@ -73,67 +82,73 @@ for (let filter of filter_buttons){
         create_filtered_menu(selected_filters);
         renderWithSearchResults();
         toggle_add_to_cart_button_label();
-    })
+    });
 }
 
-const clear_filter_button = document.getElementsByClassName("clear-filter-button")[0];
-clear_filter_button.addEventListener("click", ()=>{
-    for(let el of filter_buttons){
-        if(!el.classList.contains("btn-filter")){
+const clear_filter_button = document.getElementsByClassName(
+    "clear-filter-button"
+)[0];
+clear_filter_button.addEventListener("click", () => {
+    for (let el of filter_buttons) {
+        if (!el.classList.contains("btn-filter")) {
             el.classList.remove("btn-filter-clicked");
             el.classList.add("btn-filter");
         }
         selected_filters = [];
     }
-    search_input.value = ""
+    search_input.value = "";
     create_filtered_menu(selected_filters);
     renderWithSearchResults();
     toggle_add_to_cart_button_label();
-})
+});
 
-async function toggle_add_to_cart_button_label(){
+async function toggle_add_to_cart_button_label() {
     let add_to_cart_buttons = document.getElementsByClassName("add-to-cart");
-    for(let buttons of add_to_cart_buttons){
+    for (let buttons of add_to_cart_buttons) {
         let id = Number(buttons.id);
         buttons.classList.remove("bg-queen-pink", "btn-dark", "text-white");
         buttons.innerText = "";
-        if(item_in_cart.some((item)=> item.item_id === id)){
+        if (item_in_cart.some((item) => item.item_id === id)) {
             buttons.classList.add("btn-dark");
             buttons.innerText = "Remove from Cart";
-        }
-        else {
+        } else {
             buttons.classList.add("bg-queen-pink", "text-white");
-            buttons.innerText = "Add to Cart"
+            buttons.innerText = "Add to Cart";
         }
     }
 }
 
-async function toggle_to_cart_space_visibility(vis_value){
-    for(let ch of go_to_cart_space.children){
+async function toggle_to_cart_space_visibility(vis_value) {
+    for (let ch of go_to_cart_space.children) {
         ch.style.display = vis_value;
     }
 }
-async function update_text_in_element(element, html){
+async function update_text_in_element(element, html) {
     element.innerHTML = html;
 }
 
-async function create_filtered_menu(selected_filters){
+async function create_filtered_menu(selected_filters) {
     filtered_menu = [];
 
-    for(let cat_id of selected_filters){
+    for (let cat_id of selected_filters) {
+        const target_item_array = to_menu_page.ItemSlice.filter(
+            (item) => item.cat_id === cat_id || item.subcat_id === cat_id
+        );
 
-
-        const target_item_array = to_menu_page.ItemSlice.filter(item => item.cat_id === cat_id || item.subcat_id === cat_id);
-
-        for(let target_item of target_item_array){
-            if(target_item && !filtered_menu.some(item => item.item_id === target_item.item_id)){
+        for (let target_item of target_item_array) {
+            if (
+                target_item &&
+                !filtered_menu.some((item) => item.item_id === target_item.item_id)
+            ) {
                 filtered_menu.push(target_item);
             }
         }
     }
 }
 
-const filtered_menu_space = document.getElementsByClassName("filtered-menu-space")[0];
+const filtered_menu_space = document.getElementsByClassName(
+    "filtered-menu-space"
+)[0];
 const full_menu_space = document.getElementsByClassName("full-menu-space")[0];
 
 create_filtered_menu(selected_filters);
@@ -144,7 +159,7 @@ toggle_to_cart_button_visibility();
 filtered_menu_space.style.display = "none";
 
 function generateMenuItemHtml(item, role) {
-    let action_button_html = '';
+    let action_button_html = "";
     let img_path;
     if (item.display_pic.Valid) {
         img_path = item.display_pic.String;
@@ -191,33 +206,51 @@ function generateMenuItemHtml(item, role) {
     `;
 }
 
-async function render_filtered_menu(filtered_menu){
-    if(filtered_menu_space.style.display === "none"){
+async function render_filtered_menu(filtered_menu) {
+    if (filtered_menu_space.style.display === "none") {
         filtered_menu_space.style.display = "block";
-        full_menu_space.style.display = "none"
+        full_menu_space.style.display = "none";
     }
-    if(!filtered_menu.length){
+    if (!filtered_menu.length) {
         filtered_menu_space.style.display = "none";
-        full_menu_space.style.display = "block"
+        full_menu_space.style.display = "block";
     }
     filtered_menu_space.innerHTML = "";
 
     let menu_space = document.createElement("div");
-    menu_space.classList.add("d-flex", "flex-column", "flex-lg-row", "flex-wrap", "align-items-center", "justify-content-center", "m-1", "m-md-4", "gap-2", "gap-md-4")
-    
+    menu_space.classList.add(
+        "d-flex",
+        "flex-column",
+        "flex-lg-row",
+        "flex-wrap",
+        "align-items-center",
+        "justify-content-center",
+        "m-1",
+        "m-md-4",
+        "gap-2",
+        "gap-md-4"
+    );
+
     let reverse_filtered_menu = [...filtered_menu].reverse();
 
-    for( let items of reverse_filtered_menu){
+    for (let items of reverse_filtered_menu) {
         let new_el = document.createElement("div");
-        new_el.classList.add("card" ,"col-10", "col-lg-5" ,"d-flex" ,"flex-column", "rounded-5");
+        new_el.classList.add(
+            "card",
+            "col-10",
+            "col-lg-5",
+            "d-flex",
+            "flex-column",
+            "rounded-5"
+        );
 
         let img_path = "/public/images/sample_food.png";
-        if(items.display_pic.Valid ){
+        if (items.display_pic.Valid) {
             img_path = items.display_pic.String;
         }
 
         new_el.innerHTML = generateMenuItemHtml(items, to_menu_page.XUser.role);
-     
+
         menu_space.appendChild(new_el);
     }
     filtered_menu_space.appendChild(menu_space);
@@ -229,18 +262,20 @@ search_input.addEventListener("input", (e) => {
     renderWithSearchResults();
 });
 
-async function renderWithSearchResults(){
+async function renderWithSearchResults() {
     const searchTerm = search_input.value.trim();
     if (searchTerm === "") {
         create_filtered_menu(selected_filters);
         render_filtered_menu(filtered_menu);
     } else {
-        const searchResults = to_menu_page.ItemSlice.filter(item =>
+        const searchResults = to_menu_page.ItemSlice.filter((item) =>
             item.item_name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         if (selected_filters.length > 0) {
-            const filteredBySearchAndCategory = searchResults.filter(item => 
-                selected_filters.includes(item.cat_id) || selected_filters.includes(item.subcat_id)
+            const filteredBySearchAndCategory = searchResults.filter(
+                (item) =>
+                    selected_filters.includes(item.cat_id) ||
+                    selected_filters.includes(item.subcat_id)
             );
 
             if (filteredBySearchAndCategory.length === 0) {
@@ -256,8 +291,8 @@ async function renderWithSearchResults(){
             if (searchResults.length == 0) {
                 filtered_menu_space.innerHTML = "";
                 let noItemsCard = document.createElement("div");
-                noItemCardRender(noItemsCard)
-                
+                noItemCardRender(noItemsCard);
+
                 filtered_menu_space.appendChild(noItemsCard);
                 filtered_menu_space.style.display = "block";
             } else {
@@ -268,8 +303,19 @@ async function renderWithSearchResults(){
     toggle_add_to_cart_button_label();
 }
 
-function noItemCardRender(element){
-    element.classList.add("card", "col-12", "col-lg-8", "rounded-pill","d-flex", "flex-column", "m-4", "mx-auto", "p-4", "text-center");
+function noItemCardRender(element) {
+    element.classList.add(
+        "card",
+        "col-12",
+        "col-lg-8",
+        "rounded-pill",
+        "d-flex",
+        "flex-column",
+        "m-4",
+        "mx-auto",
+        "p-4",
+        "text-center"
+    );
     element.innerHTML = `
         <div class="card-body col-12"> 
             <div class="card-title fs-1 truculenta-normal">No Items Found</div>
@@ -278,11 +324,10 @@ function noItemCardRender(element){
     `;
 }
 
-async function toggle_to_cart_button_visibility(){
-    if(!item_in_cart.length){
+async function toggle_to_cart_button_visibility() {
+    if (!item_in_cart.length) {
         toggle_to_cart_space_visibility("none");
-    }
-    else{
+    } else {
         toggle_to_cart_space_visibility("block");
     }
 }
