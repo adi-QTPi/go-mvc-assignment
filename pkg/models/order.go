@@ -112,23 +112,45 @@ func VacateTable() error {
 }
 
 func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order) error {
-	sqlQuery := "INSERT INTO item_order (order_id, item_id, quantity, instruction) VALUES (?, ?, ?, ?);"
 
-	for _, item := range orderSlice {
-		_, err := DB.Exec(sqlQuery, newOrder.OrderId, item.ItemId, item.Quantity, item.Instruction)
-		if err != nil {
-			return fmt.Errorf("error inserting item in item-order : %v", err)
+	orderId := newOrder.OrderId
+
+	var args []any
+	var qMarks string
+
+	for k, v := range orderSlice {
+		qMarks += "(?,?,?,?)"
+		if k < (len(orderSlice) - 1) {
+			qMarks += ","
 		}
+		args = append(args, orderId, v.ItemId, v.Quantity, v.Instruction)
 	}
-	return nil
+
+	t, err := DB.Begin()
+	if err != nil {
+		return fmt.Errorf("could not begin transaction: %w", err)
+	}
+	defer t.Rollback()
+
+	sqlQuery := "INSERT INTO item_order (order_id, item_id, quantity, instruction) VALUES "
+
+	_, err = t.Exec(sqlQuery+qMarks, args...)
+	if err != nil {
+		return fmt.Errorf("error inserting items in item-order : %v", err)
+	}
+
+	return t.Commit()
 }
 
 func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
 	var kitchenData []KitchenOrder
 
-	sqlQuery := "SELECT io.order_id, io.item_id,i.item_name, io.quantity, io.instruction, io.is_complete, io.cook_id, o.table_no, o.order_at FROM item_order io JOIN item i ON io.item_id = i.item_id JOIN `order` o ON io.order_id = o.order_id WHERE DATE(o.order_at) = CURDATE() ORDER BY io.order_id DESC;"
+	d := time.Now().Local()
+	todayDate := d.Format("2006-01-02")
 
-	rows, err := DB.Query(sqlQuery)
+	sqlQuery := "SELECT io.order_id, io.item_id,i.item_name, io.quantity, io.instruction, io.is_complete, io.cook_id, o.table_no, o.order_at FROM item_order io JOIN item i ON io.item_id = i.item_id JOIN `order` o ON io.order_id = o.order_id WHERE DATE(o.order_at) = ? ORDER BY io.order_id DESC;"
+
+	rows, err := DB.Query(sqlQuery, todayDate)
 	if err != nil {
 		return kitchenData, fmt.Errorf("error fetching item order ingfo, %v", err)
 	}
