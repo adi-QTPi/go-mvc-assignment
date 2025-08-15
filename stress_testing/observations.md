@@ -67,31 +67,32 @@ Percentage of the requests served within a certain time (ms)
 <br />
 
 ## POST Order /api/order
+### c , n := 1000, 10000
 ```bash
-ab -n 1000 -c 10 \
+ab -n 10000 -c 1000 \
    -p payload/demo_order.json \
    -T application/json \
    -H "Cookie: jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjMyODU0MjBlLTc4MWEtMTFmMC1iOTA0LTZlNTk5ZDE1YjRhMiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiYWRpdHlhIiwicm9sZSI6ImN1c3RvbWVyIn0sImV4cCI6MTc1NTM3MjQ1Mn0.Cplu8SzvEiP-mKpWzOkNpmFtn0-cMy0fdCBUQnUa7JE; foodopia-session=MTc1NTI4NTc1OHxEWDhFQVFMX2dBQUJFQUVRQUFBd180QUFBUVp6ZEhKcGJtY01DQUFHWDJac1lYTm9EbHRkYVc1MFpYSm1ZV05sSUh0OV80RUNBUUxfZ2dBQkVBQUFXXy1DTlFBQkN5cDFkR2xzTGxCdmNIVndfNE1EQVFFRlVHOXdkWEFCXzRRQUFRSUJBMDF6WndFTUFBRUhTWE5GY25KdmNnRUNBQUFBSXYtRUh3RWNVM1ZqWTJWemMyWjFiR3g1SUhCc1lXTmxaQ0JQY21SbGNpQWpPUUE9fNut9PcyPTRpEcVqf8YLiIHOdfinCQtJDDsWqxXJOLq7" \
    http://localhost:9001/api/order
 ```
-- result
+### results
 ```bash
 This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
 
 Benchmarking localhost (be patient)
-Completed 100 requests
-Completed 200 requests
-Completed 300 requests
-Completed 400 requests
-Completed 500 requests
-Completed 600 requests
-Completed 700 requests
-Completed 800 requests
-Completed 900 requests
 Completed 1000 requests
-Finished 1000 requests
+Completed 2000 requests
+Completed 3000 requests
+Completed 4000 requests
+Completed 5000 requests
+Completed 6000 requests
+Completed 7000 requests
+Completed 8000 requests
+Completed 9000 requests
+Completed 10000 requests
+Finished 10000 requests
 
 
 Server Software:        
@@ -99,40 +100,91 @@ Server Hostname:        localhost
 Server Port:            9001
 
 Document Path:          /api/order
-Document Length:        61 bytes
+Document Length:        64 bytes
 
-Concurrency Level:      10
-Time taken for tests:   1.055 seconds
-Complete requests:      1000
-Failed requests:        912
-   (Connect: 0, Receive: 0, Length: 912, Exceptions: 0)
-Total transferred:      716972 bytes
-Total body sent:        1140000
-HTML transferred:       61924 bytes
-Requests per second:    948.14 [#/sec] (mean)
-Time per request:       10.547 [ms] (mean)
-Time per request:       1.055 [ms] (mean, across all concurrent requests)
-Transfer rate:          663.86 [Kbytes/sec] received
-                        1055.55 kb/s sent
-                        1719.40 kb/s total
+Concurrency Level:      1000
+Time taken for tests:   20.145 seconds
+Complete requests:      10000
+Failed requests:        0
+Total transferred:      7230000 bytes
+Total body sent:        11400000
+HTML transferred:       640000 bytes
+Requests per second:    496.41 [#/sec] (mean)
+Time per request:       2014.483 [ms] (mean)
+Time per request:       2.014 [ms] (mean, across all concurrent requests)
+Transfer rate:          350.49 [Kbytes/sec] received
+                        552.64 kb/s sent
+                        903.13 kb/s total
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.0      0       0
-Processing:     4   10  10.6      9     114
-Waiting:        4   10  10.6      9     114
-Total:          4   10  10.6      9     114
+Connect:        0    3   9.9      0      73
+Processing:    47 1981 1401.3   1625   11567
+Waiting:       22 1981 1401.3   1625   11567
+Total:         47 1984 1398.8   1627   11568
 
 Percentage of the requests served within a certain time (ms)
-  50%      9
-  66%      9
-  75%     10
-  80%     10
-  90%     11
-  95%     13
-  98%     20
-  99%    111
- 100%    114 (longest request)
+  50%   1627
+  66%   2245
+  75%   2699
+  80%   3013
+  90%   3871
+  95%   4715
+  98%   5814
+  99%   6505
+ 100%  11568 (longest request)
+```
+
+### c , n := 1000 , 100000
+- had to abort midway...
+```bash
+This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 10000 requests
+Completed 20000 requests
+^C
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            9001
+
+Document Path:          /api/order
+Document Length:        64 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   288.812 seconds
+Complete requests:      25655
+Failed requests:        0
+Total transferred:      18548565 bytes
+Total body sent:        30386700
+HTML transferred:       1641920 bytes
+Requests per second:    88.83 [#/sec] (mean)
+Time per request:       11257.536 [ms] (mean)
+Time per request:       11.258 [ms] (mean, across all concurrent requests)
+Transfer rate:          62.72 [Kbytes/sec] received
+                        102.75 kb/s sent
+                        165.47 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   3.8      0      34
+Processing:    43 10798 7167.0   8920   58834
+Waiting:       25 10798 7167.0   8920   58834
+Total:         43 10799 7166.5   8920   58835
+
+Percentage of the requests served within a certain time (ms)
+  50%   8920
+  66%  11932
+  75%  14232
+  80%  15874
+  90%  20456
+  95%  24975
+  98%  30434
+  99%  34459
+ 100%  58835 (longest request)
 ```
 
 ### Placing order using curl with json payload
