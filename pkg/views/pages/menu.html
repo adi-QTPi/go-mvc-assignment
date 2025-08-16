@@ -129,13 +129,13 @@
               </div>
             </div>
             <div
-              class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-around"
+              class="d-flex flex-column me-2 align-items-center justify-content-around col-3"
             >
               <div class="fs-3 mx-auto">₹{{.Price}}</div>
               {{if eq $role "customer"}}
               <div class="qty-controls add-to-cart" id="{{.ItemId}}">
                 <button
-                  class="add-to-cart-btn btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4"
+                  class="add-to-cart-btn btn bg-queen-pink text-white rounded-5 px-5 m-1 fs-4"
                   id="{{.ItemId}}"
                 >
                   Add to Cart

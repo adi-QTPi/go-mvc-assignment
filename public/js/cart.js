@@ -56,19 +56,23 @@ async function render_cart(item_in_cart) {
                 quantity_space.innerText = items.quantity;
                 subtotal_space.innerText = `₹${items.quantity * items.price}`;
             }
+            update_total_price()
         });
 
         plus_button.addEventListener("click", () => {
             items.quantity++;
             quantity_space.innerText = items.quantity;
-            subtotal_space.innerText = `₹${items.quantity * items.price}`;
+            subtotal_space.innerText = ` ₹${items.quantity * items.price}`;
+            update_total_price()
         });
 
         delete_button.addEventListener("click", () => {
             const itemId = items.item_id;
             removeItem(itemId);
+            update_total_price()
         });
     }
+    update_total_price()
 }
 
 function removeItem(itemId) {
@@ -142,3 +146,17 @@ cart_form.addEventListener("submit", (e) => {
             console.error("Error placing order:", error);
         });
 });
+
+function update_total_price() {
+    let target = document.getElementsByClassName("total-order-price")[0];
+    let total = calculate_total_price();
+    target.innerText = `₹${total}/-`
+}
+
+function calculate_total_price() {
+    let total = 0;
+    for (let items of item_in_cart) {
+        total += items.quantity * items.price;
+    }
+    return total;
+}

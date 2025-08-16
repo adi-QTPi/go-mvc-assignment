@@ -16,9 +16,6 @@ item_in_cart = load_cart();
 
 const metaTag = document.querySelector('meta[name="menu-data"]');
 const to_menu_page = JSON.parse(metaTag.getAttribute("content"));
-
-console.log(to_menu_page);
-
 const go_to_cart_space = document.getElementsByClassName("go-to-cart-space")[0];
 const go_to_cart_space_text = document.getElementsByClassName(
     "go-to-cart-space-text"
@@ -28,7 +25,6 @@ document.addEventListener("click", function (event) {
     let parent = event.target.parentElement;
     if (parent.classList.contains("add-to-cart")) {
         let new_target = parent.querySelector(".add-to-cart-btn");
-        console.log(new_target);
         let id = Number(new_target.id);
         if (item_in_cart.find((item) => item.item_id === id)) {
             const item_index = item_in_cart.findIndex((item) => item.item_id === id);
@@ -115,32 +111,16 @@ async function toggle_add_to_cart_button_label() {
             const foundItem = item_in_cart.find((item) => item.item_id == id);
             let quantity = foundItem.quantity;
 
-            button.innerHTML = `<div class="d-flex flex-column align-items-center">
-                <div class="mb-2">
-                    <span id="item${id}" class="qty-display fs-4 fw-bold">${quantity}</span>
+            button.innerHTML = `<div class="d-flex flex-column align-items-center justify-content-center">
+                <div class="">
+                    Qty : <span id="item${id}" class="qty-display fs-3 truculenta-normal">${quantity}</span>
                 </div>
-                <div class="btn-group" role="group" aria-label="Quantity controls">
-                    <button type="button" id="${id}" class="qty-minus btn btn-primary">-</button>
-                    <button type="button" id="${id}" class="qty-remove btn btn-secondary">x</button>
-                    <button type="button" id="${id}" class="qty-plus btn btn-success">+</button>
+                <div class="btn-group rounded-pill " role="group" aria-label="Quantity controls">
+                    <button type="button" id="${id}" class="qty-minus btn bg-light-pink rounded-pill fs-4">-</button>
+                    <button type="button" id="${id}" class="qty-remove btn bg-turq-bold text-white rounded-pill fs-4">x</button>
+                    <button type="button" id="${id}" class="qty-plus btn bg-light-pink rounded-pill fs-4">+</button>
                 </div>
             </div>`;
-
-
-            button.addEventListener('click', (event) => {
-                const clickedElement = event.target;
-                const clickedItemId = clickedElement.id
-
-                if (clickedElement.classList.contains('qty-minus')) {
-                    decrementQty(clickedItemId);
-                } else if (clickedElement.classList.contains('qty-remove')) {
-                    removeItem(clickedItemId);
-                } else if (clickedElement.classList.contains('qty-plus')) {
-                    incrementQty(clickedItemId);
-                }
-
-                console.log("update itemincart : ", item_in_cart);
-            })
         }
         else {
             button.innerHTML = `<button
@@ -152,6 +132,20 @@ async function toggle_add_to_cart_button_label() {
         }
     }
 }
+
+document.addEventListener("click", function (event) {
+    const clickedElement = event.target;
+    if (clickedElement.classList.contains('qty-minus')) {
+        const itemId = clickedElement.id;
+        decrementQty(itemId);
+    } else if (clickedElement.classList.contains('qty-plus')) {
+        const itemId = clickedElement.id;
+        incrementQty(itemId);
+    } else if (clickedElement.classList.contains('qty-remove')) {
+        const itemId = clickedElement.id;
+        removeItem(itemId);
+    }
+});
 
 function incrementQty(itemId) {
     const itemToIncrement = item_in_cart.find((item) => item.item_id == itemId);
@@ -165,6 +159,8 @@ function decrementQty(itemId) {
         itemToDecrement.quantity--;
     } else {
         removeItem(itemId);
+        save_cart();
+        return;
     }
     save_cart();
     update_qty_display(itemToDecrement.item_id, itemToDecrement.quantity);
@@ -276,7 +272,7 @@ function generateMenuItemHtml(item, role) {
                         <div class="flex-fill border p-2 m-1 text-center truculenta-normal fs-5 rounded-5 bg-light-pink">${item.subcategory}</div>
                     </div>
                 </div>
-                <div class="flex-shrink-1 d-flex flex-column me-2 align-items-center justify-content-around ">
+                <div class="d-flex flex-column me-2 align-items-center justify-content-around col-3">
                     <div class="fs-3">₹ ${item.price}</div>
                     ${action_button_html}
                 </div>

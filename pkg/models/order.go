@@ -249,7 +249,7 @@ func FetchOrderByOrderId(orderId string) (Order, error) {
 }
 
 func FetchBillDetailsByOrderId(orderId string) ([]ItemOrderDescriptive, error) {
-	sqlQuery := "SELECT o.order_id, io.item_id, i.item_name, i.price, io.quantity, io.instruction, io.is_complete, io.cook_id, cook.name AS cook_name FROM `order` o INNER JOIN item_order io ON o.order_id = io.order_id INNER JOIN item i ON io.item_id = i.item_id INNER JOIN user cook ON io.cook_id = cook.user_id WHERE o.order_id = ?;"
+	sqlQuery := "SELECT o.order_id, io.item_id, i.item_name, i.price, io.quantity, io.instruction, io.is_complete, io.cook_id, cook.name AS cook_name FROM `order` o INNER JOIN item_order io ON o.order_id = io.order_id INNER JOIN item i ON io.item_id = i.item_id LEFT JOIN user cook ON io.cook_id = cook.user_id WHERE o.order_id = ?;"
 
 	rows, err := DB.Query(sqlQuery, orderId)
 	if err != nil {
