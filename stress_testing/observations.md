@@ -1,5 +1,65 @@
 # Stress testing
 
+## Get /api/item
+```bash
+ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjMyODU0MjBlLTc4MWEtMTFmMC1iOTA0LTZlNTk5ZDE1YjRhMiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiYWRpdHlhIiwicm9sZSI6ImN1c3RvbWVyIn0sImV4cCI6MTc1NTM2ODI5N30.lHVqdiy8JmCapDvfN5jdvq6H7CsGru6SYm_Kov5_DGQ -c 1000 -n 100000 localhost:9001/api/item   
+```
+```bash
+This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 10000 requests
+Completed 20000 requests
+Completed 30000 requests
+Completed 40000 requests
+Completed 50000 requests
+Completed 60000 requests
+Completed 70000 requests
+Completed 80000 requests
+Completed 90000 requests
+Completed 100000 requests
+Finished 100000 requests
+
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            9001
+
+Document Path:          /api/item
+Document Length:        15566 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   9.641 seconds
+Complete requests:      100000
+Failed requests:        0
+Total transferred:      1565400000 bytes
+HTML transferred:       1556600000 bytes
+Requests per second:    10372.62 [#/sec] (mean)
+Time per request:       96.408 [ms] (mean)
+Time per request:       0.096 [ms] (mean, across all concurrent requests)
+Transfer rate:          158567.31 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   2.4      0      45
+Processing:     1   95  92.8     67    1067
+Waiting:        1   95  92.8     67    1067
+Total:          1   96  92.9     67    1067
+
+Percentage of the requests served within a certain time (ms)
+  50%     67
+  66%    103
+  75%    131
+  80%    152
+  90%    217
+  95%    281
+  98%    365
+  99%    432
+ 100%   1067 (longest request)
+```
+
 ## Get Menu /static/menu
 - HTML page served
 - enter jwt token manually.

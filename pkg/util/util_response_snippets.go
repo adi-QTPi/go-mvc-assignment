@@ -8,8 +8,10 @@ import (
 )
 
 func EncodeAndSendResponseWithStatus(w http.ResponseWriter, responseJson StandardResponseJson, statusCode int) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
+	if w.Header().Get("Content-Type") == "" {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(statusCode)
+	}
 	json.NewEncoder(w).Encode(responseJson)
 }
 
@@ -25,8 +27,10 @@ func EncodeAndSendCategoriesWithStatus(w http.ResponseWriter, catSlice []models.
 }
 
 func EncodeAndSendItemWithStatus(w http.ResponseWriter, itemSlice []models.DisplayItem, statusCode int) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
+	if w.Header().Get("Content-Type") == "" {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(statusCode)
+	}
 	json.NewEncoder(w).Encode(itemSlice)
 }
 

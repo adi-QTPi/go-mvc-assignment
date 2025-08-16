@@ -26,5 +26,6 @@ func (pr *PageRenderer) RenderHomePage(w http.ResponseWriter, r *http.Request) {
 		responseJson.Msg = "Can't show this page"
 		responseJson.ErrDescription = "Error in executing homepage.html"
 		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		return
 	}
 }

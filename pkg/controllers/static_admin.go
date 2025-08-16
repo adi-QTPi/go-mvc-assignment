@@ -26,13 +26,25 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 		reqDate = today.Format("2006-01-02") //dont change date pls
 	}
 
+	cacheField := fmt.Sprintf("orders%s", reqDate)
+
 	xUser := util.ExtractUserFromContext(r)
 
 	var orderSlice []models.Order
-	orderSlice, err := models.FetchAllOrderDetailsByDate(reqDate, xUser)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching orders: %v", err), http.StatusInternalServerError)
-		return
+
+	orders, ok := util.AppCache.Get(cacheField)
+	if !ok {
+		var err error
+		orderSlice, err = models.FetchAllOrderDetailsByDate(reqDate, xUser)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error fetching orders: %v", err), http.StatusInternalServerError)
+			return
+		}
+		cacheField = fmt.Sprintf("orders%s", reqDate)
+		util.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
+	}
+	if ok {
+		orderSlice = orders.([]models.Order)
 	}
 
 	popup, err := util.ExtractPopupFromFlash(w, r)
