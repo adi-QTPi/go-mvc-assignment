@@ -25,8 +25,11 @@ const go_to_cart_space_text = document.getElementsByClassName(
 )[0];
 
 document.addEventListener("click", function (event) {
-    if (event.target.classList.contains("add-to-cart")) {
-        let id = Number(event.target.id);
+    let parent = event.target.parentElement;
+    if (parent.classList.contains("add-to-cart")) {
+        let new_target = parent.querySelector(".add-to-cart-btn");
+        console.log(new_target);
+        let id = Number(new_target.id);
         if (item_in_cart.find((item) => item.item_id === id)) {
             const item_index = item_in_cart.findIndex((item) => item.item_id === id);
             item_in_cart.splice(item_index, 1);
@@ -39,9 +42,9 @@ document.addEventListener("click", function (event) {
                     price: parseInt(foundItem.price, 10),
                     quantity: 1,
                 };
-                event.target.innerText = "Remove";
-                event.target.classList.remove("btn-danger");
-                event.target.classList.add("btn-dark");
+                // event.target.innerText = "Remove";
+                // event.target.classList.remove("btn-danger");
+                // event.target.classList.add("btn-dark");
                 item_in_cart.push(new_item_for_cart);
             }
         }
@@ -104,18 +107,86 @@ clear_filter_button.addEventListener("click", () => {
 
 async function toggle_add_to_cart_button_label() {
     let add_to_cart_buttons = document.getElementsByClassName("add-to-cart");
-    for (let buttons of add_to_cart_buttons) {
-        let id = Number(buttons.id);
-        buttons.classList.remove("bg-queen-pink", "btn-dark", "text-white");
-        buttons.innerText = "";
-        if (item_in_cart.some((item) => item.item_id === id)) {
-            buttons.classList.add("btn-dark");
-            buttons.innerText = "Remove from Cart";
-        } else {
-            buttons.classList.add("bg-queen-pink", "text-white");
-            buttons.innerText = "Add to Cart";
+    item_in_cart = load_cart();
+    for (let button of add_to_cart_buttons) {
+        let id = Number(button.id);
+        let buttons = button.querySelector(".add-to-cart-btn");
+        if (item_in_cart.some((item) => item.item_id == id)) {
+            const foundItem = item_in_cart.find((item) => item.item_id == id);
+            let quantity = foundItem.quantity;
+
+            button.innerHTML = `<div class="d-flex flex-column align-items-center">
+                <div class="mb-2">
+                    <span id="item${id}" class="qty-display fs-4 fw-bold">${quantity}</span>
+                </div>
+                <div class="btn-group" role="group" aria-label="Quantity controls">
+                    <button type="button" id="${id}" class="qty-minus btn btn-primary">-</button>
+                    <button type="button" id="${id}" class="qty-remove btn btn-secondary">x</button>
+                    <button type="button" id="${id}" class="qty-plus btn btn-success">+</button>
+                </div>
+            </div>`;
+
+
+            button.addEventListener('click', (event) => {
+                const clickedElement = event.target;
+                const clickedItemId = clickedElement.id
+
+                if (clickedElement.classList.contains('qty-minus')) {
+                    decrementQty(clickedItemId);
+                } else if (clickedElement.classList.contains('qty-remove')) {
+                    removeItem(clickedItemId);
+                } else if (clickedElement.classList.contains('qty-plus')) {
+                    incrementQty(clickedItemId);
+                }
+
+                console.log("update itemincart : ", item_in_cart);
+            })
+        }
+        else {
+            button.innerHTML = `<button
+                  class="add-to-cart-btn btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4"
+                  id="${id}"
+                >
+                  Add to Cart
+                </button>`;
         }
     }
+}
+
+function incrementQty(itemId) {
+    const itemToIncrement = item_in_cart.find((item) => item.item_id == itemId);
+    itemToIncrement.quantity++;
+    save_cart();
+    update_qty_display(itemToIncrement.item_id, itemToIncrement.quantity);
+}
+function decrementQty(itemId) {
+    const itemToDecrement = item_in_cart.find((item) => item.item_id == itemId);
+    if (itemToDecrement.quantity > 1) {
+        itemToDecrement.quantity--;
+    } else {
+        removeItem(itemId);
+    }
+    save_cart();
+    update_qty_display(itemToDecrement.item_id, itemToDecrement.quantity);
+}
+function removeItem(itemId) {
+    const itemIndex = item_in_cart.findIndex((item) => item.item_id == itemId);
+    if (itemIndex > -1) {
+        item_in_cart.splice(itemIndex, 1);
+    }
+    save_cart();
+    // update_qty_display(itemToIncrement.item_id, itemToIncrement.quantity);
+    toggle_add_to_cart_button_label();
+    toggle_to_cart_button_visibility();
+    update_text_in_element(
+        go_to_cart_space_text,
+        `You have <span class="caveat-cursive fs-1"> ${item_in_cart.length} </span> item(s) in your cart !`
+    );
+}
+function update_qty_display(id, number) {
+    const qty_display_space = document.querySelector(`#item${String(id)}.qty-display`);
+    if (!qty_display_space) return;
+    qty_display_space.innerText = number
 }
 
 async function toggle_to_cart_space_visibility(vis_value) {
@@ -179,7 +250,14 @@ function generateMenuItemHtml(item, role) {
         `;
     } else {
         action_button_html = `
-            <button class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4" id="${item.item_id}">Add to Cart</button>
+            <div class="qty-controls add-to-cart" id="${item.item_id}">
+                <button
+                  class="add-to-cart-btn btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4"
+                  id="${item.item_id}"
+                >
+                  Add to Cart
+                </button>
+              </div>
         `;
     }
 

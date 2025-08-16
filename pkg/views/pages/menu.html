@@ -13,9 +13,9 @@
     {{template "headers"}}
   </head>
 
-  {{$userName := .XUser.UserName}} {{$role := .XUser.Role}} {{template "navbar"
-  .}} {{$message := .Popup.Msg}} {{$isError := .Popup.IsError}} {{$categorySlice
-  := .CategorySlice}}
+  {{$userName := .XUser.UserName}} {{$role := .XUser.Role}} {{template
+  "navbar".}} {{$message := .Popup.Msg}} {{$isError := .Popup.IsError}}
+  {{$categorySlice := .CategorySlice}}
   <body>
     <div
       class="col-12 d-flex justify-content-center bg-glass sticky-top z-5 py-2 mb-4"
@@ -133,12 +133,14 @@
             >
               <div class="fs-3 mx-auto">₹{{.Price}}</div>
               {{if eq $role "customer"}}
-              <button
-                class="add-to-cart btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4"
-                id="{{.ItemId}}"
-              >
-                Add to Cart
-              </button>
+              <div class="qty-controls add-to-cart" id="{{.ItemId}}">
+                <button
+                  class="add-to-cart-btn btn bg-queen-pink text-white rounded-5 p-2 m-1 fs-4"
+                  id="{{.ItemId}}"
+                >
+                  Add to Cart
+                </button>
+              </div>
               {{end}} {{if eq $role "admin"}}
               <form action="/api/item/d/{{.ItemId}}" method="post">
                 <button
