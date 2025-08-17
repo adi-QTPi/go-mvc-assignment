@@ -48,18 +48,21 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 
 	orderId, err := models.PlaceNewOrder(newOrder)
 	if err != nil {
+		fmt.Printf("error in placing order : %v", err)
 		http.Error(w, fmt.Sprintf("Error placing new order: %v", err), http.StatusInternalServerError)
 		return
 	}
 	newOrder.OrderId = orderId
 	err = models.OccupyTable(newOrder.TableNo.Int64)
 	if err != nil {
+		fmt.Printf("error in occupying table : %v", err)
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
 
 	err = models.EntriesInItemOrder(orderSlice, newOrder)
 	if err != nil {
+		fmt.Printf("error in putting in item orders : %v", err)
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
@@ -68,7 +71,6 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 		Msg:     fmt.Sprintf("Successfully placed Order #%v", newOrder.OrderId),
 		IsError: false,
 	}
-
 	util.InsertPopupInFlash(w, r, popup)
 
 	var responseJson = util.StandardResponseJson{

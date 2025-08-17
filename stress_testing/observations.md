@@ -128,13 +128,10 @@ Percentage of the requests served within a certain time (ms)
 ### c , n := 1000, 10000
 ```bash
 ab -n 10000 -c 1000 \
-   -p payload/demo_order.json \
-   -T application/json \
-   -H "Cookie: jwt_token = ; foodopia-session = " \
-   http://localhost:9001/api/order
-```
-### results
-```bash
+  -p payload/demo_order.json \
+  -T application/json \
+  -H "Cookie: ENTER_COOKIE_TEXT_HERE" \
+  http://localhost:9005/api/order
 This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -155,42 +152,42 @@ Finished 10000 requests
 
 Server Software:        
 Server Hostname:        localhost
-Server Port:            9001
+Server Port:            9005
 
 Document Path:          /api/order
-Document Length:        64 bytes
+Document Length:        59 bytes
 
 Concurrency Level:      1000
-Time taken for tests:   20.145 seconds
+Time taken for tests:   15.834 seconds
 Complete requests:      10000
 Failed requests:        0
-Total transferred:      7230000 bytes
-Total body sent:        11400000
-HTML transferred:       640000 bytes
-Requests per second:    496.41 [#/sec] (mean)
-Time per request:       2014.483 [ms] (mean)
-Time per request:       2.014 [ms] (mean, across all concurrent requests)
-Transfer rate:          350.49 [Kbytes/sec] received
-                        552.64 kb/s sent
-                        903.13 kb/s total
+Total transferred:      12980928 bytes
+Total body sent:        17360000
+HTML transferred:       590000 bytes
+Requests per second:    631.56 [#/sec] (mean)
+Time per request:       1583.372 [ms] (mean)
+Time per request:       1.583 [ms] (mean, across all concurrent requests)
+Transfer rate:          800.61 [Kbytes/sec] received
+                        1070.70 kb/s sent
+                        1871.31 kb/s total
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    3   9.9      0      73
-Processing:    47 1981 1401.3   1625   11567
-Waiting:       22 1981 1401.3   1625   11567
-Total:         47 1984 1398.8   1627   11568
+Connect:        0    2   8.2      0      62
+Processing:    27 1559 1119.6   1308    8096
+Waiting:        5 1559 1119.6   1308    8096
+Total:         31 1561 1117.1   1309    8096
 
 Percentage of the requests served within a certain time (ms)
-  50%   1627
-  66%   2245
-  75%   2699
-  80%   3013
-  90%   3871
-  95%   4715
-  98%   5814
-  99%   6505
- 100%  11568 (longest request)
+  50%   1309
+  66%   1799
+  75%   2154
+  80%   2406
+  90%   3088
+  95%   3716
+  98%   4565
+  99%   5057
+ 100%   8096 (longest request)
 ```
 
 ### c , n := 1000 , 100000
