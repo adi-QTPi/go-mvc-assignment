@@ -107,8 +107,4 @@ func (oc *OrderApiController) OrderPayment(w http.ResponseWriter, r *http.Reques
 	}
 	util.InsertPopupInFlash(w, r, popup)
 	util.RedirectToSite(w, r, "/static/order")
-
-	var responseJson util.StandardResponseJson
-	responseJson.Msg = fmt.Sprintf("Payment Successful for order #%v", orderId)
-	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
 }

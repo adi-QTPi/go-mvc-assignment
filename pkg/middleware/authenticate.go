@@ -213,6 +213,6 @@ func PasswordStrengthTest(next http.Handler) http.Handler {
 			util.InsertPopupInFlash(w, r, popup)
 			util.RedirectToSite(w, r, "/signup")
 		}
-
+		next.ServeHTTP(w, r)
 	})
 }
