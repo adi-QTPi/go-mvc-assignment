@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/adi-QTPi/go-mvc-assignment/cache"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
 )
@@ -65,9 +64,6 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	cacheField := fmt.Sprintf("orders%s", time.Now().Format("2006-01-02"))
-	cache.AppCache.Delete(cacheField)
-
 	popup := util.Popup{
 		Msg:     fmt.Sprintf("Successfully placed Order #%v", newOrder.OrderId),
 		IsError: false,
@@ -100,8 +96,6 @@ func (oc *OrderApiController) OrderPayment(w http.ResponseWriter, r *http.Reques
 		http.Error(w, fmt.Sprintf("Error vacating table , %v", err), http.StatusInternalServerError)
 		return
 	}
-
-	cache.AppCache.Delete("orders")
 
 	popup := util.Popup{
 		Msg: "Payment successful... happyCustomer++",

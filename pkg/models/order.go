@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
+
+	"github.com/adi-QTPi/go-mvc-assignment/cache"
 )
 
 type ItemInCart struct {
@@ -88,6 +90,9 @@ func PlaceNewOrder(o Order) (int64, error) {
 	if err != nil {
 		return 0, fmt.Errorf("Error in fetching order id, %v", err)
 	}
+
+	cacheField := fmt.Sprintf("orders%s", time.Now().Format("2006-01-02"))
+	cache.AppCache.Delete(cacheField)
 	return orderId, nil
 }
 
@@ -230,6 +235,9 @@ func MakePayment(orderId string, customerReview string) error {
 	if err != nil {
 		return fmt.Errorf("error in changing order status : , %v", err)
 	}
+
+	cacheString := fmt.Sprintf("orders%s", order.OrderAt.Format("2006-01-02"))
+	cache.AppCache.Delete(cacheString)
 
 	return nil
 }

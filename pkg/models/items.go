@@ -72,6 +72,7 @@ func AddItem(i Item) error {
 		return fmt.Errorf("Error in adding item, %v", err)
 	}
 
+	cache.AppCache.Delete("menu")
 	return nil
 }
 
@@ -87,6 +88,8 @@ func DeleteItemById(idString string) error {
 	if err != nil {
 		return fmt.Errorf("Error in adding item, %v", err)
 	}
+
+	cache.AppCache.Delete("menu")
 
 	return nil
 }

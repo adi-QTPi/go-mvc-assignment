@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/adi-QTPi/go-mvc-assignment/cache"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
 	"github.com/gorilla/mux"
@@ -18,8 +17,6 @@ func NewItemApiController() *ItemApiController {
 }
 
 func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
-	defer cache.AppCache.Delete("menu")
-
 	const maxMemory = 32 << 20
 	var err error
 	if r.Referer() == "/static/menu" {
@@ -123,8 +120,6 @@ func (ic *ItemApiController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Unable to Delete item", http.StatusBadRequest)
 		return
 	}
-
-	cache.AppCache.Delete("menu")
 
 	popup := util.Popup{
 		Msg:     "Item Deleted Successfully",
