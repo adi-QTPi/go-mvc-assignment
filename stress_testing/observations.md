@@ -2,7 +2,7 @@
 
 ## Get /api/item
 ```bash
-ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6ImU5NWIwOGNjLTdiMTItMTFmMC05MzU3LWU2NGQ3MjQ4NzVhMiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiYWRpdHlhIiwicm9sZSI6ImN1c3RvbWVyIn0sImV4cCI6MTc1NTQ4NDU3Mn0.TN2N0AQnDwSuVMbq7SZoUc_XCR6Ugrl_NZ1RvnAlbno -c 1000 -n 100000 localhost:9001/api/item   
+ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjE4ZTIyMWM0LTdiMmYtMTFmMC04ZjkzLTJmZDI5MTVlMjdhNiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiQ3VzdG9tZXJTaHJlZSIsInJvbGUiOiJjdXN0b21lciJ9LCJleHAiOjE3NTU1NDkxMzl9.7LX02C6yCj8yFqcquMVjBo8q7pG095RWhVQiI5tAdT8 -c 1000 -n 100000 localhost:9005/api/item 
 ```
 ```bash
 This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
@@ -25,39 +25,39 @@ Finished 100000 requests
 
 Server Software:        
 Server Hostname:        localhost
-Server Port:            9001
+Server Port:            9005
 
 Document Path:          /api/item
-Document Length:        15566 bytes
+Document Length:        14938 bytes
 
 Concurrency Level:      1000
-Time taken for tests:   9.641 seconds
+Time taken for tests:   4.211 seconds
 Complete requests:      100000
 Failed requests:        0
-Total transferred:      1565400000 bytes
-HTML transferred:       1556600000 bytes
-Requests per second:    10372.62 [#/sec] (mean)
-Time per request:       96.408 [ms] (mean)
-Time per request:       0.096 [ms] (mean, across all concurrent requests)
-Transfer rate:          158567.31 [Kbytes/sec] received
+Total transferred:      1502600000 bytes
+HTML transferred:       1493800000 bytes
+Requests per second:    23748.03 [#/sec] (mean)
+Time per request:       42.109 [ms] (mean)
+Time per request:       0.042 [ms] (mean, across all concurrent requests)
+Transfer rate:          348474.56 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   2.4      0      45
-Processing:     1   95  92.8     67    1067
-Waiting:        1   95  92.8     67    1067
-Total:          1   96  92.9     67    1067
+Connect:        0   25 116.2      5    3940
+Processing:     1    6   3.2      6      62
+Waiting:        1    6   3.2      5      62
+Total:          2   31 116.3     11    3948
 
 Percentage of the requests served within a certain time (ms)
-  50%     67
-  66%    103
-  75%    131
-  80%    152
-  90%    217
-  95%    281
-  98%    365
-  99%    432
- 100%   1067 (longest request)
+  50%     11
+  66%     12
+  75%     13
+  80%     18
+  90%     42
+  95%     74
+  98%    220
+  99%    344
+ 100%   3948 (longest request)
 ```
 
 ## Get Menu /static/menu

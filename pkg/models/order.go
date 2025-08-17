@@ -174,6 +174,13 @@ func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
 func FetchAllOrderDetailsByDate(dateStr string, xUser User) ([]Order, error) {
 	var orderSlice []Order
 	if xUser.Role == "admin" {
+		cacheField := fmt.Sprintf("orders%s", dateStr)
+		orders, ok := cache.AppCache.Get(cacheField)
+		if ok {
+			orderSlice = orders.([]Order)
+			return orderSlice, nil
+		}
+
 		sqlQuery := "SELECT o.order_id, u.user_id, u.name AS customer_name, o.table_no, o.order_at, o.status, o.total_price FROM `order` AS o JOIN `user` AS u ON o.customer_id = u.user_id WHERE DATE(o.order_at) = ? ORDER BY o.order_at DESC;"
 
 		rows, err := DB.Query(sqlQuery, dateStr)
@@ -189,6 +196,9 @@ func FetchAllOrderDetailsByDate(dateStr string, xUser User) ([]Order, error) {
 			}
 			orderSlice = append(orderSlice, o)
 		}
+
+		cache.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
+
 	} else if xUser.Role == "customer" {
 		sqlQuery := "SELECT o.order_id, u.user_id, u.name AS customer_name, o.table_no, o.order_at, o.status, o.total_price FROM `order` AS o JOIN `user` AS u ON o.customer_id = u.user_id WHERE o.customer_id = ? AND DATE(o.order_at) = ? ORDER BY o.order_at DESC;"
 
