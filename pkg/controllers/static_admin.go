@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/adi-QTPi/go-mvc-assignment/cache"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
 	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
@@ -27,25 +26,15 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 		reqDate = today.Format("2006-01-02") //dont change date pls
 	}
 
-	cacheField := fmt.Sprintf("orders%s", reqDate)
-
 	xUser := util.ExtractUserFromContext(r)
 
 	var orderSlice []models.Order
 
-	orders, ok := cache.AppCache.Get(cacheField)
-	if !ok {
-		var err error
-		orderSlice, err = models.FetchAllOrderDetailsByDate(reqDate, xUser)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Error fetching orders: %v", err), http.StatusInternalServerError)
-			return
-		}
-		cacheField = fmt.Sprintf("orders%s", reqDate)
-		cache.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
-	}
-	if ok {
-		orderSlice = orders.([]models.Order)
+	var err error
+	orderSlice, err = models.FetchAllOrderDetailsByDate(reqDate, xUser)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error fetching orders: %v", err), http.StatusInternalServerError)
+		return
 	}
 
 	popup, err := util.ExtractPopupFromFlash(w, r)
