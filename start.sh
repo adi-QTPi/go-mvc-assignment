@@ -100,6 +100,22 @@ echo "ADMIN_PASSWORD=\"$ADMIN_PASSWORD\"" >> .env
 echo ""
 echo "----- .env file created Successfully !. -----"
 
+echo ""
+echo "----- Database Initialisations -----"
+mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -h $MYSQL_HOST -P $MYSQL_PORT -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+migrate -path database/schema_migrate -database "mysql://$MYSQL_USER:$MYSQL_PASSWORD@tcp($MYSQL_HOST:$MYSQL_PORT)/$MYSQL_DATABASE" up
+echo "Schema Migrations Applied !"
+echo ""
+sleep 0.5s
+echo "We also provide with Dummy Data to get started with the app... "
+read -p "Enter Y to accept the Gift !" response
+if [[ $response == "y" ]]; then
+    echo "Seeding dummy data into your database."
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < dump.sql
+else
+    echo "Sure! No worries — all the best on your journey!"
+fi
+
 sleep 2s
 echo "----- Starting the application -----"
 go mod tidy
