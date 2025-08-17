@@ -2,7 +2,7 @@
 
 ## Get /api/item
 ```bash
-ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjE4ZTIyMWM0LTdiMmYtMTFmMC04ZjkzLTJmZDI5MTVlMjdhNiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiQ3VzdG9tZXJTaHJlZSIsInJvbGUiOiJjdXN0b21lciJ9LCJleHAiOjE3NTU1NDkxMzl9.7LX02C6yCj8yFqcquMVjBo8q7pG095RWhVQiI5tAdT8 -c 1000 -n 100000 localhost:9005/api/item 
+ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjE4ZTIyMWM0LTdiMmYtMTFmMC04ZjkzLTJmZDI5MTVlMjdhNiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiQ3VzdG9tZXJTaHJlZSIsInJvbGUiOiJjdXN0b21lciJ9LCJleHAiOjE3NTU1NTE3Njd9.bQxsWhzNn9wz_4qVeRC3URxcY_3Rj6FbqqsVBi9-FTI -n 100000 -c 1000 localhost:9005/api/item
 ```
 ```bash
 This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
@@ -31,43 +31,41 @@ Document Path:          /api/item
 Document Length:        14938 bytes
 
 Concurrency Level:      1000
-Time taken for tests:   4.211 seconds
+Time taken for tests:   4.330 seconds
 Complete requests:      100000
 Failed requests:        0
 Total transferred:      1502600000 bytes
 HTML transferred:       1493800000 bytes
-Requests per second:    23748.03 [#/sec] (mean)
-Time per request:       42.109 [ms] (mean)
-Time per request:       0.042 [ms] (mean, across all concurrent requests)
-Transfer rate:          348474.56 [Kbytes/sec] received
+Requests per second:    23095.88 [#/sec] (mean)
+Time per request:       43.298 [ms] (mean)
+Time per request:       0.043 [ms] (mean, across all concurrent requests)
+Transfer rate:          338904.94 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0   25 116.2      5    3940
-Processing:     1    6   3.2      6      62
-Waiting:        1    6   3.2      5      62
-Total:          2   31 116.3     11    3948
+Connect:        0   19  90.8      5    4006
+Processing:     0    6   4.5      6     106
+Waiting:        0    6   4.4      5     106
+Total:          1   25  91.0     11    4012
 
 Percentage of the requests served within a certain time (ms)
   50%     11
   66%     12
-  75%     13
-  80%     18
-  90%     42
-  95%     74
-  98%    220
-  99%    344
- 100%   3948 (longest request)
+  75%     12
+  80%     13
+  90%     41
+  95%     71
+  98%    132
+  99%    223
+ 100%   4012 (longest request)
 ```
 
 ## Get Menu /static/menu
 - HTML page served
 - enter jwt token manually.
 ```bash
-ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjMyODU0MjBlLTc4MWEtMTFmMC1iOTA0LTZlNTk5ZDE1YjRhMiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiYWRpdHlhIiwicm9sZSI6ImN1c3RvbWVyIn0sImV4cCI6MTc1NTM2ODI5N30.lHVqdiy8JmCapDvfN5jdvq6H7CsGru6SYm_Kov5_DGQ -c 1000 -n 100000 localhost:9001/static/menu
+ab -C jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjE4ZTIyMWM0LTdiMmYtMTFmMC04ZjkzLTJmZDI5MTVlMjdhNiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiQ3VzdG9tZXJTaHJlZSIsInJvbGUiOiJjdXN0b21lciJ9LCJleHAiOjE3NTU1NTE3Njd9.bQxsWhzNn9wz_4qVeRC3URxcY_3Rj6FbqqsVBi9-FTI -n 100000 -c 1000 localhost:9005/static/menu
 ```
-- Result 
-
 ```bash
 This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
@@ -89,39 +87,39 @@ Finished 100000 requests
 
 Server Software:        
 Server Hostname:        localhost
-Server Port:            9001
+Server Port:            9005
 
 Document Path:          /static/menu
-Document Length:        187139 bytes
+Document Length:        190204 bytes
 
 Concurrency Level:      1000
-Time taken for tests:   30.573 seconds
+Time taken for tests:   22.882 seconds
 Complete requests:      100000
 Failed requests:        0
-Total transferred:      18744900000 bytes
-HTML transferred:       18713900000 bytes
-Requests per second:    3270.91 [#/sec] (mean)
-Time per request:       305.725 [ms] (mean)
-Time per request:       0.306 [ms] (mean, across all concurrent requests)
-Transfer rate:          598758.36 [Kbytes/sec] received
+Total transferred:      19051400000 bytes
+HTML transferred:       19020400000 bytes
+Requests per second:    4370.16 [#/sec] (mean)
+Time per request:       228.825 [ms] (mean)
+Time per request:       0.229 [ms] (mean, across all concurrent requests)
+Transfer rate:          813062.73 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   2.7      0      62
-Processing:     7  304 208.1    257    2504
-Waiting:        6  302 208.1    255    2501
-Total:          7  304 208.1    257    2505
+Connect:        0    0   2.3      0      33
+Processing:     2  227 222.1    160    2714
+Waiting:        1  225 222.1    158    2713
+Total:          2  227 222.1    160    2715
 
 Percentage of the requests served within a certain time (ms)
-  50%    257
-  66%    342
-  75%    406
-  80%    451
-  90%    581
-  95%    706
-  98%    867
-  99%    984
- 100%   2505 (longest request)
+  50%    160
+  66%    247
+  75%    315
+  80%    364
+  90%    515
+  95%    666
+  98%    872
+  99%   1034
+ 100%   2715 (longest request)
 ```
 <br />
 <br />
