@@ -15,7 +15,6 @@ func NewStaticLoginController() *StaticLoginController {
 }
 
 func (sl *StaticLoginController) RenderLoginPage(w http.ResponseWriter, r *http.Request) {
-	var responseJson util.StandardResponseJson
 	popup, err := util.ExtractPopupFromFlash(w, r)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting the token : %v", err), http.StatusInternalServerError)
@@ -28,8 +27,8 @@ func (sl *StaticLoginController) RenderLoginPage(w http.ResponseWriter, r *http.
 
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "login.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = "Error in executing login.html"
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering login page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }

@@ -60,11 +60,10 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 		ReqDate:   reqDate,
 	}
 
-	var responseJson util.StandardResponseJson
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "admin.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = fmt.Sprintf("Error in executing admin.html : %v", err)
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering adin page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }

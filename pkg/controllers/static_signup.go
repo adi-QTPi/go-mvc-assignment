@@ -15,7 +15,6 @@ func NewStaticSignupController() *StaticSignupController {
 }
 
 func (sl *StaticSignupController) RenderSignupPage(w http.ResponseWriter, r *http.Request) {
-	var responseJson util.StandardResponseJson
 	popup, err := util.ExtractPopupFromFlash(w, r)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting the popup : %v", err), http.StatusInternalServerError)
@@ -31,8 +30,8 @@ func (sl *StaticSignupController) RenderSignupPage(w http.ResponseWriter, r *htt
 
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "signup.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = "Error in executing signup.html"
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering signup page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }

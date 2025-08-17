@@ -108,10 +108,10 @@ echo "Schema Migrations Applied !"
 echo ""
 sleep 0.5s
 echo "We also provide with Dummy Data to get started with the app... "
-read -p "Enter Y to accept the Gift !" response
-if [[ $response == "y" ]]; then
+read -p "Enter [Y/y] to accept the Gift ! " response
+if [[ $response == "y"  || $response == "Y" ]]; then
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < database/dump.sql
     echo "Seeding dummy data into your database."
-    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < dump.sql
 else
     echo "Sure! No worries — all the best on your journey!"
 fi

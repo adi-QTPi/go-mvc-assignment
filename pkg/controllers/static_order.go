@@ -48,12 +48,11 @@ func (cuc *StaticOrderCotroller) RenderCustOrderPage(w http.ResponseWriter, r *h
 		ReqDate:   reqDate,
 	}
 
-	var responseJson util.StandardResponseJson
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "order.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = fmt.Sprintf("Error in executing order.html : %v", err)
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering order page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -84,11 +83,10 @@ func (cuc *StaticOrderCotroller) RenderOrderById(w http.ResponseWriter, r *http.
 		BillData:      billData,
 	}
 
-	var responseJson util.StandardResponseJson
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "bill_by_order_id.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = fmt.Sprintf("Error in executing order_by_id.html : %v", err)
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering bill page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }

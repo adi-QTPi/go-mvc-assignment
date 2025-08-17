@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
@@ -14,7 +15,6 @@ func NewPageRenderer() *PageRenderer {
 }
 
 func (pr *PageRenderer) RenderHomePage(w http.ResponseWriter, r *http.Request) {
-	var responseJson util.StandardResponseJson
 	xUser := util.ExtractUserFromContext(r)
 
 	toPage := util.DataToPage{
@@ -23,9 +23,8 @@ func (pr *PageRenderer) RenderHomePage(w http.ResponseWriter, r *http.Request) {
 
 	err := template_helpers.Tmpl.ExecuteTemplate(w, "homepage.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = "Error in executing homepage.html"
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering home page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 }

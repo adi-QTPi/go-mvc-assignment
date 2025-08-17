@@ -16,8 +16,6 @@ func NewStaticController() *StaticController {
 }
 
 func (sl *StaticController) RenderMenuPage(w http.ResponseWriter, r *http.Request) {
-	var responseJson util.StandardResponseJson
-
 	xUser := util.ExtractUserFromContext(r)
 	categorySlice, err := models.GetAllCategories()
 	if err != nil {
@@ -44,15 +42,13 @@ func (sl *StaticController) RenderMenuPage(w http.ResponseWriter, r *http.Reques
 
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "menu.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = fmt.Sprintf("Error in executing menu.html : %v", err)
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering menu page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }
 
 func (sl *StaticController) RenderCartPage(w http.ResponseWriter, r *http.Request) {
-	var responseJson util.StandardResponseJson
-
 	xUser := util.ExtractUserFromContext(r)
 	popup, err := util.ExtractPopupFromFlash(w, r)
 	if err != nil {
@@ -67,8 +63,8 @@ func (sl *StaticController) RenderCartPage(w http.ResponseWriter, r *http.Reques
 
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "cart.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = fmt.Sprintf("Error in executing menu.html : %v", err)
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering cart page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }

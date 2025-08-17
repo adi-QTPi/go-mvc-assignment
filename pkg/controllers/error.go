@@ -27,11 +27,10 @@ func (asc *StaticErrorController) RenderErrorPage(w http.ResponseWriter, r *http
 		XUser: xUser,
 	}
 
-	var responseJson util.StandardResponseJson
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "error.html", toPage)
 	if err != nil {
-		responseJson.Msg = "Can't show this page"
-		responseJson.ErrDescription = fmt.Sprintf("Error in executing error.html : %v", err)
-		util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusInternalServerError)
+		fmt.Printf("error rendering error page : %v\n", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 }
