@@ -130,7 +130,7 @@ Percentage of the requests served within a certain time (ms)
 ab -n 10000 -c 1000 \
    -p payload/demo_order.json \
    -T application/json \
-   -H "Cookie: jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcl9pZCI6IjMyODU0MjBlLTc4MWEtMTFmMC1iOTA0LTZlNTk5ZDE1YjRhMiIsInVzZXJfbmFtZSI6InNhbnRvb3IiLCJuYW1lIjoiYWRpdHlhIiwicm9sZSI6ImN1c3RvbWVyIn0sImV4cCI6MTc1NTM3MjQ1Mn0.Cplu8SzvEiP-mKpWzOkNpmFtn0-cMy0fdCBUQnUa7JE; foodopia-session=MTc1NTI4NTc1OHxEWDhFQVFMX2dBQUJFQUVRQUFBd180QUFBUVp6ZEhKcGJtY01DQUFHWDJac1lYTm9EbHRkYVc1MFpYSm1ZV05sSUh0OV80RUNBUUxfZ2dBQkVBQUFXXy1DTlFBQkN5cDFkR2xzTGxCdmNIVndfNE1EQVFFRlVHOXdkWEFCXzRRQUFRSUJBMDF6WndFTUFBRUhTWE5GY25KdmNnRUNBQUFBSXYtRUh3RWNVM1ZqWTJWemMyWjFiR3g1SUhCc1lXTmxaQ0JQY21SbGNpQWpPUUE9fNut9PcyPTRpEcVqf8YLiIHOdfinCQtJDDsWqxXJOLq7" \
+   -H "Cookie: jwt_token = ; foodopia-session = " \
    http://localhost:9001/api/order
 ```
 ### results
