@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/adi-QTPi/go-mvc-assignment/cache"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
 	"github.com/adi-QTPi/go-mvc-assignment/template_helpers"
@@ -32,7 +33,7 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 
 	var orderSlice []models.Order
 
-	orders, ok := util.AppCache.Get(cacheField)
+	orders, ok := cache.AppCache.Get(cacheField)
 	if !ok {
 		var err error
 		orderSlice, err = models.FetchAllOrderDetailsByDate(reqDate, xUser)
@@ -41,7 +42,7 @@ func (asc *AdminStaticController) FetchAdminOrderDashboardByDate(w http.Response
 			return
 		}
 		cacheField = fmt.Sprintf("orders%s", reqDate)
-		util.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
+		cache.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
 	}
 	if ok {
 		orderSlice = orders.([]models.Order)
