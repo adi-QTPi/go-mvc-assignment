@@ -32,8 +32,7 @@
                 </div>
                 {{end}}
 
-                <form class="text-center" method="post" action="{{if eq $role " admin"}}/account/admin/createaccount
-                    {{else}} /account/signup{{end}}">
+                <form class="text-center" method="post" action="{{if eq $role "admin"}}/account/admin/createaccount{{else}}/account/signup{{end}}">
                     <div class="form-floating mb-3">
                         <input type="text" name="user_name" placeholder="abc" autofocus class="form-control"
                             id="user_name">
