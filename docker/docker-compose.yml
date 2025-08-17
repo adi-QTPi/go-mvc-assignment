@@ -21,13 +21,13 @@ services:
     build: 
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: go-app
+    container_name: mvc-assignment-go
     environment:
       - SERVER_PORT=9080
       - MYSQL_HOST=mysql
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root_pwd
-      - MYSQL_PORT=3308
+      - MYSQL_PORT=3306
       - MYSQL_DATABASE=karma_mvc_foodopia
       - JWT_SECRET=sfdkjasl;fjdsfjlsdfj;adskfjs;lfj;ldsafj;safk;skfdj;askj;dkljf;skfj;kjflsfjeiwfjoiw
       - SESSIONS_SECRET=s;ldkj;safjadls;fja;sdj;flfjsdjf;dsajfdweifjowefjowifheiofiwjoijo

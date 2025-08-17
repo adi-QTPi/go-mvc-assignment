@@ -16,7 +16,9 @@ FROM debian:bookworm-slim
 WORKDIR /app
 
 COPY --from=builder /app/main .
-
+COPY --from=builder /app/pkg/views ./pkg/views 
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/uploads ./uploads
 
 # Run the binary
 CMD ["./main"]

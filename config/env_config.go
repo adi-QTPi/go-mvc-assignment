@@ -3,8 +3,6 @@ package config
 import (
 	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 var (
@@ -22,9 +20,6 @@ var (
 )
 
 func LoadAdminDetailsEnv() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file (from : LoadMainEnv)")
-	}
 
 	if ADMIN_USERNAME = os.Getenv("ADMIN_USERNAME"); ADMIN_USERNAME == "" {
 		log.Fatal("Set a proper ADMIN_USERNAME secret in .env file")
@@ -38,9 +33,6 @@ func LoadAdminDetailsEnv() {
 }
 
 func LoadJwtEnv() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file (from : LoadMainEnv)")
-	}
 
 	if JWT_SECRET = os.Getenv("JWT_SECRET"); JWT_SECRET == "" {
 		log.Fatal("Set a proper JWT secret in .env file")
@@ -48,18 +40,12 @@ func LoadJwtEnv() {
 }
 
 func LoadMainEnv() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file (from : LoadMainEnv)")
-	}
 
 	if SERVER_PORT = os.Getenv("SERVER_PORT"); SERVER_PORT == "" {
 		SERVER_PORT = "9000"
 	}
 }
 func LoadSessionsEnv() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file (from : LoadMainEnv)")
-	}
 
 	if SESSIONS_SECRET = os.Getenv("SESSIONS_SECRET"); SESSIONS_SECRET == "" {
 		log.Fatal("Set pass word as SESSIONS_SECRET=your_key in .env file")
@@ -67,9 +53,6 @@ func LoadSessionsEnv() {
 }
 
 func LoadDBEnv() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file (from : LoadDBEnv)")
-	}
 
 	if MYSQL_HOST = os.Getenv("MYSQL_HOST"); MYSQL_HOST == "" {
 		MYSQL_HOST = "localhost"
