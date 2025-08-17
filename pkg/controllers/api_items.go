@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
@@ -87,7 +86,6 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to add new item ", http.StatusInternalServerError)
 		return
 	}
-	util.AppCache.Delete("menu")
 
 	popup := util.Popup{
 		Msg:     "Item Added Successfully",
@@ -105,17 +103,11 @@ func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ic *ItemApiController) GetItems(w http.ResponseWriter, r *http.Request) {
-
-	if items, ok := util.AppCache.Get("menu"); ok {
-		util.EncodeAndSendItemWithStatus(w, items.([]models.DisplayItem), http.StatusOK)
-	}
-
 	items, err := models.GetAllItems()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error fetching items: %v", err), http.StatusInternalServerError)
 		return
 	}
-	util.AppCache.Set("menu", items, 24*time.Hour)
 	util.EncodeAndSendItemWithStatus(w, items, http.StatusOK)
 }
 
@@ -128,8 +120,6 @@ func (ic *ItemApiController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Unable to Delete item", http.StatusBadRequest)
 		return
 	}
-
-	util.AppCache.Delete("menu")
 
 	popup := util.Popup{
 		Msg:     "Item Deleted Successfully",
