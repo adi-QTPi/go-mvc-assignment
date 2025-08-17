@@ -1,5 +1,4 @@
-
-FROM golang:latest AS builder
+FROM golang:latest
 
 WORKDIR /app
 
@@ -8,17 +7,17 @@ RUN go mod download
 
 COPY . .
 
+RUN apt-get update && apt-get install -y default-mysql-client \
+    && wget https://github.com/golang-migrate/migrate/releases/download/v4.16.0/migrate.linux-amd64.tar.gz \
+    && tar -xvzf migrate.linux-amd64.tar.gz \
+    && mv migrate /usr/local/bin/migrate \
+    && rm migrate.linux-amd64.tar.gz \
+    && chmod +x /usr/local/bin/migrate \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN go build -o main ./cmd/main.go
 
-# ---- Run Stage ----
-FROM debian:bookworm-slim
+RUN chmod +x ./docker-entrypoint.sh
 
-WORKDIR /app
-
-COPY --from=builder /app/main .
-COPY --from=builder /app/pkg/views ./pkg/views 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/uploads ./uploads
-
-# Run the binary
-CMD ["./main"]
+# CMD ["./main"]
+ENTRYPOINT ["./docker-entrypoint.sh"]

@@ -23,6 +23,9 @@ func main() {
 		log.Fatalf("Database not initialised properly -> %v", err)
 	}
 
+	// database.MigrateDBSchema()
+	// database.SeedData()
+
 	router := api.SetupRouter()
 
 	server := &http.Server{
