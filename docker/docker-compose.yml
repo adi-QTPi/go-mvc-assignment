@@ -17,28 +17,33 @@ services:
     restart: always
     networks:
       - hungry-net
-  # node:
-  #   image: adiqtpi/foodopia:app
-  #   environment:
-  #     - SERVER_PORT=9000
-  #     - JWT_SECRET=sfdkjasl;fjdsfjlsdfj;adskfjs;lfj;ldsafj;s
-  #     - SESSION_SECRET_KEY=s;ldkj;safjadls;fja;sdj;flfjsdjf;dsajfd
-  #     - MYSQL_HOST=mysql
-  #     - MYSQL_USERNAME=root
-  #     - MYSQL_PASSWORD=root_pwd
-  #     - MYSQL_PORT=3306
-  #     - ADMIN_NAME=haldi
-  #     - ADMIN_PASSWORD=1234567890
-  #     - DOCKER_ENV=true
-  #   ports:
-  #     - "9000:9000"
-  #     - "9080:9080"
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #   restart: always
-  #   networks:
-  #     - hungry-net
+  go:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: go-app
+    environment:
+      - SERVER_PORT=9080
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root_pwd
+      - MYSQL_PORT=3308
+      - MYSQL_DATABASE=karma_mvc_foodopia
+      - JWT_SECRET=sfdkjasl;fjdsfjlsdfj;adskfjs;lfj;ldsafj;safk;skfdj;askj;dkljf;skfj;kjflsfjeiwfjoiw
+      - SESSIONS_SECRET=s;ldkj;safjadls;fja;sdj;flfjsdjf;dsajfdweifjowefjowifheiofiwjoijo
+      - ADMIN_USERNAME="haldi"
+      - ADMIN_NAME="Mr. Admin"
+      - ADMIN_PASSWORD="Admin@123"
+      - DOCKER_ENV=true
+    ports:
+      - "9000:9000"
+      - "9080:9080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: always
+    networks:
+      - hungry-net
 
 networks:
   hungry-net:

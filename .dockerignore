@@ -1,0 +1,8 @@
+tmp/
+.git
+.gitignore.DS_Store
+/.vscode/
+*.log
+docker/
+docker-compose.yml
+Dockerfile
