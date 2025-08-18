@@ -80,7 +80,7 @@ func CheckAndAssignTable(xUserId string) (int64, error) {
 }
 
 func PlaceNewOrder(o Order, tx *sql.Tx) (int64, error) {
-	sqlQuery := "INSERT INTO `order` (order_at, table_no, customer_id, status, total_price) VALUES (?, ?, ?, ?, ?)"
+	sqlQuery := "INSERT INTO `order` (order_at, table_no, customer_id, status, total_price) VALUES (?, ?, ?, ?, ?);"
 
 	result, err := tx.Exec(sqlQuery, o.OrderAt, o.TableNo, o.CustomerId, o.Status, o.TotalPrice)
 	if err != nil {
@@ -101,6 +101,7 @@ func OccupyTable(tableNo int64, tx *sql.Tx) error {
 
 	_, err := tx.Exec(sqlQuery, tableNo)
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("error occupying table : %v", err)
 	}
 

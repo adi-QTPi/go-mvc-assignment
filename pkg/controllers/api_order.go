@@ -53,6 +53,14 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	err = models.OccupyTable(newOrder.TableNo.Int64, tx)
+	if err != nil {
+		fmt.Printf("error in occupying table : %v", err)
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		tx.Rollback()
+		return
+	}
+
 	orderId, err := models.PlaceNewOrder(newOrder, tx)
 	if err != nil {
 		fmt.Printf("error in placing order : %v", err)
@@ -61,13 +69,6 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	newOrder.OrderId = orderId
-	err = models.OccupyTable(newOrder.TableNo.Int64, tx)
-	if err != nil {
-		fmt.Printf("error in occupying table : %v", err)
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
-		tx.Rollback()
-		return
-	}
 
 	err = models.EntriesInItemOrder(orderSlice, newOrder, tx)
 	if err != nil {
