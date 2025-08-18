@@ -155,39 +155,39 @@ Server Hostname:        localhost
 Server Port:            9005
 
 Document Path:          /api/order
-Document Length:        59 bytes
+Document Length:        70 bytes
 
 Concurrency Level:      1000
-Time taken for tests:   15.834 seconds
+Time taken for tests:   0.750 seconds
 Complete requests:      10000
 Failed requests:        0
-Total transferred:      12980928 bytes
-Total body sent:        17360000
-HTML transferred:       590000 bytes
-Requests per second:    631.56 [#/sec] (mean)
-Time per request:       1583.372 [ms] (mean)
-Time per request:       1.583 [ms] (mean, across all concurrent requests)
-Transfer rate:          800.61 [Kbytes/sec] received
-                        1070.70 kb/s sent
-                        1871.31 kb/s total
+Total transferred:      1780000 bytes
+Total body sent:        17370000
+HTML transferred:       700000 bytes
+Requests per second:    13326.30 [#/sec] (mean)
+Time per request:       75.040 [ms] (mean)
+Time per request:       0.075 [ms] (mean, across all concurrent requests)
+Transfer rate:          2316.49 [Kbytes/sec] received
+                        22605.25 kb/s sent
+                        24921.74 kb/s total
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    2   8.2      0      62
-Processing:    27 1559 1119.6   1308    8096
-Waiting:        5 1559 1119.6   1308    8096
-Total:         31 1561 1117.1   1309    8096
+Connect:        0    2   7.3      0      33
+Processing:     1   69  47.8     58     424
+Waiting:        1   69  47.8     58     424
+Total:          1   72  48.9     61     455
 
 Percentage of the requests served within a certain time (ms)
-  50%   1309
-  66%   1799
-  75%   2154
-  80%   2406
-  90%   3088
-  95%   3716
-  98%   4565
-  99%   5057
- 100%   8096 (longest request)
+  50%     61
+  66%     82
+  75%     95
+  80%    106
+  90%    136
+  95%    166
+  98%    207
+  99%    233
+ 100%    455 (longest request)
 ```
 
 ### c , n := 1000 , 100000
