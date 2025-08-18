@@ -2,7 +2,7 @@
 
 ## Get /api/item
 ```bash
-ab -C jwt_token=TWT_TOKEN -n 100000 -c 1000 localhost:9005/api/item
+ab -C jwt_token=JWT_TOKEN -n 100000 -c 1000 localhost:9005/api/item
 ```
 ```bash
 This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
