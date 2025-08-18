@@ -20,9 +20,12 @@ func AssignEmptyTable(next http.Handler) http.Handler {
 			return
 		}
 		if tableNo == 0 {
-			var responseJson util.StandardResponseJson
-			responseJson.ErrDescription = "No empty tables available at this time"
-			util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusOK)
+			popup := util.Popup{
+				Msg:     "Sorry, all tables are full ! Can't place order right now.",
+				IsError: false,
+			}
+			util.InsertPopupInFlash(w, r, popup)
+			util.RedirectToSite(w, r, "/static/menu")
 			return
 		}
 

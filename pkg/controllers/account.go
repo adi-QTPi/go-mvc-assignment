@@ -62,6 +62,7 @@ func (ac *AccountController) CreateNewUser(w http.ResponseWriter, r *http.Reques
 	}
 
 	util.RedirectToSite(w, r, "/login")
+
 }
 
 func (ac *AccountController) CreateNewUserByAdmin(w http.ResponseWriter, r *http.Request) {
