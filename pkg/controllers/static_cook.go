@@ -38,7 +38,7 @@ func (cc *CookStaticController) CookDashboardInfo(w http.ResponseWriter, r *http
 	err = template_helpers.Tmpl.ExecuteTemplate(w, "cook.html", toPage)
 	if err != nil {
 		fmt.Printf("error rendering cook page : %v\n", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		// http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 }
