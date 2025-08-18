@@ -212,7 +212,8 @@ func PasswordStrengthTest(next http.Handler) http.Handler {
 		if len(pwd) < 10 || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecial {
 			util.InsertPopupInFlash(w, r, popup)
 			util.RedirectToSite(w, r, "/signup")
+		} else {
+			next.ServeHTTP(w, r)
 		}
-		next.ServeHTTP(w, r)
 	})
 }
