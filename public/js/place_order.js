@@ -109,12 +109,11 @@ async function toggle_add_to_cart_button_label() {
             let quantity = foundItem.quantity;
 
             button.innerHTML = `<div class="d-flex flex-column align-items-center justify-content-center">
-                <div class="">
-                    Qty : <span id="item${id}" class="qty-display fs-3 truculenta-normal">${quantity}</span>
-                </div>
                 <div class="btn-group " role="group" aria-label="Quantity controls">
                     <button type="button" id="${id}" class="qty-minus btn bg-light-pink rounded-left-3 fs-4">-</button>
-                    <button type="button" id="${id}" class="qty-remove btn bg-turq-bold text-white fs-4">x</button>
+                    <div class="d-flex justify-content-center align-items-center">
+                    <span id="item${id}" class="px-3 qty-display fs-3 truculenta-normal">${quantity}</span>
+                    </div>
                     <button type="button" id="${id}" class="qty-plus btn bg-light-pink rounded-right-3 fs-4">+</button>
                 </div>
             </div>`;
