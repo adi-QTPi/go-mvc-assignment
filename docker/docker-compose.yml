@@ -28,13 +28,13 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root_pwd
       - MYSQL_PORT=3306
-      - MYSQL_DATABASE=karma_mvc_foodopia
-      - JWT_SECRET=sfdkjasl;fjdsfjlsdfj;adskfjs;lfj;ldsafj;safk;skfdj;askj;dkljf;skfj;kjflsfjeiwfjoiw
-      - SESSIONS_SECRET=s;ldkj;safjadls;fja;sdj;flfjsdjf;dsajfdweifjowefjowifheiofiwjoijo
-      - ADMIN_USERNAME=haldi
-      - ADMIN_NAME=AdminKumar
-      - ADMIN_PASSWORD=Admin@123
-      - SEED_DB=yes
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - JWT_SECRET=${JWT_SECRET}
+      - SESSIONS_SECRET=${SESSIONS_SECRET}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_NAME=${ADMIN_NAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SEED_DB=${SEED_DUMMY_DATA}
       - DOCKER_ENV=true
     ports:
       - "9000:9000"
