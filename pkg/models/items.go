@@ -33,20 +33,17 @@ type DisplayItem struct {
 }
 
 func GetAllItems() ([]DisplayItem, error) {
-	items, ok := cache.AppCache.Get("menu")
-	if ok {
-		return items.([]DisplayItem), nil
+	var fetchedItems []DisplayItem
+	if fetchedItems, ok := cache.AppCache.Get("menu"); ok {
+		return fetchedItems.([]DisplayItem), nil
 	}
-
-	sqlQuery := "SELECT i.item_id, i.item_name, i.cook_time_min, i.price, i.display_pic, i.cat_id, c.cat_name AS cat_name, i.subcat_id, cd.cat_name AS subcat_name FROM item i JOIN category c ON i.cat_id = c.cat_id LEFT JOIN category cd ON i.subcat_id = cd.cat_id WHERE i.is_available = 1 ORDER BY RAND();"
+	sqlQuery := "SELECT i.item_id, i.item_name, i.cook_time_min, i.price, i.display_pic, i.cat_id, c.cat_name AS cat_name, i.subcat_id, cd.cat_name AS subcat_name FROM item i JOIN category c ON i.cat_id = c.cat_id LEFT JOIN category cd ON i.subcat_id = cd.cat_id WHERE i.is_available = 1"
 
 	rows, err := DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying users: %v", err)
 	}
 	defer rows.Close()
-
-	var fetchedItems []DisplayItem
 
 	for rows.Next() {
 		var oneItem DisplayItem

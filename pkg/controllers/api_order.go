@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/adi-QTPi/go-mvc-assignment/cache"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/models"
 	"github.com/adi-QTPi/go-mvc-assignment/pkg/util"
 )
@@ -47,36 +46,53 @@ func (oc *OrderApiController) PlaceOrder(w http.ResponseWriter, r *http.Request)
 	newOrder.TotalPrice = int64(totalOrderPrice)
 	newOrder.Status = "received"
 
-	orderId, err := models.PlaceNewOrder(newOrder)
+	tx, err := models.DB.Begin()
 	if err != nil {
+		fmt.Printf("can't start transaction : %v", err)
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
+
+	err = models.OccupyTable(newOrder.TableNo.Int64, tx)
+	if err != nil {
+		fmt.Printf("error in occupying table : %v", err)
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		tx.Rollback()
+		return
+	}
+
+	orderId, err := models.PlaceNewOrder(newOrder, tx)
+	if err != nil {
+		fmt.Printf("error in placing order : %v", err)
 		http.Error(w, fmt.Sprintf("Error placing new order: %v", err), http.StatusInternalServerError)
+		tx.Rollback()
 		return
 	}
 	newOrder.OrderId = orderId
-	err = models.OccupyTable(newOrder.TableNo.Int64)
+
+	err = models.EntriesInItemOrder(orderSlice, newOrder, tx)
 	if err != nil {
+		fmt.Printf("error in putting in item orders : %v", err)
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		tx.Rollback()
 		return
 	}
 
-	err = models.EntriesInItemOrder(orderSlice, newOrder)
-	if err != nil {
+	if err := tx.Commit(); err != nil {
+		fmt.Printf("error commiting the order in db : %v", err)
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
-
-	cacheField := fmt.Sprintf("orders%s", time.Now().Format("2006-01-02"))
-	cache.AppCache.Delete(cacheField)
 
 	popup := util.Popup{
 		Msg:     fmt.Sprintf("Successfully placed Order #%v", newOrder.OrderId),
 		IsError: false,
 	}
-
 	util.InsertPopupInFlash(w, r, popup)
 
-	var responseJson util.StandardResponseJson
-	responseJson.Msg = fmt.Sprintf("Order Placed !!! orderId = %v", newOrder.OrderId)
+	var responseJson = util.StandardResponseJson{
+		Msg: "Order Placed successfully !",
+	}
 	util.EncodeAndSendResponseWithStatus(w, responseJson, http.StatusCreated)
 }
 
@@ -100,8 +116,6 @@ func (oc *OrderApiController) OrderPayment(w http.ResponseWriter, r *http.Reques
 		http.Error(w, fmt.Sprintf("Error vacating table , %v", err), http.StatusInternalServerError)
 		return
 	}
-
-	cache.AppCache.Delete("orders")
 
 	popup := util.Popup{
 		Msg: "Payment successful... happyCustomer++",

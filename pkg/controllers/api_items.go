@@ -18,7 +18,6 @@ func NewItemApiController() *ItemApiController {
 
 func (ic *ItemApiController) AddItem(w http.ResponseWriter, r *http.Request) {
 	const maxMemory = 32 << 20
-
 	var err error
 	if r.Referer() == "/static/menu" {
 		err = r.ParseMultipartForm(maxMemory)

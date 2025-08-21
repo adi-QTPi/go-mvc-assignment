@@ -38,9 +38,6 @@ document.addEventListener("click", function (event) {
                     price: parseInt(foundItem.price, 10),
                     quantity: 1,
                 };
-                // event.target.innerText = "Remove";
-                // event.target.classList.remove("btn-danger");
-                // event.target.classList.add("btn-dark");
                 item_in_cart.push(new_item_for_cart);
             }
         }
@@ -112,13 +109,12 @@ async function toggle_add_to_cart_button_label() {
             let quantity = foundItem.quantity;
 
             button.innerHTML = `<div class="d-flex flex-column align-items-center justify-content-center">
-                <div class="">
-                    Qty : <span id="item${id}" class="qty-display fs-3 truculenta-normal">${quantity}</span>
-                </div>
-                <div class="btn-group rounded-pill " role="group" aria-label="Quantity controls">
-                    <button type="button" id="${id}" class="qty-minus btn bg-light-pink rounded-pill fs-4">-</button>
-                    <button type="button" id="${id}" class="qty-remove btn bg-turq-bold text-white rounded-pill fs-4">x</button>
-                    <button type="button" id="${id}" class="qty-plus btn bg-light-pink rounded-pill fs-4">+</button>
+                <div class="btn-group " role="group" aria-label="Quantity controls">
+                    <button type="button" id="${id}" class="qty-minus btn bg-light-pink rounded-left-3 fs-4">-</button>
+                    <div class="d-flex justify-content-center align-items-center">
+                    <span id="item${id}" class="px-3 qty-display fs-3 truculenta-normal">${quantity}</span>
+                    </div>
+                    <button type="button" id="${id}" class="qty-plus btn bg-light-pink rounded-right-3 fs-4">+</button>
                 </div>
             </div>`;
         }
@@ -171,7 +167,6 @@ function removeItem(itemId) {
         item_in_cart.splice(itemIndex, 1);
     }
     save_cart();
-    // update_qty_display(itemToIncrement.item_id, itemToIncrement.quantity);
     toggle_add_to_cart_button_label();
     toggle_to_cart_button_visibility();
     update_text_in_element(

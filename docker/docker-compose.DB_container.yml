@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mvc-assignment-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_pwd
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    healthcheck: 
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+      start_period: 30s
+    restart: always
+    networks:
+      - hungry-net
+
+networks:
+  hungry-net:
+    driver: bridge

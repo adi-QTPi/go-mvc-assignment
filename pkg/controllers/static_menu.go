@@ -29,7 +29,7 @@ func (sl *StaticController) RenderMenuPage(w http.ResponseWriter, r *http.Reques
 	}
 	popup, err := util.ExtractPopupFromFlash(w, r)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error getting stuff from sessions and db : %v", err), http.StatusInternalServerError)
+		fmt.Printf("warning: could not extract popup from flash: %v\n", err)
 		return
 	}
 

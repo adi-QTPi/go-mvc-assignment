@@ -79,10 +79,10 @@ func CheckAndAssignTable(xUserId string) (int64, error) {
 	return tableNo, nil
 }
 
-func PlaceNewOrder(o Order) (int64, error) {
-	sqlQuery := "INSERT INTO `order` (order_at, table_no, customer_id, status, total_price) VALUES (?, ?, ?, ?, ?)"
+func PlaceNewOrder(o Order, tx *sql.Tx) (int64, error) {
+	sqlQuery := "INSERT INTO `order` (order_at, table_no, customer_id, status, total_price) VALUES (?, ?, ?, ?, ?);"
 
-	result, err := DB.Exec(sqlQuery, o.OrderAt, o.TableNo, o.CustomerId, o.Status, o.TotalPrice)
+	result, err := tx.Exec(sqlQuery, o.OrderAt, o.TableNo, o.CustomerId, o.Status, o.TotalPrice)
 	if err != nil {
 		return 0, fmt.Errorf("Error in creating order, %v", err)
 	}
@@ -90,14 +90,18 @@ func PlaceNewOrder(o Order) (int64, error) {
 	if err != nil {
 		return 0, fmt.Errorf("Error in fetching order id, %v", err)
 	}
+
+	cacheField := fmt.Sprintf("orders%s", time.Now().Format("2006-01-02"))
+	cache.AppCache.Delete(cacheField)
 	return orderId, nil
 }
 
-func OccupyTable(tableNo int64) error {
+func OccupyTable(tableNo int64, tx *sql.Tx) error {
 	sqlQuery := "UPDATE `table` SET is_empty = 0 WHERE table_id = ?"
 
-	_, err := DB.Exec(sqlQuery, tableNo)
+	_, err := tx.Exec(sqlQuery, tableNo)
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("error occupying table : %v", err)
 	}
 
@@ -114,7 +118,7 @@ func VacateTable() error {
 	return nil
 }
 
-func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order) error {
+func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order, tx *sql.Tx) error {
 
 	orderId := newOrder.OrderId
 
@@ -129,20 +133,14 @@ func EntriesInItemOrder(orderSlice []ItemInCart, newOrder Order) error {
 		args = append(args, orderId, v.ItemId, v.Quantity, v.Instruction)
 	}
 
-	t, err := DB.Begin()
-	if err != nil {
-		return fmt.Errorf("could not begin transaction: %w", err)
-	}
-	defer t.Rollback()
-
 	sqlQuery := "INSERT INTO item_order (order_id, item_id, quantity, instruction) VALUES "
 
-	_, err = t.Exec(sqlQuery+qMarks, args...)
+	_, err := tx.Exec(sqlQuery+qMarks, args...)
 	if err != nil {
 		return fmt.Errorf("error inserting items in item-order : %v", err)
 	}
 
-	return t.Commit()
+	return nil
 }
 
 func FetchKitchenOrderForToday() ([]KitchenOrder, error) {
@@ -198,6 +196,8 @@ func FetchAllOrderDetailsByDate(dateStr string, xUser User) ([]Order, error) {
 			}
 			orderSlice = append(orderSlice, o)
 		}
+
+		cache.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
 
 		cache.AppCache.Set(cacheField, orderSlice, 24*time.Hour)
 

@@ -19,8 +19,8 @@ func InitDatabase() (*sql.DB, error) {
 		return nil, fmt.Errorf("error opening database -> %v", err)
 	}
 
-	rootDB.SetMaxOpenConns(5)
-	rootDB.SetMaxIdleConns(5)
+	rootDB.SetMaxOpenConns(21)
+	rootDB.SetMaxIdleConns(21)
 	rootDB.SetConnMaxLifetime(1 * time.Minute)
 
 	DB = rootDB
