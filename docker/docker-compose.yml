@@ -18,9 +18,7 @@ services:
     networks:
       - hungry-net
   go:
-    build: 
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: adiqtpi/mvc_foodopia:latest
     container_name: mvc-assignment-go
     environment:
       - SERVER_PORT=9080
