@@ -1,5 +1,11 @@
 # go-mvc-assignment
 
+## Branch `dockerize`
+- Run the following commands to Start the server.
+```bash
+cp .env.sample docker/.env
+docker compose -f docker/docker-compose.yml up
+```
 ## Branch `main`
 - Run the following commands to Start the server (`main` branch).
 ```bash
@@ -12,12 +18,6 @@ chmod +x ./start.sh
 docker compose -f docker-compose.DB_container.yml up
 ```
 
-## Branch `dockerize`
-- Run the following commands to Start the server.
-```bash
-cp .env.sample docker/.env
-docker compose -f docker/docker-copose.yml up
-```
 
 - Know the Live routes and more on Postman : Click [here](https://web.postman.co/workspace/My-Workspace~b9d5d650-5956-4307-8b7a-a5e57a5c5bb7/collection/44035623-0d31ba9a-354e-4b6a-8bb1-3510bfea7dc3?action=share&source=copy-link&creator=44035623).
 
