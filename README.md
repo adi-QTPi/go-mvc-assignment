@@ -1,5 +1,18 @@
 # go-mvc-assignment
 
+## Branch `dockerize`
+- for easy setup, use this branch.
+```bash
+git pull origin dockerize
+git switch dockerize
+```
+- Run the following commands to Start the server.
+```bash
+cp .env.sample docker/.env
+docker compose -f docker/docker-compose.yml up
+```
+## Branch `main`
+- We encourage using the setup script for speedy setup without hassle.
 - Run the following commands to Start the server.
 ```bash
 chmod +x ./start.sh
